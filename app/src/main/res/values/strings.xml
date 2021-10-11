@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TrainingTimer</string>
+    <string name="training_pulls">pull-ups</string>
+    <string name="training_pushes">push-ups</string>
+    <string name="training_title_hint">Enter training title</string>
+    <string name="training_title_label">Title</string>
+    <string name="training_sets">Sets</string>
+    <string name="training_times">Times</string>
+</resources>
