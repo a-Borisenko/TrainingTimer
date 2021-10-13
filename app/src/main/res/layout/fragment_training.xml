@@ -1,39 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:layout_margin="16dp"
+    android:orientation="vertical">
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/training_title_label"/>
+        android:text="@string/training_title_label" />
 
     <EditText
         android:id="@+id/training_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/training_title_hint"/>
+        android:hint="@string/training_title_hint" />
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/training_sets"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/training_sets" />
+
+        <EditText
+            android:id="@+id/training_sets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/training_sets_hint" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/training_times"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/training_times" />
+
+        <EditText
+            android:id="@+id/training_times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/training_times_hint" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/training_rest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="set done"/>
+        tools:text="set done" />
 
 </LinearLayout>
