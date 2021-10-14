@@ -21,5 +21,15 @@ class MainActivity : AppCompatActivity() {
         addButton.setOnClickListener {
             //выполнить после нажатия
         }
+
+        val currentFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment == null) {
+            val fragment = TrainingFragment()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
 }
