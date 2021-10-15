@@ -113,7 +113,7 @@ class TrainingFragment : Fragment() {
         restButton = view?.findViewById(R.id.training_rest) as Button
 
         restButton.apply {
-            text = training.rest.toString()
+            //text = training.rest.toString()
             isEnabled = false
         }
     }
