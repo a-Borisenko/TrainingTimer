@@ -110,7 +110,7 @@ class TrainingFragment : Fragment() {
         titleField.addTextChangedListener(titleWatcher)
         setsField.addTextChangedListener(setsWatcher)
         timesField.addTextChangedListener(timesWatcher)
-        restButton = view?.findViewById(R.id.training_rest) as Button
+        restButton = view?.findViewById(R.id.training_done) as Button
 
         restButton.apply {
             //text = training.rest.toString()

@@ -54,10 +54,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/training_rest" />
+
+        <EditText
+            android:id="@+id/training_rest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/training_rest_hint" />
+
+    </LinearLayout>
+
     <Button
-        android:id="@+id/training_rest"
+        android:id="@+id/training_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="set done" />
+        android:layout_margin="8dp"
+        tools:text="@string/training_done" />
 
 </LinearLayout>

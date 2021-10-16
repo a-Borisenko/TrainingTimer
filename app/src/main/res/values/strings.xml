@@ -8,5 +8,7 @@
     <string name="training_sets">Sets</string>
     <string name="training_times_hint">Enter number of times</string>
     <string name="training_times">Times</string>
-    <string name="training_rest">Training Rest Time</string>
+    <string name="training_rest_hint">Enter rest time</string>
+    <string name="training_rest">Rest Time</string>
+    <string name="training_done">Set done</string>
 </resources>
