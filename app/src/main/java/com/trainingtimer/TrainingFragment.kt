@@ -15,8 +15,6 @@ class TrainingFragment : Fragment() {
 
     private lateinit var training: Training
     private lateinit var titleField: EditText
-    private lateinit var setsField: EditText
-    private lateinit var timesField: EditText
     private lateinit var restButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +27,6 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //return super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText
         return view
@@ -54,67 +51,20 @@ class TrainingFragment : Fragment() {
                 before: Int,
                 count: Int
             ) {
-                training.title = sequence.toString()
+                training.title = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
                 //
             }
-        }
-
-        val setsWatcher = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-                //
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                training.sets = sequence.toString()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
-
-        }
-
-        val timesWatcher = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-                //
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                training.times = sequence.toString()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
-
         }
 
         titleField.addTextChangedListener(titleWatcher)
-        setsField.addTextChangedListener(setsWatcher)
-        timesField.addTextChangedListener(timesWatcher)
         restButton = view?.findViewById(R.id.training_done) as Button
 
         restButton.apply {
-            //text = training.rest.toString()
-            isEnabled = false
+            text = training.title.toString()
+            //isEnabled = false
         }
     }
 }
