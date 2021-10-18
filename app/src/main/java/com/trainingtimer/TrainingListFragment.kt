@@ -57,7 +57,7 @@ class TrainingListFragment : Fragment() {
         private lateinit var training: Training
 
         private val titleTextView: TextView = itemView.findViewById(R.id.training_title)
-        private val dateTextView: TextView = itemView.findViewById(R.id.training_rest)
+        //private val dateTextView: TextView = itemView.findViewById(R.id.training_rest)
 
         init {
             itemView.setOnClickListener(this)

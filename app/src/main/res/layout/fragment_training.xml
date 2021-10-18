@@ -16,6 +16,7 @@
         android:id="@+id/training_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:hint="@string/training_title_hint" />
 
     <LinearLayout
@@ -32,6 +33,7 @@
             android:id="@+id/training_sets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:hint="@string/training_sets_hint" />
 
     </LinearLayout>
@@ -50,6 +52,7 @@
             android:id="@+id/training_times"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:hint="@string/training_times_hint" />
 
     </LinearLayout>
@@ -68,6 +71,7 @@
             android:id="@+id/training_rest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:hint="@string/training_rest_hint" />
 
     </LinearLayout>
@@ -76,6 +80,7 @@
         android:id="@+id/training_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:layout_margin="8dp"
         tools:text="@string/training_done" />
 
