@@ -1,8 +1,14 @@
 package com.trainingtimer
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
-data class Training(val trainingId: UUID = UUID.randomUUID(),
-                    var title: String = "",
-                    var sets: Int,
-                    var times: Int)
+@Entity
+data class Training(
+    @PrimaryKey
+    val trainingId: UUID = UUID.randomUUID(),
+    var title: String = "",
+    var sets: Int,
+    var times: Int
+)
