@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,16 +18,16 @@ private const val TAG = "TrainingListFragment"
 class TrainingListFragment : Fragment() {
 
     private lateinit var trainingRecyclerView: RecyclerView
-    private var adapter: TrainingAdapter? = null
+    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList()) //null
 
     private val trainingListViewModel: TrainingListViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingListViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "Total trainings: ${trainingListViewModel.trainings.size}")
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,13 +41,26 @@ class TrainingListFragment : Fragment() {
             view.findViewById(R.id.training_recycler_view) as RecyclerView
         trainingRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        updateUI()
-
+        //updateUI()
+        trainingRecyclerView.adapter = adapter
         return view
     }
 
-    private fun updateUI() {
-        val trainings = trainingListViewModel.trainings
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        trainingListViewModel.trainingListLiveData.observe(
+            viewLifecycleOwner,
+            Observer { trainings ->
+                trainings?.let {
+                    Log.i(TAG, "Got trainings ${trainings.size}")
+                    updateUI(trainings)
+                }
+            }
+        )
+    }
+
+    private fun updateUI(trainings: List<Training>) {
+        //val trainings = trainingListViewModel.trainings
         adapter = TrainingAdapter(trainings)
         trainingRecyclerView.adapter = adapter
     }

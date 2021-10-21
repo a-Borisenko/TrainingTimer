@@ -1,6 +1,7 @@
 package com.trainingtimer
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.database.TrainingDatabase
 import java.util.*
@@ -17,9 +18,11 @@ class TrainingRepository private constructor(context: Context){
 
     private val trainingDao = database.trainingDao()
 
-    fun getTrainings(): List<Training> = trainingDao.getTrainings()
+    //fun getTrainings(): List<Training> = trainingDao.getTrainings()
+    fun getTrainings(): LiveData<List<Training>> = trainingDao.getTrainings()
 
-    fun getTraining(id: UUID): Training? = trainingDao.getTraining(id)
+    //fun getTraining(id: UUID): Training? = trainingDao.getTraining(id)
+    fun getTraining(id: UUID): LiveData<Training?> = trainingDao.getTraining(id)
 
     companion object {
         private var INSTANCE: TrainingRepository? = null

@@ -5,7 +5,7 @@ import java.util.*
 
 class TrainingListViewModel : ViewModel() {
 
-    val trainings = mutableListOf<Training>()
+    /*val trainings = mutableListOf<Training>()
 
     init {
         for (i in 0 until 100) {
@@ -13,5 +13,8 @@ class TrainingListViewModel : ViewModel() {
             training.title = "Training #$i"
             trainings += training
         }
-    }
+    }*/
+
+    private val trainingRepository = TrainingRepository.get()
+    val trainingListLiveData = trainingRepository.getTrainings()
 }
