@@ -1,5 +1,6 @@
 package com.trainingtimer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,16 +13,26 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 private const val TAG = "TrainingListFragment"
 
 class TrainingListFragment : Fragment() {
 
+    interface Callbacks {
+        fun onTrainingSelected(trainingId: UUID)
+    }
+
+    private var callbacks: Callbacks? = null
     private lateinit var trainingRecyclerView: RecyclerView
     private var adapter: TrainingAdapter? = TrainingAdapter(emptyList()) //null
-
     private val trainingListViewModel: TrainingListViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
     /*override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +70,11 @@ class TrainingListFragment : Fragment() {
         )
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
+
     private fun updateUI(trainings: List<Training>) {
         //val trainings = trainingListViewModel.trainings
         adapter = TrainingAdapter(trainings)
@@ -84,8 +100,9 @@ class TrainingListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            Toast.makeText(context, "${training.title} pressed!", Toast.LENGTH_SHORT)
-                .show()
+            /*Toast.makeText(context, "${training.title} pressed!", Toast.LENGTH_SHORT)
+                .show()*/
+            callbacks?.onTrainingSelected(training.trainingId) //training.id
         }
     }
 

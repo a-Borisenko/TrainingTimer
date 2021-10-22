@@ -2,7 +2,9 @@ package com.trainingtimer.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.trainingtimer.Training
 import java.util.*
 
@@ -16,4 +18,10 @@ interface TrainingDao {
     @Query("SELECT * FROM training WHERE trainingId = (:id)")
     //fun getTraining(id: UUID): Training?
     fun getTraining(id: UUID): LiveData<Training?>
+
+    @Update
+    fun updateTraining(training: Training)
+
+    @Insert
+    fun addTraining(training: Training)
 }
