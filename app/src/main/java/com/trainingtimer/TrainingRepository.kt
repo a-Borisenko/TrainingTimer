@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "training-database"
 
-class TrainingRepository private constructor(context: Context){
+class TrainingRepository private constructor(context: Context) {
 
     private val database: TrainingDatabase = Room.databaseBuilder(
         context.applicationContext,
@@ -26,6 +26,12 @@ class TrainingRepository private constructor(context: Context){
     //fun getTraining(id: UUID): Training? = trainingDao.getTraining(id)
     fun getTraining(id: UUID): LiveData<Training?> = trainingDao.getTraining(id)
 
+    fun updateTraining(training: Training) {
+        executor.execute {
+            trainingDao.updateTraining(training)
+        }
+    }
+
     fun addTraining(training: Training) {
         executor.execute {
             trainingDao.addTraining(training)
@@ -41,9 +47,8 @@ class TrainingRepository private constructor(context: Context){
             }
         }
 
-        fun get() : TrainingRepository {
-            return INSTANCE ?:
-            throw IllegalStateException("TrainingRepository must be initialized")
+        fun get(): TrainingRepository {
+            return INSTANCE ?: throw IllegalStateException("TrainingRepository must be initialized")
         }
     }
 }
