@@ -1,7 +1,6 @@
 package com.trainingtimer
 
 import androidx.lifecycle.ViewModel
-import java.util.*
 
 class TrainingListViewModel : ViewModel() {
 

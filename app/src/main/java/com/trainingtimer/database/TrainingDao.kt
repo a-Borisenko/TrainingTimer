@@ -15,7 +15,7 @@ interface TrainingDao {
     //fun getTrainings(): List<Training>
     fun getTrainings(): LiveData<List<Training>>
 
-    @Query("SELECT * FROM training WHERE trainingId = (:id)")
+    @Query("SELECT * FROM training WHERE id = (:id)")
     //fun getTraining(id: UUID): Training?
     fun getTraining(id: UUID): LiveData<Training?>
 

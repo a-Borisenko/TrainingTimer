@@ -7,7 +7,7 @@ import java.util.*
 @Entity
 data class Training(
     @PrimaryKey
-    val trainingId: UUID = UUID.randomUUID(),
+    val id: UUID = UUID.randomUUID(),
     var title: String = "",
     var sets: Int,
     var times: Int

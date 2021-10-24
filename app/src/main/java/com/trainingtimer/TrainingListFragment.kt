@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -99,10 +100,10 @@ class TrainingListFragment : Fragment() {
             //restTextView.text = this.training.rest.toString()
         }
 
-        override fun onClick(v: View?) {
-            /*Toast.makeText(context, "${training.title} pressed!", Toast.LENGTH_SHORT)
-                .show()*/
-            callbacks?.onTrainingSelected(training.trainingId) //training.id
+        override fun onClick(v: View) {
+            Toast.makeText(context, "${training.title} pressed!", Toast.LENGTH_SHORT)
+                .show()
+            callbacks?.onTrainingSelected(training.id)
         }
     }
 
