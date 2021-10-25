@@ -20,10 +20,7 @@ class TrainingRepository private constructor(context: Context) {
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    //fun getTrainings(): List<Training> = trainingDao.getTrainings()
     fun getTrainings(): LiveData<List<Training>> = trainingDao.getTrainings()
-
-    //fun getTraining(id: UUID): Training? = trainingDao.getTraining(id)
     fun getTraining(id: UUID): LiveData<Training?> = trainingDao.getTraining(id)
 
     fun updateTraining(training: Training) {

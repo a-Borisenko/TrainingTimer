@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import java.util.*
 
@@ -47,7 +48,7 @@ class TrainingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         trainingDetailViewModel.trainingLiveData.observe(
             viewLifecycleOwner,
-            androidx.lifecycle.Observer { training ->
+            Observer { training ->
                 training?.let {
                     this.training = training
                     updateUI()

@@ -14,11 +14,6 @@ class MainActivity : AppCompatActivity(), TrainingListFragment.Callbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*addButton = findViewById(R.id.add_button)
-        addButton.setOnClickListener {
-            //выполнить после нажатия
-        }*/
-
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
