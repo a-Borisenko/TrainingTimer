@@ -89,7 +89,6 @@ class TrainingFragment : Fragment() {
 
         restButton.apply {
             text = training.title.toString()
-            //isEnabled = false
         }
     }
 

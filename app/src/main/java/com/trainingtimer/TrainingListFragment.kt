@@ -25,7 +25,7 @@ class TrainingListFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
     private lateinit var trainingRecyclerView: RecyclerView
-    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList()) //null
+    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
     private val trainingListViewModel: TrainingListViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingListViewModel::class.java)
     }
@@ -87,7 +87,6 @@ class TrainingListFragment : Fragment() {
         private lateinit var training: Training
 
         private val titleTextView: TextView = itemView.findViewById(R.id.training_title)
-        //private val dateTextView: TextView = itemView.findViewById(R.id.training_rest)
 
         init {
             itemView.setOnClickListener(this)
@@ -96,7 +95,6 @@ class TrainingListFragment : Fragment() {
         fun bind(training: Training) {
             this.training = training
             titleTextView.text = this.training.title
-            //restTextView.text = this.training.rest.toString()
         }
 
         override fun onClick(v: View) {
