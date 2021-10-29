@@ -27,7 +27,7 @@ class TrainingFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        training = Training(UUID.randomUUID(), "", 0, 0)
+        training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         //Log.d(TAG, "args bundle training ID: $trainingId")
         trainingDetailViewModel.loadTraining(trainingId)
@@ -84,11 +84,11 @@ class TrainingFragment : Fragment() {
         }
 
         titleField.addTextChangedListener(titleWatcher)
-        restButton = view?.findViewById(R.id.training_done) as Button
+        /*restButton = view?.findViewById(R.id.training_done) as Button
 
         restButton.apply {
             text = training.title.toString()
-        }
+        }*/
     }
 
     override fun onStop() {

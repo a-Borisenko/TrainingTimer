@@ -9,6 +9,6 @@ data class Training(
     @PrimaryKey
     val id: UUID = UUID.randomUUID(),
     var title: String = "",
-    var sets: Int,
-    var times: Int
+    /*var sets: Int,
+    var times: Int*/
 )
