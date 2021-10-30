@@ -3,9 +3,7 @@ package com.trainingtimer
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -35,10 +33,11 @@ class TrainingListFragment : Fragment() {
         callbacks = context as Callbacks?
     }
 
-    /*override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total trainings: ${trainingListViewModel.trainings.size}")
-    }*/
+        //Log.d(TAG, "Total trainings: ${trainingListViewModel.trainings.size}")
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,6 +74,23 @@ class TrainingListFragment : Fragment() {
         callbacks = null
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_training_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.new_training -> {
+                val training = Training()
+                trainingListViewModel.addTraining(training)
+                callbacks?.onTrainingSelected(training.id)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun updateUI(trainings: List<Training>) {
         //val trainings = trainingListViewModel.trainings
         adapter = TrainingAdapter(trainings)
@@ -106,6 +122,7 @@ class TrainingListFragment : Fragment() {
 
     private inner class TrainingAdapter(var trainings: List<Training>)
         : RecyclerView.Adapter<TrainingHolder>() {
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
         : TrainingHolder {
             val view = layoutInflater.inflate(R.layout.list_item_training, parent, false)
@@ -120,9 +137,9 @@ class TrainingListFragment : Fragment() {
         override fun getItemCount() = trainings.size
     }
 
-    companion object {
+    /*companion object {
         fun newInstance(): TrainingListFragment {
             return TrainingListFragment()
         }
-    }
+    }*/
 }

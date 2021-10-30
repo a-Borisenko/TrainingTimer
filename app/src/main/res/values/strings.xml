@@ -11,4 +11,5 @@
     <string name="training_rest_hint">Enter rest time</string>
     <string name="training_rest">Rest Time</string>
     <string name="training_done">Set done</string>
+    <string name="new_training">New Training</string>
 </resources>
