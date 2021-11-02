@@ -1,6 +1,7 @@
 package com.trainingtimer
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -23,7 +25,7 @@ class TrainingFragment : Fragment() {
     private lateinit var training: Training
     private lateinit var titleField: EditText
     //private lateinit var restButton: Button
-    private lateinit var view_timer: Timer
+    //private lateinit var view_timer: Timer
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
     }
@@ -93,9 +95,9 @@ class TrainingFragment : Fragment() {
             text = training.title.toString()
         }*/
 
-        view_timer.isCountDown = true
-        view_timer.base = SystemClock.elapsedRealtime() + 20000
-        view_timer.start()
+        //view_timer.isCountDown = true
+        //view_timer.base = SystemClock.elapsedRealtime() + 20000
+        timer.start()
     }
 
     override fun onStop() {
@@ -105,6 +107,15 @@ class TrainingFragment : Fragment() {
 
     private fun updateUI() {
         titleField.setText(training.title)
+    }
+
+    private val timer = object: CountDownTimer(20000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {}
+        
+        override fun onFinish() {
+            Toast.makeText(context, "Time's finished!", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     companion object{
