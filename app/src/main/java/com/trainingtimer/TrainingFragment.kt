@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import java.time.Clock
 import java.util.*
 
 private const val TAG = "TrainingFragment"
@@ -24,8 +25,8 @@ class TrainingFragment : Fragment() {
 
     private lateinit var training: Training
     private lateinit var titleField: EditText
+    private lateinit var restField: Clock
     //private lateinit var restButton: Button
-    //private lateinit var view_timer: Timer
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
     }
@@ -45,6 +46,7 @@ class TrainingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText
+        restField = view.findViewById(R.id.training_rest) as Clock
         return view
     }
 
@@ -110,7 +112,10 @@ class TrainingFragment : Fragment() {
     }
 
     private val timer = object: CountDownTimer(20000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {}
+        override fun onTick(millisUntilFinished: Long) {
+            Toast.makeText(context, "seconds remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT)
+                .show()
+        }
         
         override fun onFinish() {
             Toast.makeText(context, "Time's finished!", Toast.LENGTH_SHORT)
