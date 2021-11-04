@@ -23,6 +23,10 @@ private const val ARG_TRAINING_ID = "training_id"
 
 class TrainingFragment : Fragment() {
 
+    val start = 600_000L
+    private var newtimer = start
+    lateinit var countDownTimer: CountDownTimer
+
     private lateinit var training: Training
     private lateinit var titleField: EditText
     private lateinit var restField: Clock
@@ -37,6 +41,8 @@ class TrainingFragment : Fragment() {
         val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         //Log.d(TAG, "args bundle training ID: $trainingId")
         trainingDetailViewModel.loadTraining(trainingId)
+        setContentView(R.layout.fragment_training)
+        setTextTimer()
     }
 
     override fun onCreateView(
@@ -113,7 +119,9 @@ class TrainingFragment : Fragment() {
 
     private val timer = object: CountDownTimer(20000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
-            Toast.makeText(context, "seconds remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT)
+            Toast.makeText(context,
+                "seconds remaining: " + millisUntilFinished / 1000,
+                Toast.LENGTH_SHORT)
                 .show()
         }
         
@@ -121,6 +129,40 @@ class TrainingFragment : Fragment() {
             Toast.makeText(context, "Time's finished!", Toast.LENGTH_SHORT)
                 .show()
         }
+    }
+
+    private fun startTimer() {
+        countDownTimer = object : CountDownTimer(newtimer,1000){
+            //            end of timer
+            override fun onFinish() {
+                Toast.makeText(context,"end timer",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                newtimer = millisUntilFinished
+                setTextTimer()
+            }
+
+        }.start()
+    }
+
+    private fun pauseTimer() {
+        countDownTimer.cancel()
+    }
+
+    private fun restTimer() {
+        countDownTimer.cancel()
+        newtimer = start
+        setTextTimer()
+    }
+
+    fun setTextTimer() {
+        var m = (timer / 1000) / 60
+        var s = (timer / 1000) % 60
+
+        var format = String.format("%02d:%02d", m, s)
+
+        view_timer.setText(format)
     }
 
     companion object{
