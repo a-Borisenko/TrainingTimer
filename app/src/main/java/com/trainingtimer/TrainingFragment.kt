@@ -23,14 +23,17 @@ private const val ARG_TRAINING_ID = "training_id"
 
 class TrainingFragment : Fragment() {
 
-    val start = 600_000L
-    private var newtimer = start
-    lateinit var countDownTimer: CountDownTimer
+    enum class TimerState{
+        Stopped, Paused, Running
+    }
+
+    private lateinit var timer: CountDownTimer
+    private var timerLengthSeconds = 0L
+    private var timerState = TimerState.Stopped
+    private var secondsRemaining = 0L
 
     private lateinit var training: Training
     private lateinit var titleField: EditText
-    private lateinit var restField: Clock
-    //private lateinit var restButton: Button
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
     }
@@ -41,8 +44,11 @@ class TrainingFragment : Fragment() {
         val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         //Log.d(TAG, "args bundle training ID: $trainingId")
         trainingDetailViewModel.loadTraining(trainingId)
-        setContentView(R.layout.fragment_training)
-        setTextTimer()
+
+        /*training_done.setOnClickListener { view ->
+            startTimer()
+            timerState = TimerState.Running
+        }*/
     }
 
     override fun onCreateView(
@@ -52,7 +58,6 @@ class TrainingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText
-        restField = view.findViewById(R.id.training_rest) as Clock
         return view
     }
 
@@ -95,17 +100,7 @@ class TrainingFragment : Fragment() {
                 //
             }
         }
-
         titleField.addTextChangedListener(titleWatcher)
-        /*restButton = view?.findViewById(R.id.training_done) as Button
-
-        restButton.apply {
-            text = training.title.toString()
-        }*/
-
-        //view_timer.isCountDown = true
-        //view_timer.base = SystemClock.elapsedRealtime() + 20000
-        timer.start()
     }
 
     override fun onStop() {
@@ -115,54 +110,6 @@ class TrainingFragment : Fragment() {
 
     private fun updateUI() {
         titleField.setText(training.title)
-    }
-
-    private val timer = object: CountDownTimer(20000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            Toast.makeText(context,
-                "seconds remaining: " + millisUntilFinished / 1000,
-                Toast.LENGTH_SHORT)
-                .show()
-        }
-        
-        override fun onFinish() {
-            Toast.makeText(context, "Time's finished!", Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
-
-    private fun startTimer() {
-        countDownTimer = object : CountDownTimer(newtimer,1000){
-            //            end of timer
-            override fun onFinish() {
-                Toast.makeText(context,"end timer",Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-                newtimer = millisUntilFinished
-                setTextTimer()
-            }
-
-        }.start()
-    }
-
-    private fun pauseTimer() {
-        countDownTimer.cancel()
-    }
-
-    private fun restTimer() {
-        countDownTimer.cancel()
-        newtimer = start
-        setTextTimer()
-    }
-
-    fun setTextTimer() {
-        var m = (timer / 1000) / 60
-        var s = (timer / 1000) % 60
-
-        var format = String.format("%02d:%02d", m, s)
-
-        view_timer.setText(format)
     }
 
     companion object{
