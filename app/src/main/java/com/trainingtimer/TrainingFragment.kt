@@ -25,7 +25,7 @@ private const val ARG_TRAINING_ID = "training_id"
 class TrainingFragment : Fragment() {
 
     enum class TimerState{
-        Stopped, Paused, Running
+        Stopped, Running
     }
 
     private lateinit var timer: CountDownTimer
@@ -115,11 +115,10 @@ class TrainingFragment : Fragment() {
         titleField.setText(training.title)
     }
 
-    private fun onTimerFinished(){
+    private fun onTimerFinished() {
         timerState = TimerState.Stopped
+        //updateButtons()
 
-        //set the length of the timer to be the one set in SettingsActivity
-        //if the length was changed when the timer was running
         /*setNewTimerLength()
 
         progress_countdown.progress = 0
@@ -127,11 +126,10 @@ class TrainingFragment : Fragment() {
         PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
         secondsRemaining = timerLengthSeconds
 
-        updateButtons()
         updateCountdownUI()*/
     }
 
-    private fun startTimer(){
+    private fun startTimer() {
         timerState = TimerState.Running
 
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
@@ -143,7 +141,20 @@ class TrainingFragment : Fragment() {
         }.start()
     }
 
-    companion object{
+    /*private fun updateButtons() {
+        when (timerState) {
+            TimerState.Running -> {
+                fab_start.isEnabled = false
+                fab_stop.isEnabled = true
+            }
+            TimerState.Stopped -> {
+                fab_start.isEnabled = true
+                fab_stop.isEnabled = false
+            }
+        }
+    }*/
+
+    companion object {
         fun newInstance(trainingId: UUID): TrainingFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_TRAINING_ID, trainingId)
