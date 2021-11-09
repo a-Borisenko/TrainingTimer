@@ -119,14 +119,22 @@ class TrainingFragment : Fragment() {
         timerState = TimerState.Stopped
         //updateButtons()
 
-        /*setNewTimerLength()
+        setNewTimerLength()
 
         progress_countdown.progress = 0
 
         PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
         secondsRemaining = timerLengthSeconds
 
-        updateCountdownUI()*/
+        updateCountdownUI()
+    }
+
+    private fun updateCountdownUI(){
+        val minutesUntilFinished = secondsRemaining / 60
+        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
+        val secondsStr = secondsInMinuteUntilFinished.toString()
+        textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+        progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
     private fun startTimer() {
