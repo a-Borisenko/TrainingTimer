@@ -49,6 +49,55 @@ class TrainingFragment : Fragment() {
         trainingDetailViewModel.loadTraining(trainingId)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initTimer()
+
+        //TODO: remove background timer, hide notification
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        if (timerState == TimerState.Running){
+            timer.cancel()
+            //TODO: start background timer and show notification
+        }
+        else if (timerState == TimerState.Paused){
+            //TODO: show notification
+        }
+
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
+        PrefUtil.setSecondsRemaining(secondsRemaining, this)
+        PrefUtil.setTimerState(timerState, this)
+    }
+
+    private fun initTimer(){
+        timerState = PrefUtil.getTimerState(this)
+
+        //we don't want to change the length of the timer which is already running
+        //if the length was changed in settings while it was backgrounded
+        if (timerState == TimerState.Stopped)
+            setNewTimerLength()
+        else
+            setPreviousTimerLength()
+
+        secondsRemaining = if (timerState == TimerState.Running || timerState == TimerState.Paused)
+            PrefUtil.getSecondsRemaining(this)
+        else
+            timerLengthSeconds
+
+        //TODO: change secondsRemaining according to where the background timer stopped
+
+        //resume where we left off
+        if (timerState == TimerState.Running)
+            startTimer()
+
+        updateButtons()
+        updateCountdownUI()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -121,7 +170,7 @@ class TrainingFragment : Fragment() {
 
         setNewTimerLength()
 
-        progress_countdown.progress = 0
+        //progress_countdown.progress = 0
 
         PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
         secondsRemaining = timerLengthSeconds
@@ -135,6 +184,12 @@ class TrainingFragment : Fragment() {
         val secondsStr = secondsInMinuteUntilFinished.toString()
         textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
         progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
+    }
+
+    private fun setNewTimerLength(){
+        val lengthInMinutes = PrefUtil.getTimerLength(this)
+        timerLengthSeconds = (lengthInMinutes * 60L)
+        progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     private fun startTimer() {
