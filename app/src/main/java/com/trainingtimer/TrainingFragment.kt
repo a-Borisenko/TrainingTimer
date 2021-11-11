@@ -25,7 +25,7 @@ private const val ARG_TRAINING_ID = "training_id"
 class TrainingFragment : Fragment() {
 
     enum class TimerState{
-        Stopped, Running
+        Stopped, Running, Paused
     }
 
     private lateinit var timer: CountDownTimer
@@ -53,19 +53,21 @@ class TrainingFragment : Fragment() {
         super.onResume()
 
         initTimer()
-
         //TODO: remove background timer, hide notification
     }
 
     override fun onPause() {
         super.onPause()
 
-        if (timerState == TimerState.Running){
-            timer.cancel()
-            //TODO: start background timer and show notification
-        }
-        else if (timerState == TimerState.Paused){
-            //TODO: show notification
+        when (timerState) {
+            TimerState.Running -> {
+                timer.cancel()
+                //TODO: start background timer and show notification
+            }
+            TimerState.Paused -> {
+                //TODO: show notification
+            }
+            TimerState.Stopped -> TODO()
         }
 
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
@@ -78,15 +80,15 @@ class TrainingFragment : Fragment() {
 
         //we don't want to change the length of the timer which is already running
         //if the length was changed in settings while it was backgrounded
-        if (timerState == TimerState.Stopped)
-            setNewTimerLength()
-        else
-            setPreviousTimerLength()
+        when (timerState) {
+            TimerState.Stopped -> setNewTimerLength()
+            else -> setPreviousTimerLength()
+        }
 
-        secondsRemaining = if (timerState == TimerState.Running || timerState == TimerState.Paused)
-            PrefUtil.getSecondsRemaining(this)
-        else
-            timerLengthSeconds
+        secondsRemaining = when (timerState) {
+            TimerState.Running, TimerState.Paused -> PrefUtil.getSecondsRemaining(this)
+            else -> timerLengthSeconds
+        }
 
         //TODO: change secondsRemaining according to where the background timer stopped
 
@@ -96,6 +98,11 @@ class TrainingFragment : Fragment() {
 
         updateButtons()
         updateCountdownUI()
+    }
+
+    private fun setPreviousTimerLength(){
+        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
+        progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     override fun onCreateView(
