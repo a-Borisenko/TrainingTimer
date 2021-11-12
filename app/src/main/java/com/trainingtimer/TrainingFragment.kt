@@ -96,13 +96,13 @@ class TrainingFragment : Fragment() {
         if (timerState == TimerState.Running)
             startTimer()
 
-        updateButtons()
+        //updateButtons()
         updateCountdownUI()
     }
 
     private fun setPreviousTimerLength(){
         timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
-        progress_countdown.max = timerLengthSeconds.toInt()
+        //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     override fun onCreateView(
@@ -189,14 +189,14 @@ class TrainingFragment : Fragment() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        textView_countdown.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
-        progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
+        binding.viewTimer.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+        //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
     private fun setNewTimerLength(){
         val lengthInMinutes = PrefUtil.getTimerLength(this)
         timerLengthSeconds = (lengthInMinutes * 60L)
-        progress_countdown.max = timerLengthSeconds.toInt()
+        //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     private fun startTimer() {
