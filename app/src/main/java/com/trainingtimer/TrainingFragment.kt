@@ -2,21 +2,16 @@ package com.trainingtimer
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import java.time.Clock
 import java.util.*
 
 private const val TAG = "TrainingFragment"
