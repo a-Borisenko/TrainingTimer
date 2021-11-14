@@ -1,5 +1,6 @@
 package com.trainingtimer
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -180,6 +181,7 @@ class TrainingFragment : Fragment() {
         updateCountdownUI()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateCountdownUI(){
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
