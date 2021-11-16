@@ -5,6 +5,7 @@ import android.preference.PreferenceManager
 import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.preference.PreferenceFragmentCompat
 
 class PrefUtil {
 
@@ -19,7 +20,9 @@ class PrefUtil {
             "com.timer.previous_timer_length_seconds"
 
         fun getPreviousTimerLengthSeconds(context: TrainingFragment): Long {
-            val preferences = FragmentManager.findFragment<TrainingFragment>(View(context: Context))
+            val preferences = PreferenceFragmentCompat.OnPreferenceStartFragmentCallback()
+                //PreferenceFragmentCompat(context)
+                //FragmentManager.findFragment<TrainingFragment>(View(context: Context))
                 //FragmentActivity.getSupportFragmentManager
                 //PreferenceManager.getDefaultSharedPreferences(context)
             return preferences.getLong(PREVIOUS_TIMER_LENGTH_SECONDS_ID, 0)
