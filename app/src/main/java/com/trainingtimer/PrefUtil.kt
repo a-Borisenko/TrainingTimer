@@ -20,7 +20,7 @@ class PrefUtil {
             "com.timer.previous_timer_length_seconds"
 
         fun getPreviousTimerLengthSeconds(context: TrainingFragment): Long {
-            val preferences = PreferenceFragmentCompat.OnPreferenceStartFragmentCallback()
+            val preferences = PreferenceFragmentCompat.OnPreferenceStartFragmentCallback(TrainingFragment)
                 //PreferenceFragmentCompat(context)
                 //FragmentManager.findFragment<TrainingFragment>(View(context: Context))
                 //FragmentActivity.getSupportFragmentManager
