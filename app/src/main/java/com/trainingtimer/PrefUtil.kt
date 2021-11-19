@@ -2,11 +2,6 @@ package com.trainingtimer
 
 import android.content.Context
 import android.preference.PreferenceManager
-import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.preference.PreferenceFragmentCompat
 
 class PrefUtil {
 
