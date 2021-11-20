@@ -66,7 +66,7 @@ class TrainingFragment : Fragment() {
             TimerState.Stopped -> TODO()
         }
 
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, PrefUtil.Context)
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, context)
         PrefUtil.setSecondsRemaining(secondsRemaining, this)
         PrefUtil.setTimerState(timerState, this)
     }
