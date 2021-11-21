@@ -21,7 +21,7 @@ private const val ARG_TRAINING_ID = "training_id"
 class TrainingFragment : Fragment() {
 
     enum class TimerState{
-        Stopped, Running, Paused
+        Stopped, Running
     }
 
     private lateinit var timer: CountDownTimer
@@ -60,9 +60,6 @@ class TrainingFragment : Fragment() {
                 timer.cancel()
                 //TODO: start background timer and show notification
             }
-            TimerState.Paused -> {
-                //TODO: show notification
-            }
             TimerState.Stopped -> TODO()
         }
 
@@ -82,7 +79,7 @@ class TrainingFragment : Fragment() {
         }
 
         secondsRemaining = when (timerState) {
-            TimerState.Running, TimerState.Paused -> PrefUtil.getSecondsRemaining(this)
+            TimerState.Running -> PrefUtil.getSecondsRemaining(this)
             else -> timerLengthSeconds
         }
 
