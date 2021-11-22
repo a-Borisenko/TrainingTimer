@@ -56,10 +56,7 @@ class TrainingFragment : Fragment() {
         super.onPause()
 
         when (timerState) {
-            TimerState.Running -> {
-                timer.cancel()
-                //TODO: start background timer and show notification
-            }
+            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
             TimerState.Stopped -> TODO()
         }
 
@@ -111,7 +108,7 @@ class TrainingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.trainingDone.setOnClickListener { view ->
+        binding.trainingDone.setOnClickListener {
             startTimer()
             timerState = TimerState.Running
         }
