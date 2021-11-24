@@ -1,7 +1,6 @@
 package com.trainingtimer
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -61,7 +60,7 @@ class TrainingFragment : Fragment() {
             TimerState.Stopped -> TODO()
         }
 
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, Context)
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, this)
         PrefUtil.setSecondsRemaining(secondsRemaining, this)
         PrefUtil.setTimerState(timerState, this)
     }

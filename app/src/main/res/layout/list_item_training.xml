@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -23,9 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/training_sets"
-        app:layout_constraintEnd_toStartOf="@+id/training_times"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/training_title" />
 
@@ -33,22 +33,21 @@
         android:id="@+id/training_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/training_times"
         app:layout_constraintEnd_toStartOf="@+id/training_rest"
         app:layout_constraintStart_toEndOf="@+id/training_sets"
-        app:layout_constraintTop_toTopOf="@+id/training_sets" />
+        app:layout_constraintTop_toBottomOf="@+id/training_title" />
 
     <TextView
         android:id="@+id/training_rest"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/training_rest"
-        app:layout_constraintBaseline_toBaselineOf="@+id/training_times"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/training_times" />
+        app:layout_constraintTop_toBottomOf="@+id/training_title" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
