@@ -100,10 +100,9 @@ class TrainingFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText
-        //return view
         return binding.root
     }
 
@@ -115,7 +114,7 @@ class TrainingFragment : Fragment() {
         }
         trainingDetailViewModel.trainingLiveData.observe(
             viewLifecycleOwner,
-            Observer { training ->
+            /*Observer*/ { training ->
                 training?.let {
                     this.training = training
                     updateUI()
@@ -181,7 +180,7 @@ class TrainingFragment : Fragment() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        binding.viewTimer.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0" + secondsStr}"
+        binding.viewTimer.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0$secondsStr"}"
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
