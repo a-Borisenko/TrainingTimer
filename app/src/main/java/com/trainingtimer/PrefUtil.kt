@@ -20,8 +20,8 @@ class PrefUtil {
             return preferences.getLong(PREVIOUS_TIMER_LENGTH_SECONDS_ID, 0)
         }
 
-        fun setPreviousTimerLengthSeconds(seconds: Long, context: Context) {
-            val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        fun setPreviousTimerLengthSeconds(seconds: Long, /*context: Context*/) {
+            val editor = PreferenceManager.getDefaultSharedPreferences(/*context*/).edit()
             editor.putLong(PREVIOUS_TIMER_LENGTH_SECONDS_ID, seconds)
             editor.apply()
         }
