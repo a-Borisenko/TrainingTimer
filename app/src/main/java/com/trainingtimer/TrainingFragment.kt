@@ -60,7 +60,7 @@ class TrainingFragment : Fragment() {
             TimerState.Stopped -> TODO()
         }
 
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.intent.)
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.inflate.)
         PrefUtil.setSecondsRemaining(secondsRemaining, this)
         PrefUtil.setTimerState(timerState, this)
     }
