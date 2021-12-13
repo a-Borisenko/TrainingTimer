@@ -60,13 +60,13 @@ class TrainingFragment : Fragment() {
             TimerState.Stopped -> TODO()
         }
 
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.inflate.)
-        PrefUtil.setSecondsRemaining(secondsRemaining, this)
-        PrefUtil.setTimerState(timerState, this)
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
+        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
+        PrefUtil.setTimerState(timerState, binding.root.context)
     }
 
     private fun initTimer(){
-        timerState = PrefUtil.getTimerState(this)
+        timerState = PrefUtil.getTimerState(binding.root.context)
 
         //we don't want to change the length of the timer which is already running
         //if the length was changed in settings while it was backgrounded
@@ -76,7 +76,7 @@ class TrainingFragment : Fragment() {
         }
 
         secondsRemaining = when (timerState) {
-            TimerState.Running -> PrefUtil.getSecondsRemaining(this)
+            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
             else -> timerLengthSeconds
         }
 
@@ -91,7 +91,7 @@ class TrainingFragment : Fragment() {
     }
 
     private fun setPreviousTimerLength(){
-        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(this)
+        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
         //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
@@ -168,7 +168,7 @@ class TrainingFragment : Fragment() {
 
         //progress_countdown.progress = 0
 
-        PrefUtil.setSecondsRemaining(timerLengthSeconds, this)
+        PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
         secondsRemaining = timerLengthSeconds
 
         updateCountdownUI()
