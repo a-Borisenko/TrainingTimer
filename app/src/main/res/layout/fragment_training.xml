@@ -88,8 +88,8 @@
         android:id="@+id/view_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="01:00"
         android:gravity="center"
-        android:textSize="70sp"/>
+        android:textSize="70sp"
+        tools:text="01:30" />
 
 </LinearLayout>
