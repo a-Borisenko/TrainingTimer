@@ -59,7 +59,7 @@ class TrainingFragment : Fragment() {
             TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
             TimerState.Stopped -> TODO()
         }
-        //extra test for keep stopping app
+        //express test for keep stopping app
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
         PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
         PrefUtil.setTimerState(timerState, binding.root.context)
