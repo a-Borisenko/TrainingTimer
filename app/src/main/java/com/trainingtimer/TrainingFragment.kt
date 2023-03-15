@@ -111,15 +111,13 @@ class TrainingFragment : Fragment() {
             startTimer()
             timerState = TimerState.Running
         }
-        trainingDetailViewModel.trainingLiveData.observe(
-            viewLifecycleOwner,
-            /*Observer*/ { training ->
-                training?.let {
-                    this.training = training
-                    updateUI()
-                }
+        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner)
+        /*Observer*/ { training ->
+            training?.let {
+                this.training = training
+                updateUI()
             }
-        )
+        }
     }
 
     override fun onStart() {
