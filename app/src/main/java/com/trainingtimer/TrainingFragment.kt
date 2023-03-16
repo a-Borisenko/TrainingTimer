@@ -28,8 +28,8 @@ class TrainingFragment : Fragment() {
     private var timerLengthSeconds = 0L
     private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
-    private var _binding: FragmentTrainingBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentTrainingBinding
+//    private val binding get() = _binding
 
     private lateinit var training: Training
     private lateinit var titleField: EditText
