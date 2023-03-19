@@ -11,7 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import java.util.*
 
@@ -20,7 +22,7 @@ private const val ARG_TRAINING_ID = "training_id"
 
 class TrainingFragment : Fragment() {
 
-    enum class TimerState{
+    enum class TimerState {
         Stopped, Running
     }
 
@@ -34,14 +36,14 @@ class TrainingFragment : Fragment() {
     private lateinit var training: Training
     private lateinit var titleField: EditText
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
-        ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
+        ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
+//        ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
-        //Log.d(TAG, "args bundle training ID: $trainingId")
         trainingDetailViewModel.loadTraining(trainingId)
     }
 
@@ -65,7 +67,7 @@ class TrainingFragment : Fragment() {
         PrefUtil.setTimerState(timerState, binding.root.context)
     }
 
-    private fun initTimer(){
+    private fun initTimer() {
         timerState = PrefUtil.getTimerState(binding.root.context)
 
         //we don't want to change the length of the timer which is already running
@@ -90,7 +92,7 @@ class TrainingFragment : Fragment() {
         updateCountdownUI()
     }
 
-    private fun setPreviousTimerLength(){
+    private fun setPreviousTimerLength() {
         timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
         //progress_countdown.max = timerLengthSeconds.toInt()
     }
@@ -111,8 +113,7 @@ class TrainingFragment : Fragment() {
             startTimer()
             timerState = TimerState.Running
         }
-        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner)
-        /*Observer*/ { training ->
+        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
                 this.training = training
                 updateUI()
@@ -161,9 +162,7 @@ class TrainingFragment : Fragment() {
     private fun onTimerFinished() {
         timerState = TimerState.Stopped
         //updateButtons()
-
         setNewTimerLength()
-
         //progress_countdown.progress = 0
 
         PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
@@ -173,15 +172,16 @@ class TrainingFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateCountdownUI(){
+    private fun updateCountdownUI() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        binding.viewTimer.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0$secondsStr"}"
+        binding.viewTimer.text =
+            "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0$secondsStr"}"
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
-    private fun setNewTimerLength(){
+    private fun setNewTimerLength() {
         val lengthInMinutes = PrefUtil.getTimerLength(this)
         timerLengthSeconds = (lengthInMinutes * 60L)
         //progress_countdown.max = timerLengthSeconds.toInt()
