@@ -5,7 +5,7 @@ import android.preference.PreferenceManager
 
 class PrefUtil {
 
-    companion object{
+    companion object {
 
         fun getTimerLength(context: TrainingFragment): Int {
             //placeholder

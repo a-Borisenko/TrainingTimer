@@ -27,6 +27,7 @@ class TrainingRepository private constructor(context: Context) {
             trainingDao.updateTraining(training)
         }
     }
+
     fun addTraining(training: Training) {
         executor.execute {
             trainingDao.addTraining(training)

@@ -25,6 +25,7 @@ class TrainingFragment : Fragment() {
     enum class TimerState {
         Stopped, Running
     }
+
     private lateinit var timer: CountDownTimer
     private var timerLengthSeconds = 0L
     private var timerState = TimerState.Stopped

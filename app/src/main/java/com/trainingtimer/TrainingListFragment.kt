@@ -59,15 +59,12 @@ class TrainingListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        trainingListViewModel.trainingListLiveData.observe(
-            viewLifecycleOwner,
-            Observer { trainings ->
-                trainings?.let {
-                    Log.i(TAG, "Got trainings ${trainings.size}")
-                    updateUI(trainings)
-                }
+        trainingListViewModel.trainingListLiveData.observe(viewLifecycleOwner) { trainings ->
+            trainings?.let {
+                Log.i(TAG, "Got trainings ${trainings.size}")
+                updateUI(trainings)
             }
-        )
+        }
     }
 
     override fun onDetach() {
@@ -98,8 +95,8 @@ class TrainingListFragment : Fragment() {
         trainingRecyclerView.adapter = adapter
     }
 
-    private inner class TrainingHolder(view: View)
-        : RecyclerView.ViewHolder(view), View.OnClickListener {
+    private inner class TrainingHolder(view: View) : RecyclerView.ViewHolder(view),
+        View.OnClickListener {
 
         private lateinit var training: Training
         private val titleTextView: TextView = itemView.findViewById(R.id.training_title)
@@ -120,12 +117,12 @@ class TrainingListFragment : Fragment() {
         }
     }
 
-    private inner class TrainingAdapter(var trainings: List<Training>)
-        : RecyclerView.Adapter<TrainingHolder>() {
+    private inner class TrainingAdapter(var trainings: List<Training>) :
+        RecyclerView.Adapter<TrainingHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-        : TrainingHolder {
+                : TrainingHolder {
             val view = layoutInflater.inflate(R.layout.list_item_training, parent, false)
-            return  TrainingHolder(view)
+            return TrainingHolder(view)
         }
 
         override fun onBindViewHolder(holder: TrainingHolder, position: Int) {
