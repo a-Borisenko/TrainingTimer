@@ -22,13 +22,11 @@ class TrainingRepository private constructor(context: Context) {
 
     fun getTrainings(): LiveData<List<Training>> = trainingDao.getTrainings()
     fun getTraining(id: UUID): LiveData<Training?> = trainingDao.getTraining(id)
-
     fun updateTraining(training: Training) {
         executor.execute {
             trainingDao.updateTraining(training)
         }
     }
-
     fun addTraining(training: Training) {
         executor.execute {
             trainingDao.addTraining(training)

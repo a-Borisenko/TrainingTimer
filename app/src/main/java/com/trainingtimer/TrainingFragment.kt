@@ -25,7 +25,6 @@ class TrainingFragment : Fragment() {
     enum class TimerState {
         Stopped, Running
     }
-
     private lateinit var timer: CountDownTimer
     private var timerLengthSeconds = 0L
     private var timerState = TimerState.Stopped
@@ -81,13 +80,10 @@ class TrainingFragment : Fragment() {
             TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
             else -> timerLengthSeconds
         }
-
         //TODO: change secondsRemaining according to where the background timer stopped
-
         //resume where we left off
         if (timerState == TimerState.Running)
             startTimer()
-
         //updateButtons()
         updateCountdownUI()
     }
@@ -164,10 +160,8 @@ class TrainingFragment : Fragment() {
         //updateButtons()
         setNewTimerLength()
         //progress_countdown.progress = 0
-
         PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
         secondsRemaining = timerLengthSeconds
-
         updateCountdownUI()
     }
 
