@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity(), TrainingListFragment.Callbacks {
     }
 
     override fun onTrainingSelected(trainingId: UUID) {
-        //Log.d(TAG, "MainActivity.onTrainingSelected: $trainingId")
         val fragment = TrainingFragment.newInstance(trainingId)
         supportFragmentManager
             .beginTransaction()
