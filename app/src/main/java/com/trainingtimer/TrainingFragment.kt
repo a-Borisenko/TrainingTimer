@@ -30,8 +30,8 @@ class TrainingFragment : Fragment() {
     private var timerLengthSeconds = 0L
     private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
-    private lateinit var binding: FragmentTrainingBinding
-//    private val binding get() = _binding
+    private var _binding: FragmentTrainingBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var training: Training
     private lateinit var titleField: EditText
@@ -43,7 +43,7 @@ class TrainingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
+        val trainingId: UUID = UUID.randomUUID() //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)
     }
 
@@ -101,6 +101,7 @@ class TrainingFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText
+        _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -150,6 +151,11 @@ class TrainingFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         trainingDetailViewModel.saveTraining(training)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateUI() {
