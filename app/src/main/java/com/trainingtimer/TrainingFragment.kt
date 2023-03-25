@@ -170,6 +170,7 @@ class TrainingFragment : Fragment() {
         PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
         secondsRemaining = timerLengthSeconds
         updateCountdownUI()
+        binding.viewTimer.text = "done!"
     }
 
     @SuppressLint("SetTextI18n")
