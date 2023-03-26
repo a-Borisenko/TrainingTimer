@@ -53,8 +53,8 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_training, container, false)
-        titleField = view.findViewById(R.id.training_title) as EditText
+//        val view = inflater.inflate(R.layout.fragment_training, container, false)
+//        titleField = view.findViewById(R.id.training_title) as EditText
         _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -99,7 +99,7 @@ class TrainingFragment : Fragment() {
                 //
             }
         }
-        titleField.addTextChangedListener(titleWatcher)
+//        titleField.addTextChangedListener(titleWatcher)
     }
 
     override fun onResume() {
