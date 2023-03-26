@@ -43,55 +43,9 @@ class TrainingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        val trainingId: UUID = UUID.randomUUID() //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
+        val trainingId: UUID = UUID.randomUUID()
+            //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        initTimer()
-        //TODO: remove background timer, hide notification
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        when (timerState) {
-            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
-            TimerState.Stopped -> TODO()
-        }
-        //technical test for keep stopping app
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
-        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
-        PrefUtil.setTimerState(timerState, binding.root.context)
-    }
-
-    private fun initTimer() {
-        timerState = PrefUtil.getTimerState(binding.root.context)
-
-        //we don't want to change the length of the timer which is already running
-        //if the length was changed in settings while it was backgrounded
-        when (timerState) {
-            TimerState.Stopped -> setNewTimerLength()
-            else -> setPreviousTimerLength()
-        }
-
-        secondsRemaining = when (timerState) {
-            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
-            else -> timerLengthSeconds
-        }
-        //TODO: change secondsRemaining according to where the background timer stopped
-        //resume where we left off
-        if (timerState == TimerState.Running)
-            startTimer()
-        //updateButtons()
-        updateCountdownUI()
-    }
-
-    private fun setPreviousTimerLength() {
-        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
-        //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     override fun onCreateView(
@@ -148,6 +102,26 @@ class TrainingFragment : Fragment() {
         titleField.addTextChangedListener(titleWatcher)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initTimer()
+        //TODO: remove background timer, hide notification
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        when (timerState) {
+            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
+            TimerState.Stopped -> TODO()
+        }
+        //technical test for keep stopping app
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
+        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
+        PrefUtil.setTimerState(timerState, binding.root.context)
+    }
+
     override fun onStop() {
         super.onStop()
         trainingDetailViewModel.saveTraining(training)
@@ -156,6 +130,33 @@ class TrainingFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initTimer() {
+        timerState = PrefUtil.getTimerState(binding.root.context)
+
+        //we don't want to change the length of the timer which is already running
+        //if the length was changed in settings while it was backgrounded
+        when (timerState) {
+            TimerState.Stopped -> setNewTimerLength()
+            else -> setPreviousTimerLength()
+        }
+
+        secondsRemaining = when (timerState) {
+            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
+            else -> timerLengthSeconds
+        }
+        //TODO: change secondsRemaining according to where the background timer stopped
+        //resume where we left off
+        if (timerState == TimerState.Running)
+            startTimer()
+        //updateButtons()
+        updateCountdownUI()
+    }
+
+    private fun setPreviousTimerLength() {
+        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
+        //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     private fun updateUI() {
