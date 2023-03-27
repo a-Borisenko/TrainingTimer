@@ -44,7 +44,7 @@ class TrainingFragment : Fragment() {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         val trainingId: UUID = UUID.randomUUID()
-            //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
+        //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)
     }
 
@@ -179,8 +179,13 @@ class TrainingFragment : Fragment() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        binding.viewTimer.text =
-            "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0$secondsStr"}"
+        binding.viewTimer.text = "${
+            if (minutesUntilFinished.toString().length == 2) minutesUntilFinished
+            else "0$minutesUntilFinished"
+        }:${
+            if (secondsStr.length == 2) secondsStr
+            else "0$secondsStr"
+        }"
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
@@ -198,6 +203,7 @@ class TrainingFragment : Fragment() {
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
+                updateCountdownUI()
             }
         }.start()
     }
