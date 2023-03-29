@@ -42,6 +42,12 @@ class TrainingFragment : Fragment() {
         val trainingId: UUID = UUID.randomUUID()
         //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)
+        childFragmentManager.setFragmentResultListener(
+            "key", this
+        ) { _, bundle ->
+            secondsRemaining = bundle.getLong("time")
+            updateCountdownUI()
+        }
     }
 
     override fun onCreateView(
@@ -60,6 +66,10 @@ class TrainingFragment : Fragment() {
         binding.trainingDone.setOnClickListener {
             startTimer()
             timerState = TimerState.Running
+        }
+        binding.viewTimer.setOnClickListener {
+            timerState = TimerState.Stopped
+            TimePickerFragment().show(childFragmentManager, "timePicker")
         }
         trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
@@ -125,6 +135,8 @@ class TrainingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        timerState = TimerState.Stopped
+        timerLengthSeconds = 0
         _binding = null
     }
 
