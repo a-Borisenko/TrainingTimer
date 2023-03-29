@@ -1,7 +1,6 @@
 package com.trainingtimer
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -12,8 +11,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.get
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import java.util.*
 
@@ -37,7 +34,6 @@ class TrainingFragment : Fragment() {
     private lateinit var titleField: EditText
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
-//        ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
