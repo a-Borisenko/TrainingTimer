@@ -41,7 +41,8 @@ class TrainingFragment : Fragment() {
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         val trainingId: UUID = UUID.randomUUID()
         //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
-        trainingDetailViewModel.loadTraining(trainingId)
+//        trainingDetailViewModel.loadTraining(trainingId)
+        timerState = TimerState.Stopped
         childFragmentManager.setFragmentResultListener(
             "key", this
         ) { _, bundle ->
@@ -71,12 +72,12 @@ class TrainingFragment : Fragment() {
             timerState = TimerState.Stopped
             TimePickerFragment().show(childFragmentManager, "timePicker")
         }
-        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
+        /*trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
                 this.training = training
                 updateUI()
             }
-        }
+        }*/
     }
 
     override fun onStart() {
@@ -137,7 +138,15 @@ class TrainingFragment : Fragment() {
         super.onDestroyView()
         timerState = TimerState.Stopped
         timerLengthSeconds = 0
+        secondsRemaining = 0
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timerState = TimerState.Stopped
+        timerLengthSeconds = 0
+        secondsRemaining = 0
     }
 
     private fun initTimer() {
@@ -150,15 +159,14 @@ class TrainingFragment : Fragment() {
             else -> setPreviousTimerLength()
         }
 
-        secondsRemaining = when (timerState) {
+        //autostart counting down timer`s
+        /*secondsRemaining = when (timerState) {
             TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
             else -> timerLengthSeconds
-        }
+        }*/
         //TODO: change secondsRemaining according to where the background timer stopped
         //resume where we left off
-        if (timerState == TimerState.Running)
-            startTimer()
-        //updateButtons()
+        if (timerState == TimerState.Running) startTimer()
         updateCountdownUI()
     }
 
@@ -173,7 +181,6 @@ class TrainingFragment : Fragment() {
 
     private fun onTimerFinished() {
         timerState = TimerState.Stopped
-        //updateButtons()
         setNewTimerLength()
         //progress_countdown.progress = 0
         PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
@@ -215,19 +222,6 @@ class TrainingFragment : Fragment() {
             }
         }.start()
     }
-
-    /*private fun updateButtons() {
-        when (timerState) {
-            TimerState.Running -> {
-                fab_start.isEnabled = false
-                fab_stop.isEnabled = true
-            }
-            TimerState.Stopped -> {
-                fab_start.isEnabled = true
-                fab_stop.isEnabled = false
-            }
-        }
-    }*/
 
     companion object {
         fun newInstance(trainingId: UUID): TrainingFragment {
