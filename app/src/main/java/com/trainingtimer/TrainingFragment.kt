@@ -23,9 +23,10 @@ class TrainingFragment : Fragment() {
         Stopped, Running
     }
 
+    private var timerState = TimerState.Stopped
+
     private lateinit var timer: CountDownTimer
     private var timerLengthSeconds = 0L
-    private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var _binding: FragmentTrainingBinding? = null
     private val binding get() = _binding!!
@@ -39,10 +40,11 @@ class TrainingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        val trainingId: UUID = UUID.randomUUID()
+        //TODO: for future trainingList recycler
+        /*val trainingId: UUID = UUID.randomUUID()
         //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
-//        trainingDetailViewModel.loadTraining(trainingId)
-        timerState = TimerState.Stopped
+        trainingDetailViewModel.loadTraining(trainingId)*/
+
         childFragmentManager.setFragmentResultListener(
             "key", this
         ) { _, bundle ->
@@ -56,8 +58,9 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        val view = inflater.inflate(R.layout.fragment_training, container, false)
-//        titleField = view.findViewById(R.id.training_title) as EditText
+        //TODO: for future trainingList recycler
+        /*val view = inflater.inflate(R.layout.fragment_training, container, false)
+        titleField = view.findViewById(R.id.training_title) as EditText*/
         _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -72,6 +75,7 @@ class TrainingFragment : Fragment() {
             timerState = TimerState.Stopped
             TimePickerFragment().show(childFragmentManager, "timePicker")
         }
+        //TODO: for future trainingList recycler
         /*trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
                 this.training = training
@@ -111,7 +115,6 @@ class TrainingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         initTimer()
         //TODO: remove background timer, hide notification
     }
@@ -123,7 +126,6 @@ class TrainingFragment : Fragment() {
             TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
             TimerState.Stopped -> TODO()
         }
-        //technical test for keep stopping app
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
         PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
         PrefUtil.setTimerState(timerState, binding.root.context)
@@ -136,17 +138,7 @@ class TrainingFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        timerState = TimerState.Stopped
-        timerLengthSeconds = 0
-        secondsRemaining = 0
         _binding = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        timerState = TimerState.Stopped
-        timerLengthSeconds = 0
-        secondsRemaining = 0
     }
 
     private fun initTimer() {
