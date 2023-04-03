@@ -6,7 +6,7 @@ import java.util.*
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(), TrainingListFragment.Callbacks {
+class MainActivity : AppCompatActivity()/*, TrainingListFragment.Callbacks*/ {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +23,13 @@ class MainActivity : AppCompatActivity(), TrainingListFragment.Callbacks {
         }
     }
 
-    override fun onTrainingSelected(trainingId: UUID) {
+    //TODO: for future trainingList recycler
+    /*override fun onTrainingSelected(trainingId: UUID) {
         val fragment = TrainingFragment.newInstance(trainingId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
-    }
+    }*/
 }

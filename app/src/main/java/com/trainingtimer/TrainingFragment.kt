@@ -216,7 +216,8 @@ class TrainingFragment : Fragment() {
         }.start()
     }
 
-    companion object {
+    //TODO: for future trainingList recycler
+    /*companion object {
         fun newInstance(trainingId: UUID): TrainingFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_TRAINING_ID, trainingId)
@@ -225,5 +226,5 @@ class TrainingFragment : Fragment() {
                 arguments = args
             }
         }
-    }
+    }*/
 }
