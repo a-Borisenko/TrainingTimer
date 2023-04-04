@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.trainingtimer.databinding.FragmentTrainingBinding
@@ -87,8 +86,8 @@ class TrainingFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        val titleWatcher = object : TextWatcher {
+        //TODO: for future trainingList recycler
+        /*val titleWatcher = object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
@@ -110,7 +109,7 @@ class TrainingFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 //
             }
-        }
+        }*/
 //        titleField.addTextChangedListener(titleWatcher)
     }
 
