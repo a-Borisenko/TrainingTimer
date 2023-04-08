@@ -19,8 +19,8 @@ class TimePicker @JvmOverloads constructor(
 ) :
     FrameLayout(context, attrs, defStyle) {
     // state
-    private var mCurrentMinute = 0 // 0-59
-    private var mCurrentSeconds = 0 // 0-59
+    private var mCurrentMinute = 0
+    private var mCurrentSeconds = 0
 
     // ui components
     private val mMinutePicker: NumberPicker
@@ -37,7 +37,7 @@ class TimePicker @JvmOverloads constructor(
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(
             R.layout.time_picker_widget,
-            this,  // we are the parent
+            this,
             true
         )
 
@@ -183,7 +183,7 @@ class TimePicker @JvmOverloads constructor(
             ) {
             }
         }
-        val TWO_DIGIT_FORMATTER = NumberPicker.Formatter { value -> //Auto-generated method stub
+        val TWO_DIGIT_FORMATTER = NumberPicker.Formatter { value ->
             String.format("%02d", value)
         }
     }
