@@ -22,8 +22,8 @@ class MainActivity : AppCompatActivity()/*, TrainingListFragment.Callbacks*/ {
         }
     }
 
-    //TODO: for future trainingList recycler
-    /*override fun onTrainingSelected(trainingId: UUID) {
+    /*TODO: for future trainingList recycler
+    override fun onTrainingSelected(trainingId: UUID) {
         val fragment = TrainingFragment.newInstance(trainingId)
         supportFragmentManager
             .beginTransaction()

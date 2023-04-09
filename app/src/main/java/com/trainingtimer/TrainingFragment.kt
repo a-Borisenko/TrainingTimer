@@ -32,7 +32,7 @@ class TrainingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var training: Training
-    private lateinit var titleField: EditText
+//    private lateinit var titleField: EditText
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
     }
@@ -40,8 +40,8 @@ class TrainingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        //TODO: for future trainingList recycler
-        /*val trainingId: UUID = UUID.randomUUID()
+        /*TODO: for future trainingList recycler
+        val trainingId: UUID = UUID.randomUUID()
         //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)*/
 
@@ -58,8 +58,8 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //TODO: for future trainingList recycler
-        /*val view = inflater.inflate(R.layout.fragment_training, container, false)
+        /*TODO: for future trainingList recycler
+        val view = inflater.inflate(R.layout.fragment_training, container, false)
         titleField = view.findViewById(R.id.training_title) as EditText*/
         _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
@@ -84,10 +84,10 @@ class TrainingFragment : Fragment() {
         }*/
     }
 
+    /*TODO: for future trainingList recycler
     override fun onStart() {
         super.onStart()
-        //TODO: for future trainingList recycler
-        /*val titleWatcher = object : TextWatcher {
+        val titleWatcher = object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
                 start: Int,
@@ -109,9 +109,9 @@ class TrainingFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 //
             }
-        }*/
+        }
 //        titleField.addTextChangedListener(titleWatcher)
-    }
+    }*/
 
     override fun onResume() {
         super.onResume()
@@ -167,9 +167,10 @@ class TrainingFragment : Fragment() {
         //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
+    /*TODO: for future trainingList recycler
     private fun updateUI() {
         titleField.setText(training.title)
-    }
+    }*/
 
     private fun onTimerFinished() {
         timerState = TimerState.Stopped
@@ -215,8 +216,8 @@ class TrainingFragment : Fragment() {
         }.start()
     }
 
-    //TODO: for future trainingList recycler
-    /*companion object {
+    /*TODO: for future trainingList recycler
+    companion object {
         fun newInstance(trainingId: UUID): TrainingFragment {
             val args = Bundle().apply {
                 putSerializable(ARG_TRAINING_ID, trainingId)
