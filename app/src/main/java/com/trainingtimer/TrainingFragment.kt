@@ -75,8 +75,8 @@ class TrainingFragment : Fragment() {
             timerState = TimerState.Stopped
             TimePickerFragment().show(childFragmentManager, "timePicker")
         }
-        //TODO: for future trainingList recycler
-        /*trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
+        /*TODO: for future trainingList recycler
+        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
                 this.training = training
                 updateUI()

@@ -7,10 +7,11 @@ class PrefUtil {
 
     companion object {
 
+        /*TODO: for future trainingList recycler
         fun getTimerLength(context: TrainingFragment): Int {
             //placeholder
             return 1
-        }
+        }*/
 
         private const val PREVIOUS_TIMER_LENGTH_SECONDS_ID =
             "com.timer.previous_timer_length_seconds"
@@ -43,10 +44,11 @@ class PrefUtil {
 
         private const val SECONDS_REMAINING_ID = "com.timer.seconds_remaining"
 
+        /*TODO: for future trainingList recycler
         fun getSecondsRemaining(context: Context): Long {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             return preferences.getLong(SECONDS_REMAINING_ID, 0)
-        }
+        }*/
 
         fun setSecondsRemaining(seconds: Long, context: Context) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
