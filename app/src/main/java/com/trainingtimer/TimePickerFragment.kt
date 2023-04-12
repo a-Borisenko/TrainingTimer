@@ -1,26 +1,38 @@
 package com.trainingtimer
 
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.os.Bundle
-import android.widget.TimePicker
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import java.util.*
+import com.trainingtimer.databinding.TimePickerDialogBinding
 
-class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment : DialogFragment() {
+
+    private var _binding: TimePickerDialogBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val c = Calendar.getInstance()
-        val minute = c.get(Calendar.MINUTE)
-        val seconds = c.get(Calendar.SECOND)
-
-        return TimePickerDialog(context, this, minute, seconds, true)
+        _binding = TimePickerDialogBinding.inflate(LayoutInflater.from(context))
+        return AlertDialog.Builder(requireActivity())
+            .setView(binding.root)
+            .create()
     }
 
-    override fun onTimeSet(view: TimePicker?, minute: Int, seconds: Int) {
-        val result = minute.toLong() * 60 + seconds.toLong()
-        setFragmentResult("key", bundleOf("time" to result))
+    override fun onResume() {
+        super.onResume()
+        binding.save.setOnClickListener {
+            val result = (binding.timePicker.getCurrentMinutes() * 60
+                    + binding.timePicker.getCurrentSeconds()).toLong()
+            setFragmentResult("key", bundleOf("time" to result))
+            dismiss()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
