@@ -39,7 +39,6 @@ class TimePicker @JvmOverloads constructor(
             this,
             true
         )
-
         // digits of minute
         mMinutePicker = findViewById<View>(R.id.minute) as NumberPicker
         mMinutePicker.minValue = 0
@@ -47,7 +46,6 @@ class TimePicker @JvmOverloads constructor(
         mMinutePicker.setFormatter(TWO_DIGIT_FORMATTER)
         mMinutePicker.setOnValueChangedListener { spinner, oldVal, newVal ->
             mCurrentMinutes = newVal
-            onTimeChanged()
         }
 
         // digits of seconds
@@ -57,15 +55,16 @@ class TimePicker @JvmOverloads constructor(
         mSecondPicker.setFormatter(TWO_DIGIT_FORMATTER)
         mSecondPicker.setOnValueChangedListener { picker, oldVal, newVal ->
             mCurrentSeconds = newVal
-            onTimeChanged()
         }
 
         // initialize to current time
-        val cal = Calendar.getInstance()
         setOnTimeChangedListener(NO_OP_CHANGE_LISTENER)
+        setCurrentMinute(0)
+        setCurrentSecond(0)
 
-        setCurrentMinute(cal[Calendar.MINUTE])
-        setCurrentSecond(cal[Calendar.SECOND])
+        if (!isEnabled) {
+            isEnabled = false
+        }
     }
 
     override fun setEnabled(enabled: Boolean) {
@@ -129,7 +128,6 @@ class TimePicker @JvmOverloads constructor(
 
     fun setCurrentMinute(currentMinute: Int) {
         mCurrentMinutes = currentMinute
-        updateMinuteDisplay()
     }
 
     fun getCurrentSeconds(): Int {
@@ -138,39 +136,10 @@ class TimePicker @JvmOverloads constructor(
 
     fun setCurrentSecond(currentSecond: Int) {
         mCurrentSeconds = currentSecond
-        updateSecondsDisplay()
     }
 
     override fun getBaseline(): Int {
         return mMinutePicker.baseline
-    }
-
-    private fun onTimeChanged() {
-        mOnTimeChangedListener?.onTimeChanged(
-            this,
-            getCurrentMinutes(),
-            getCurrentSeconds()
-        ) ?: Toast.makeText(context, "onTimeChanged listener null", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun updateMinuteDisplay() {
-        mMinutePicker.value = mCurrentMinutes
-        mOnTimeChangedListener?.onTimeChanged(
-            this,
-            getCurrentMinutes(),
-            getCurrentSeconds()
-        ) ?: Toast.makeText(context, "updateMinuteDisplay listener null", Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    private fun updateSecondsDisplay() {
-        mSecondPicker.value = mCurrentSeconds
-        mOnTimeChangedListener?.onTimeChanged(
-            this,
-            getCurrentMinutes(),
-            getCurrentSeconds()
-        ) ?: Toast.makeText(context, "updateSecondsDisplay listener null", Toast.LENGTH_SHORT)
-            .show()
     }
 
     companion object {
@@ -182,8 +151,6 @@ class TimePicker @JvmOverloads constructor(
             ) {
             }
         }
-        val TWO_DIGIT_FORMATTER = NumberPicker.Formatter { value ->
-            String.format("%02d", value)
-        }
+        val TWO_DIGIT_FORMATTER = NumberPicker.Formatter { value -> String.format("%02d", value) }
     }
 }
