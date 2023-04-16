@@ -68,12 +68,16 @@ class TrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trainingDone.setOnClickListener {
-            startTimer()
-            timerState = TimerState.Running
+            if (timerState == TimerState.Stopped) {
+                startTimer()
+                timerState = TimerState.Running
+            }
         }
         binding.viewTimer.setOnClickListener {
-            timerState = TimerState.Stopped
-            TimePickerFragment().show(childFragmentManager, "timePicker")
+            if (timerState == TimerState.Stopped) {
+                timerState = TimerState.Stopped
+                TimePickerFragment().show(childFragmentManager, "timePicker")
+            }
         }
         /*TODO: for future trainingList recycler
         trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->

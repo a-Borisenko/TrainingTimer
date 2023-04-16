@@ -25,13 +25,6 @@ class TimePicker @JvmOverloads constructor(
     private val mMinutePicker: NumberPicker
     private val mSecondPicker: NumberPicker
 
-    // callbacks
-    private var mOnTimeChangedListener: OnTimeChangedListener? = null
-
-    interface OnTimeChangedListener {
-        fun onTimeChanged(view: TimePicker?, minute: Int, seconds: Int)
-    }
-
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(
@@ -43,6 +36,7 @@ class TimePicker @JvmOverloads constructor(
         mMinutePicker = findViewById<View>(R.id.minute) as NumberPicker
         mMinutePicker.minValue = 0
         mMinutePicker.maxValue = 59
+        setCurrentMinute(0)
         mMinutePicker.setFormatter(TWO_DIGIT_FORMATTER)
         mMinutePicker.setOnValueChangedListener { spinner, oldVal, newVal ->
             mCurrentMinutes = newVal
@@ -52,24 +46,47 @@ class TimePicker @JvmOverloads constructor(
         mSecondPicker = findViewById<View>(R.id.seconds) as NumberPicker
         mSecondPicker.minValue = 0
         mSecondPicker.maxValue = 59
+        setCurrentSecond(0)
         mSecondPicker.setFormatter(TWO_DIGIT_FORMATTER)
         mSecondPicker.setOnValueChangedListener { picker, oldVal, newVal ->
             mCurrentSeconds = newVal
-        }
-
-        // initialize to current time
-        setOnTimeChangedListener(NO_OP_CHANGE_LISTENER)
-        setCurrentMinute(0)
-        setCurrentSecond(0)
-
-        if (!isEnabled) {
-            isEnabled = false
         }
     }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         mMinutePicker.isEnabled = enabled
+    }
+
+    override fun getBaseline(): Int {
+        return mMinutePicker.baseline
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        return SavedState(superState, mCurrentMinutes, mCurrentSeconds)
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        val ss = state as SavedState
+        super.onRestoreInstanceState(ss.superState)
+        setCurrentMinute(ss.getMinute())
+    }
+
+    fun getCurrentMinutes(): Int {
+        return mCurrentMinutes
+    }
+
+    fun setCurrentMinute(currentMinute: Int) {
+        mCurrentMinutes = currentMinute
+    }
+
+    fun getCurrentSeconds(): Int {
+        return mCurrentSeconds
+    }
+
+    fun setCurrentSecond(currentSecond: Int) {
+        mCurrentSeconds = currentSecond
     }
 
     private class SavedState : BaseSavedState {
@@ -107,50 +124,7 @@ class TimePicker @JvmOverloads constructor(
         }
     }
 
-    override fun onSaveInstanceState(): Parcelable {
-        val superState = super.onSaveInstanceState()
-        return SavedState(superState, mCurrentMinutes, mCurrentSeconds)
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable) {
-        val ss = state as SavedState
-        super.onRestoreInstanceState(ss.superState)
-        setCurrentMinute(ss.getMinute())
-    }
-
-    fun setOnTimeChangedListener(onTimeChangedListener: OnTimeChangedListener?) {
-        mOnTimeChangedListener = onTimeChangedListener
-    }
-
-    fun getCurrentMinutes(): Int {
-        return mCurrentMinutes
-    }
-
-    fun setCurrentMinute(currentMinute: Int) {
-        mCurrentMinutes = currentMinute
-    }
-
-    fun getCurrentSeconds(): Int {
-        return mCurrentSeconds
-    }
-
-    fun setCurrentSecond(currentSecond: Int) {
-        mCurrentSeconds = currentSecond
-    }
-
-    override fun getBaseline(): Int {
-        return mMinutePicker.baseline
-    }
-
     companion object {
-        private val NO_OP_CHANGE_LISTENER: OnTimeChangedListener = object : OnTimeChangedListener {
-            override fun onTimeChanged(
-                view: TimePicker?,
-                minute: Int,
-                seconds: Int
-            ) {
-            }
-        }
         val TWO_DIGIT_FORMATTER = NumberPicker.Formatter { value -> String.format("%02d", value) }
     }
 }
