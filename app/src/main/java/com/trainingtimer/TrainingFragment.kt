@@ -146,7 +146,7 @@ class TrainingFragment : Fragment() {
     }
 
     private fun initTimer() {
-        timerState = PrefUtil.getTimerState(binding.root.context)
+//        timerState = PrefUtil.getTimerState(binding.root.context)
 
         //we don't want to change the length of the timer which is already running
         //if the length was changed in settings while it was backgrounded

@@ -29,11 +29,12 @@ class PrefUtil {
 
         private const val TIMER_STATE_ID = "com.timer.timer_state"
 
+        /*TODO: for background timer
         fun getTimerState(context: Context): TrainingFragment.TimerState {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             val ordinal = preferences.getInt(TIMER_STATE_ID, 0)
             return TrainingFragment.TimerState.values()[ordinal]
-        }
+        }*/
 
         fun setTimerState(state: TrainingFragment.TimerState, context: Context) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
