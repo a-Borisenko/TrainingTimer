@@ -68,7 +68,8 @@ class TrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trainingDone.setOnClickListener {
-            if (timerState == TimerState.Stopped) {
+            if (timerState == TimerState.Stopped && binding.viewTimer.text != "00:00") {
+                //TODO: binding.viewTimer.text != "00:00" for avoiding unclickable timePicker
                 startTimer()
                 timerState = TimerState.Running
             }
