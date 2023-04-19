@@ -23,24 +23,25 @@ class TrainingFragment : Fragment() {
         Stopped, Running
     }
 
-    private var timerState = TimerState.Stopped
+//    private var timerState = TimerState.Stopped
 
     private lateinit var timer: CountDownTimer
-    private var timerLengthSeconds = 0L
+//    private var timerLengthSeconds = 0L
     private var secondsRemaining = 0L
     private var _binding: FragmentTrainingBinding? = null
     private val binding get() = _binding!!
 
+    /*TODO: for future trainingList recycler
     private lateinit var training: Training
-//    private lateinit var titleField: EditText
+    private lateinit var titleField: EditText
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
         ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         /*TODO: for future trainingList recycler
+        training = Training(/*UUID.randomUUID(), "", 0, 0*/)
         val trainingId: UUID = UUID.randomUUID()
         //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
         trainingDetailViewModel.loadTraining(trainingId)*/
@@ -68,18 +69,19 @@ class TrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trainingDone.setOnClickListener {
-            if (timerState == TimerState.Stopped && binding.viewTimer.text != "00:00") {
+//            if (timerState == TimerState.Stopped && binding.viewTimer.text != "00:00") {
                 //TODO: binding.viewTimer.text != "00:00" for avoiding unclickable timePicker
                 startTimer()
-                timerState = TimerState.Running
-            }
+//                timerState = TimerState.Running
+//            }
         }
         binding.viewTimer.setOnClickListener {
-            if (timerState == TimerState.Stopped) {
-                timerState = TimerState.Stopped
+            /*if (timerState == TimerState.Stopped) {
+                timerState = TimerState.Stopped*/
                 TimePickerFragment().show(childFragmentManager, "timePicker")
-            }
+//            }
         }
+        updateCountdownUI()
         /*TODO: for future trainingList recycler
         trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
             training?.let {
@@ -118,12 +120,14 @@ class TrainingFragment : Fragment() {
 //        titleField.addTextChangedListener(titleWatcher)
     }*/
 
+    /*TODO: PrefUtil deleting
     override fun onResume() {
         super.onResume()
         initTimer()
         //TODO: remove background timer, hide notification
-    }
+    }*/
 
+    /*TODO: PrefUtil deleting
     override fun onPause() {
         super.onPause()
 
@@ -134,18 +138,20 @@ class TrainingFragment : Fragment() {
         PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
         PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
         PrefUtil.setTimerState(timerState, binding.root.context)
-    }
+    }*/
 
+    /*TODO: for future trainingList recycler
     override fun onStop() {
         super.onStop()
         trainingDetailViewModel.saveTraining(training)
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    /*TODO: PrefUtil deleting
     private fun initTimer() {
 //        timerState = PrefUtil.getTimerState(binding.root.context)
 
@@ -165,18 +171,20 @@ class TrainingFragment : Fragment() {
         //resume where we left off
         if (timerState == TimerState.Running) startTimer()
         updateCountdownUI()
-    }
+    }*/
 
+    /*TODO: PrefUtil deleting
     private fun setPreviousTimerLength() {
         timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
         //progress_countdown.max = timerLengthSeconds.toInt()
-    }
+    }*/
 
     /*TODO: for future trainingList recycler
     private fun updateUI() {
         titleField.setText(training.title)
     }*/
 
+    /*TODO: PrefUtil deleting
     private fun onTimerFinished() {
         timerState = TimerState.Stopped
         setNewTimerLength()
@@ -185,7 +193,7 @@ class TrainingFragment : Fragment() {
         secondsRemaining = timerLengthSeconds
         updateCountdownUI()
         binding.viewTimer.text = "done!"
-    }
+    }*/
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
@@ -202,17 +210,20 @@ class TrainingFragment : Fragment() {
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
+    /*TODO: PrefUtil deleting
     private fun setNewTimerLength() {
         val lengthInMinutes = 0 //PrefUtil.getTimerLength(this)//autoset app starting with 1 minute
         timerLengthSeconds = (lengthInMinutes * 60L)
         //progress_countdown.max = timerLengthSeconds.toInt()
-    }
+    }*/
 
     private fun startTimer() {
-        timerState = TimerState.Running
+//        timerState = TimerState.Running
 
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
-            override fun onFinish() = onTimerFinished()
+            override fun onFinish() {
+                binding.viewTimer.text = "done!"
+            }
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
