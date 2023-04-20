@@ -19,9 +19,9 @@ private const val ARG_TRAINING_ID = "training_id"
 
 class TrainingFragment : Fragment() {
 
-    enum class TimerState {
+    /*enum class TimerState {
         Stopped, Running
-    }
+    }*/
 
 //    private var timerState = TimerState.Stopped
 
