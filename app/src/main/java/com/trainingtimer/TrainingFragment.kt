@@ -1,7 +1,6 @@
 package com.trainingtimer
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -11,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import java.util.*
 
@@ -20,79 +19,39 @@ private const val ARG_TRAINING_ID = "training_id"
 
 class TrainingFragment : Fragment() {
 
-    enum class TimerState{
+    /*enum class TimerState {
         Stopped, Running
-    }
+    }*/
+
+//    private var timerState = TimerState.Stopped
 
     private lateinit var timer: CountDownTimer
-    private var timerLengthSeconds = 0L
-    private var timerState = TimerState.Stopped
+//    private var timerLengthSeconds = 0L
     private var secondsRemaining = 0L
     private var _binding: FragmentTrainingBinding? = null
     private val binding get() = _binding!!
 
+    /*TODO: for future trainingList recycler
     private lateinit var training: Training
     private lateinit var titleField: EditText
     private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
-        ViewModelProviders.of(this).get(TrainingDetailViewModel::class.java)
-    }
+        ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        /*TODO: for future trainingList recycler
         training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        val trainingId: UUID = arguments?.getSerializable(ARG_TRAINING_ID) as UUID
-        //Log.d(TAG, "args bundle training ID: $trainingId")
-        trainingDetailViewModel.loadTraining(trainingId)
-    }
+        val trainingId: UUID = UUID.randomUUID()
+        //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
+        trainingDetailViewModel.loadTraining(trainingId)*/
 
-    override fun onResume() {
-        super.onResume()
-
-        initTimer()
-        //TODO: remove background timer, hide notification
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        when (timerState) {
-            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
-            TimerState.Stopped -> TODO()
+        childFragmentManager.setFragmentResultListener(
+            "key", this
+        ) { _, bundle ->
+            secondsRemaining = bundle.getLong("time")
+            updateCountdownUI()
         }
-        //especial test for keep stopping app
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
-        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
-        PrefUtil.setTimerState(timerState, binding.root.context)
-    }
-
-    private fun initTimer(){
-        timerState = PrefUtil.getTimerState(binding.root.context)
-
-        //we don't want to change the length of the timer which is already running
-        //if the length was changed in settings while it was backgrounded
-        when (timerState) {
-            TimerState.Stopped -> setNewTimerLength()
-            else -> setPreviousTimerLength()
-        }
-
-        secondsRemaining = when (timerState) {
-            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
-            else -> timerLengthSeconds
-        }
-
-        //TODO: change secondsRemaining according to where the background timer stopped
-
-        //resume where we left off
-        if (timerState == TimerState.Running)
-            startTimer()
-
-        //updateButtons()
-        updateCountdownUI()
-    }
-
-    private fun setPreviousTimerLength(){
-        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
-        //progress_countdown.max = timerLengthSeconds.toInt()
     }
 
     override fun onCreateView(
@@ -100,31 +59,41 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        /*TODO: for future trainingList recycler
         val view = inflater.inflate(R.layout.fragment_training, container, false)
-        titleField = view.findViewById(R.id.training_title) as EditText
+        titleField = view.findViewById(R.id.training_title) as EditText*/
+        _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trainingDone.setOnClickListener {
-            startTimer()
-            timerState = TimerState.Running
+//            if (timerState == TimerState.Stopped && binding.viewTimer.text != "00:00") {
+                //TODO: binding.viewTimer.text != "00:00" for avoiding unclickable timePicker
+                startTimer()
+//                timerState = TimerState.Running
+//            }
         }
-        trainingDetailViewModel.trainingLiveData.observe(
-            viewLifecycleOwner,
-            /*Observer*/ { training ->
-                training?.let {
-                    this.training = training
-                    updateUI()
-                }
+        binding.viewTimer.setOnClickListener {
+            /*if (timerState == TimerState.Stopped) {
+                timerState = TimerState.Stopped*/
+                TimePickerFragment().show(childFragmentManager, "timePicker")
+//            }
+        }
+        updateCountdownUI()
+        /*TODO: for future trainingList recycler
+        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
+            training?.let {
+                this.training = training
+                updateUI()
             }
-        )
+        }*/
     }
 
+    /*TODO: for future trainingList recycler
     override fun onStart() {
         super.onStart()
-
         val titleWatcher = object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,
@@ -148,72 +117,122 @@ class TrainingFragment : Fragment() {
                 //
             }
         }
-        titleField.addTextChangedListener(titleWatcher)
-    }
+//        titleField.addTextChangedListener(titleWatcher)
+    }*/
 
+    /*TODO: PrefUtil deleting
+    override fun onResume() {
+        super.onResume()
+        initTimer()
+        //TODO: remove background timer, hide notification
+    }*/
+
+    /*TODO: PrefUtil deleting
+    override fun onPause() {
+        super.onPause()
+
+        when (timerState) {
+            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
+            TimerState.Stopped -> TODO()
+        }
+        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
+        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
+        PrefUtil.setTimerState(timerState, binding.root.context)
+    }*/
+
+    /*TODO: for future trainingList recycler
     override fun onStop() {
         super.onStop()
         trainingDetailViewModel.saveTraining(training)
+    }*/
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
+    /*TODO: PrefUtil deleting
+    private fun initTimer() {
+//        timerState = PrefUtil.getTimerState(binding.root.context)
+
+        //we don't want to change the length of the timer which is already running
+        //if the length was changed in settings while it was backgrounded
+        when (timerState) {
+            TimerState.Stopped -> setNewTimerLength()
+            else -> setPreviousTimerLength()
+        }
+
+        //autostart counting down timer`s
+        /*secondsRemaining = when (timerState) {
+            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
+            else -> timerLengthSeconds
+        }*/
+        //TODO: change secondsRemaining according to where the background timer stopped
+        //resume where we left off
+        if (timerState == TimerState.Running) startTimer()
+        updateCountdownUI()
+    }*/
+
+    /*TODO: PrefUtil deleting
+    private fun setPreviousTimerLength() {
+        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
+        //progress_countdown.max = timerLengthSeconds.toInt()
+    }*/
+
+    /*TODO: for future trainingList recycler
     private fun updateUI() {
         titleField.setText(training.title)
-    }
+    }*/
 
+    /*TODO: PrefUtil deleting
     private fun onTimerFinished() {
         timerState = TimerState.Stopped
-        //updateButtons()
-
         setNewTimerLength()
-
         //progress_countdown.progress = 0
-
         PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
         secondsRemaining = timerLengthSeconds
-
         updateCountdownUI()
-    }
+        binding.viewTimer.text = "done!"
+    }*/
 
     @SuppressLint("SetTextI18n")
-    private fun updateCountdownUI(){
+    private fun updateCountdownUI() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondsStr = secondsInMinuteUntilFinished.toString()
-        binding.viewTimer.text = "$minutesUntilFinished:${if (secondsStr.length == 2) secondsStr else "0$secondsStr"}"
+        binding.viewTimer.text = "${
+            if (minutesUntilFinished.toString().length == 2) minutesUntilFinished
+            else "0$minutesUntilFinished"
+        }:${
+            if (secondsStr.length == 2) secondsStr
+            else "0$secondsStr"
+        }"
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
-    private fun setNewTimerLength(){
-        val lengthInMinutes = PrefUtil.getTimerLength(this)
+    /*TODO: PrefUtil deleting
+    private fun setNewTimerLength() {
+        val lengthInMinutes = 0 //PrefUtil.getTimerLength(this)//autoset app starting with 1 minute
         timerLengthSeconds = (lengthInMinutes * 60L)
         //progress_countdown.max = timerLengthSeconds.toInt()
-    }
+    }*/
 
     private fun startTimer() {
-        timerState = TimerState.Running
+//        timerState = TimerState.Running
 
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
-            override fun onFinish() = onTimerFinished()
+            override fun onFinish() {
+                binding.viewTimer.text = "done!"
+            }
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
+                updateCountdownUI()
             }
         }.start()
     }
 
-    /*private fun updateButtons() {
-        when (timerState) {
-            TimerState.Running -> {
-                fab_start.isEnabled = false
-                fab_stop.isEnabled = true
-            }
-            TimerState.Stopped -> {
-                fab_start.isEnabled = true
-                fab_stop.isEnabled = false
-            }
-        }
-    }*/
-
+    /*TODO: for future trainingList recycler
     companion object {
         fun newInstance(trainingId: UUID): TrainingFragment {
             val args = Bundle().apply {
@@ -223,5 +242,5 @@ class TrainingFragment : Fragment() {
                 arguments = args
             }
         }
-    }
+    }*/
 }

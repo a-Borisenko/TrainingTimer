@@ -80,16 +80,16 @@
         android:id="@+id/training_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
         android:layout_margin="8dp"
-        tools:text="@string/training_done" />
+        android:minHeight="48dp"
+        android:text="@string/training_done" />
 
     <TextView
         android:id="@+id/view_timer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="70sp"
-        tools:text="01:30" />
+        android:text="00:00"
+        android:textSize="70sp" />
 
 </LinearLayout>
