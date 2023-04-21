@@ -69,17 +69,10 @@ class TrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trainingDone.setOnClickListener {
-//            if (timerState == TimerState.Stopped && binding.viewTimer.text != "00:00") {
-                //TODO: binding.viewTimer.text != "00:00" for avoiding unclickable timePicker
-                startTimer()
-//                timerState = TimerState.Running
-//            }
+            startTimer()
         }
         binding.viewTimer.setOnClickListener {
-            /*if (timerState == TimerState.Stopped) {
-                timerState = TimerState.Stopped*/
-                TimePickerFragment().show(childFragmentManager, "timePicker")
-//            }
+            TimePickerFragment().show(childFragmentManager, "timePicker")
         }
         updateCountdownUI()
         /*TODO: for future trainingList recycler
@@ -120,26 +113,6 @@ class TrainingFragment : Fragment() {
 //        titleField.addTextChangedListener(titleWatcher)
     }*/
 
-    /*TODO: PrefUtil deleting
-    override fun onResume() {
-        super.onResume()
-        initTimer()
-        //TODO: remove background timer, hide notification
-    }*/
-
-    /*TODO: PrefUtil deleting
-    override fun onPause() {
-        super.onPause()
-
-        when (timerState) {
-            TimerState.Running -> timer.cancel() //TODO: start background timer and show notification
-            TimerState.Stopped -> TODO()
-        }
-        PrefUtil.setPreviousTimerLengthSeconds(timerLengthSeconds, binding.root.context)
-        PrefUtil.setSecondsRemaining(secondsRemaining, binding.root.context)
-        PrefUtil.setTimerState(timerState, binding.root.context)
-    }*/
-
     /*TODO: for future trainingList recycler
     override fun onStop() {
         super.onStop()
@@ -151,48 +124,9 @@ class TrainingFragment : Fragment() {
         _binding = null
     }
 
-    /*TODO: PrefUtil deleting
-    private fun initTimer() {
-//        timerState = PrefUtil.getTimerState(binding.root.context)
-
-        //we don't want to change the length of the timer which is already running
-        //if the length was changed in settings while it was backgrounded
-        when (timerState) {
-            TimerState.Stopped -> setNewTimerLength()
-            else -> setPreviousTimerLength()
-        }
-
-        //autostart counting down timer`s
-        /*secondsRemaining = when (timerState) {
-            TimerState.Running -> PrefUtil.getSecondsRemaining(binding.root.context)
-            else -> timerLengthSeconds
-        }*/
-        //TODO: change secondsRemaining according to where the background timer stopped
-        //resume where we left off
-        if (timerState == TimerState.Running) startTimer()
-        updateCountdownUI()
-    }*/
-
-    /*TODO: PrefUtil deleting
-    private fun setPreviousTimerLength() {
-        timerLengthSeconds = PrefUtil.getPreviousTimerLengthSeconds(binding.root.context)
-        //progress_countdown.max = timerLengthSeconds.toInt()
-    }*/
-
     /*TODO: for future trainingList recycler
     private fun updateUI() {
         titleField.setText(training.title)
-    }*/
-
-    /*TODO: PrefUtil deleting
-    private fun onTimerFinished() {
-        timerState = TimerState.Stopped
-        setNewTimerLength()
-        //progress_countdown.progress = 0
-        PrefUtil.setSecondsRemaining(timerLengthSeconds, binding.root.context)
-        secondsRemaining = timerLengthSeconds
-        updateCountdownUI()
-        binding.viewTimer.text = "done!"
     }*/
 
     @SuppressLint("SetTextI18n")
@@ -209,13 +143,6 @@ class TrainingFragment : Fragment() {
         }"
         //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
-
-    /*TODO: PrefUtil deleting
-    private fun setNewTimerLength() {
-        val lengthInMinutes = 0 //PrefUtil.getTimerLength(this)//autoset app starting with 1 minute
-        timerLengthSeconds = (lengthInMinutes * 60L)
-        //progress_countdown.max = timerLengthSeconds.toInt()
-    }*/
 
     private fun startTimer() {
 //        timerState = TimerState.Running
