@@ -75,7 +75,7 @@ class TrainingListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_training -> {
+            R.id.add_training -> {
                 val training = Training()
                 trainingListViewModel.addTraining(training)
                 callbacks?.onTrainingSelected(training.id)
