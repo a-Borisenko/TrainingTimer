@@ -31,21 +31,8 @@ class TrainingFragment : Fragment() {
     private var _binding: FragmentTrainingBinding? = null
     private val binding get() = _binding!!
 
-    /*TODO: for future trainingList recycler
-    private lateinit var training: Training
-    private lateinit var titleField: EditText
-    private val trainingDetailViewModel: TrainingDetailViewModel by lazy {
-        ViewModelProvider(this).get(TrainingDetailViewModel::class.java)
-    }*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*TODO: for future trainingList recycler
-        training = Training(/*UUID.randomUUID(), "", 0, 0*/)
-        val trainingId: UUID = UUID.randomUUID()
-        //arguments?.getSerializable(ARG_TRAINING_ID) as UUID
-        trainingDetailViewModel.loadTraining(trainingId)*/
-
         childFragmentManager.setFragmentResultListener(
             "key", this
         ) { _, bundle ->
@@ -59,9 +46,6 @@ class TrainingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        /*TODO: for future trainingList recycler
-        val view = inflater.inflate(R.layout.fragment_training, container, false)
-        titleField = view.findViewById(R.id.training_title) as EditText*/
         _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -75,59 +59,12 @@ class TrainingFragment : Fragment() {
             TimePickerFragment().show(childFragmentManager, "timePicker")
         }
         updateCountdownUI()
-        /*TODO: for future trainingList recycler
-        trainingDetailViewModel.trainingLiveData.observe(viewLifecycleOwner) { training ->
-            training?.let {
-                this.training = training
-                updateUI()
-            }
-        }*/
     }
-
-    /*TODO: for future trainingList recycler
-    override fun onStart() {
-        super.onStart()
-        val titleWatcher = object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-                //
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                training.title = s.toString()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
-        }
-//        titleField.addTextChangedListener(titleWatcher)
-    }*/
-
-    /*TODO: for future trainingList recycler
-    override fun onStop() {
-        super.onStop()
-        trainingDetailViewModel.saveTraining(training)
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    /*TODO: for future trainingList recycler
-    private fun updateUI() {
-        titleField.setText(training.title)
-    }*/
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
@@ -141,7 +78,6 @@ class TrainingFragment : Fragment() {
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
         }"
-        //progress_countdown.progress = (timerLengthSeconds - secondsRemaining).toInt()
     }
 
     private fun startTimer() {

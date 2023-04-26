@@ -34,7 +34,6 @@ class TrainingListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Log.d(TAG, "Total trainings: ${trainingListViewModel.trainings.size}")
         setHasOptionsMenu(true)
     }
 
@@ -43,12 +42,10 @@ class TrainingListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //return super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_training_list, container, false)
         trainingRecyclerView =
             view.findViewById(R.id.training_recycler_view) as RecyclerView
         trainingRecyclerView.layoutManager = LinearLayoutManager(context)
-        //updateUI()
         trainingRecyclerView.adapter = adapter
         return view
     }
@@ -86,7 +83,6 @@ class TrainingListFragment : Fragment() {
     }
 
     private fun updateUI(trainings: List<Training>) {
-        //val trainings = trainingListViewModel.trainings
         adapter = TrainingAdapter(trainings)
         trainingRecyclerView.adapter = adapter
     }
