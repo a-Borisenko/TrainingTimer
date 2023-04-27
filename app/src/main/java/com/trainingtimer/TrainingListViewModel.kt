@@ -1,5 +1,6 @@
 package com.trainingtimer
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TrainingListViewModel : ViewModel() {
@@ -9,5 +10,11 @@ class TrainingListViewModel : ViewModel() {
 
     fun addTraining(training: Training) {
         trainingRepository.addTraining(training)
+    }
+
+    val trainingList = MutableLiveData<List<Training>>()
+
+    fun getTrainingList() {
+        trainingList.value = TODO() //getTrainingListUseCase.getTrainingList()
     }
 }
