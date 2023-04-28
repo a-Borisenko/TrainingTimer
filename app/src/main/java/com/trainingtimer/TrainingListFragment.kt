@@ -24,7 +24,7 @@ class TrainingListFragment : Fragment() {
     private lateinit var trainingRecyclerView: RecyclerView
     private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
     private val trainingListViewModel: TrainingListViewModel by lazy {
-        ViewModelProvider(this).get(TrainingListViewModel::class.java)
+        ViewModelProvider(this)[TrainingListViewModel::class.java]
     }
 
     override fun onAttach(context: Context) {
@@ -43,8 +43,7 @@ class TrainingListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_training_list, container, false)
-        trainingRecyclerView =
-            view.findViewById(R.id.training_recycler_view) as RecyclerView
+        trainingRecyclerView = view.findViewById(R.id.training_recycler_view) as RecyclerView
         trainingRecyclerView.layoutManager = LinearLayoutManager(context)
         trainingRecyclerView.adapter = adapter
         return view
