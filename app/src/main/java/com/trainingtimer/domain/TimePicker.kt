@@ -1,4 +1,4 @@
-package com.trainingtimer
+package com.trainingtimer.domain
 
 import android.content.Context
 import android.os.Parcel
@@ -8,8 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.NumberPicker
-import android.widget.Toast
-import java.util.*
+import com.trainingtimer.R
 
 class TimePicker @JvmOverloads constructor(
     context: Context,

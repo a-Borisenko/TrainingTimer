@@ -1,9 +1,11 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.trainingtimer.TrainingRepository
+import com.trainingtimer.domain.Training
 import java.util.*
 
 class TrainingDetailViewModel() : ViewModel() {

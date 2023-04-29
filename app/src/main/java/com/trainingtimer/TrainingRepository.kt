@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.database.TrainingDatabase
+import com.trainingtimer.domain.Training
 import java.util.*
 import java.util.concurrent.Executors
 

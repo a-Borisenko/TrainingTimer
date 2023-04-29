@@ -1,4 +1,4 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import android.app.Dialog
 import android.os.Bundle

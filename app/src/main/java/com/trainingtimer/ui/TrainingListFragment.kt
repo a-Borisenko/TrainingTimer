@@ -1,4 +1,4 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.trainingtimer.R
+import com.trainingtimer.domain.Training
 import java.util.*
 
 private const val TAG = "TrainingListFragment"

@@ -1,7 +1,9 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.trainingtimer.TrainingRepository
+import com.trainingtimer.domain.Training
 
 class TrainingListViewModel : ViewModel() {
 

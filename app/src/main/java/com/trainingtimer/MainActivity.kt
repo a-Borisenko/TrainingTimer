@@ -2,6 +2,7 @@ package com.trainingtimer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.trainingtimer.ui.TrainingFragment
 
 private const val TAG = "MainActivity"
 

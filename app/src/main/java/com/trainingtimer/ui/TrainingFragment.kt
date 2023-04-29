@@ -1,18 +1,13 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import java.util.*
 
 private const val TAG = "TrainingFragment"
 private const val ARG_TRAINING_ID = "training_id"
