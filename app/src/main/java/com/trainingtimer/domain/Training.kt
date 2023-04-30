@@ -1,14 +1,14 @@
 package com.trainingtimer.domain
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import java.util.*
-
-@Entity
 data class Training(
-    @PrimaryKey
-    val id: UUID = UUID.randomUUID(),
-    var title: String = ""/*,
-    var sets: Int,
-    var times: Int*/
-)
+    val sets: String,
+    val title: String,
+    val times: String,
+    val rest: String,
+    var id: Int = UNDEFINED_ID
+) {
+    companion object {
+
+        const val UNDEFINED_ID = -1
+    }
+}
