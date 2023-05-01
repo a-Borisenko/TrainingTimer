@@ -1,15 +1,18 @@
 <resources>
-    <string name="app_name">TrainingTimer</string>
+    <string name="app_name">SportTimer</string>
     <string name="training_pulls">pull-ups</string>
     <string name="training_pushes">push-ups</string>
     <string name="training_title_hint">Enter training title</string>
     <string name="training_title_label">Title</string>
     <string name="training_sets_hint">Enter number of sets</string>
-    <string name="training_sets">Sets</string>
+    <string name="training_sets">10</string>
     <string name="training_times_hint">Enter number of times</string>
-    <string name="training_times">Times</string>
+    <string name="training_times">x3</string>
     <string name="training_rest_hint">Enter rest time</string>
-    <string name="training_rest">Rest Time</string>
+    <string name="training_rest">01:00</string>
     <string name="training_done">Set done</string>
     <string name="new_training">New Training</string>
+    <string name="time_set">Set time</string>
+    <string name="cancel">Cancel</string>
+    <string name="time">Time : </string>
 </resources>
