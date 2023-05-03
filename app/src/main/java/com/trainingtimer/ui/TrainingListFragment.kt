@@ -19,7 +19,7 @@ private const val TAG = "TrainingListFragment"
 class TrainingListFragment : Fragment() {
 
     interface Callbacks {
-        fun onTrainingSelected(trainingId: UUID)
+        fun onTrainingSelected(trainingId: Int)    //UUID
     }
 
     private var callbacks: Callbacks? = null
@@ -73,8 +73,8 @@ class TrainingListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.add_training -> {
-                val training = Training()
+            R.id.new_training -> {
+                val training = Training("", "", "x", "00:00")
                 trainingListViewModel.addTraining(training)
                 callbacks?.onTrainingSelected(training.id)
                 true
