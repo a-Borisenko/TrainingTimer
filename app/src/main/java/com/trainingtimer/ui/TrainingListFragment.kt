@@ -18,21 +18,23 @@ private const val TAG = "TrainingListFragment"
 
 class TrainingListFragment : Fragment() {
 
-    interface Callbacks {
+    /*interface Callbacks {
         fun onTrainingSelected(trainingId: Int)    //UUID
-    }
+    }*/
 
-    private var callbacks: Callbacks? = null
+//    private var callbacks: Callbacks? = null
     private lateinit var trainingRecyclerView: RecyclerView
-    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
+
+//    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
+    private lateinit var trainingListAdapter: TrainingAdapter
     private val trainingListViewModel: TrainingListViewModel by lazy {
         ViewModelProvider(this)[TrainingListViewModel::class.java]
     }
 
-    override fun onAttach(context: Context) {
+    /*override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,7 @@ class TrainingListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_training_list, container, false)
         trainingRecyclerView = view.findViewById(R.id.training_recycler_view) as RecyclerView
         trainingRecyclerView.layoutManager = LinearLayoutManager(context)
-        trainingRecyclerView.adapter = adapter
+        trainingRecyclerView.adapter = trainingListAdapter
         return view
     }
 
@@ -56,22 +58,22 @@ class TrainingListFragment : Fragment() {
         trainingListViewModel.trainingListLiveData.observe(viewLifecycleOwner) { trainings ->
             trainings?.let {
                 Log.i(TAG, "Got trainings ${trainings.size}")
-                updateUI(trainings)
+                updateUI()
             }
         }
     }
 
-    override fun onDetach() {
+    /*override fun onDetach() {
         super.onDetach()
         callbacks = null
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.fragment_training_list, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.new_training -> {
                 val training = Training("", "", "x", "00:00")
@@ -81,14 +83,14 @@ class TrainingListFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }*/
+
+    private fun updateUI() {
+        trainingListAdapter = TrainingAdapter()
+        trainingRecyclerView.adapter = trainingListAdapter
     }
 
-    private fun updateUI(trainings: List<Training>) {
-        adapter = TrainingAdapter(trainings)
-        trainingRecyclerView.adapter = adapter
-    }
-
-    private inner class TrainingHolder(view: View) : RecyclerView.ViewHolder(view),
+    /*private inner class TrainingHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
 
         private lateinit var training: Training
@@ -108,9 +110,9 @@ class TrainingListFragment : Fragment() {
                 .show()
             callbacks?.onTrainingSelected(training.id)
         }
-    }
+    }*/
 
-    private inner class TrainingAdapter(var trainings: List<Training>) :
+    /*private inner class TrainingAdapter(var trainings: List<Training>) :
         RecyclerView.Adapter<TrainingHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
                 : TrainingHolder {
@@ -124,7 +126,7 @@ class TrainingListFragment : Fragment() {
         }
 
         override fun getItemCount() = trainings.size
-    }
+    }*/
 
     /*companion object {
         fun newInstance(): TrainingListFragment {
