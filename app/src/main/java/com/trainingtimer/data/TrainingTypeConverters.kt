@@ -1,4 +1,4 @@
-package com.trainingtimer.database
+package com.trainingtimer.data
 
 import androidx.room.TypeConverter
 import java.util.*
