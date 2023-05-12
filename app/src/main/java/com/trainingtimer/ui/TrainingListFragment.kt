@@ -135,46 +135,10 @@ class TrainingListFragment : Fragment() {
     private fun setupClickListener() {
         trainingListAdapter.onShopItemClickListener = {
             Log.d("MainActivity", "item with id ${it.id} clicked!")
+//            val intent = MainFragment.newIntentEditItem(this, it.id)
+//            startActivity(intent)
         }
     }
-
-    /*private inner class TrainingHolder(view: View) : RecyclerView.ViewHolder(view),
-        View.OnClickListener {
-
-        private lateinit var training: Training
-        private val titleTextView: TextView = itemView.findViewById(R.id.training_title)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        fun bind(training: Training) {
-            this.training = training
-            titleTextView.text = this.training.title
-        }
-
-        override fun onClick(v: View) {
-            Toast.makeText(context, "${training.title} pressed!", Toast.LENGTH_SHORT)
-                .show()
-            callbacks?.onTrainingSelected(training.id)
-        }
-    }*/
-
-    /*private inner class TrainingAdapter(var trainings: List<Training>) :
-        RecyclerView.Adapter<TrainingHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-                : TrainingHolder {
-            val view = layoutInflater.inflate(R.layout.list_item_training, parent, false)
-            return TrainingHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: TrainingHolder, position: Int) {
-            val training = trainings[position]
-            holder.bind(training)
-        }
-
-        override fun getItemCount() = trainings.size
-    }*/
 
     /*companion object {
         fun newInstance(): TrainingListFragment {

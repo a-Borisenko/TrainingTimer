@@ -38,4 +38,20 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
             true
         }
     }
+
+    /*private inner class TrainingAdapter(var trainings: List<Training>) :
+        RecyclerView.Adapter<TrainingHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+                : TrainingHolder {
+            val view = layoutInflater.inflate(R.layout.list_item_training, parent, false)
+            return TrainingHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: TrainingHolder, position: Int) {
+            val training = trainings[position]
+            holder.bind(training)
+        }
+
+        override fun getItemCount() = trainings.size
+    }*/
 }
