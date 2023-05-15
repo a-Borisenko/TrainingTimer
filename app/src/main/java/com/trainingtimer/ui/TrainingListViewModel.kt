@@ -2,7 +2,7 @@ package com.trainingtimer.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.TrainingRepository
+import com.trainingtimer.domain.TrainingRepository
 import com.trainingtimer.data.TrainingListRepositoryImpl
 import com.trainingtimer.domain.DeleteTrainingUseCase
 import com.trainingtimer.domain.Training
