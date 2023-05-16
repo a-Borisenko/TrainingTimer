@@ -1,10 +1,9 @@
-package com.trainingtimer.domain
+package com.trainingtimer.data
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import com.trainingtimer.DATABASE_NAME
-import com.trainingtimer.data.TrainingDatabase
+import com.trainingtimer.domain.Training
 import java.util.*
 import java.util.concurrent.Executors
 

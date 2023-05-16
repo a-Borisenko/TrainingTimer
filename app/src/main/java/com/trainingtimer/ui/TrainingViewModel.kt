@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.domain.TrainingRepository
+import com.trainingtimer.data.TrainingRepository
 import com.trainingtimer.domain.Training
 import java.util.*
 
-class TrainingDetailViewModel() : ViewModel() {
+class TrainingViewModel() : ViewModel() {
 
     private val trainingRepository = TrainingRepository.get()
     private val trainingIdLiveData = MutableLiveData<UUID>()

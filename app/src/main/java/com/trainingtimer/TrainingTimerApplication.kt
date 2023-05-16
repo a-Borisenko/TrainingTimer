@@ -1,7 +1,7 @@
 package com.trainingtimer
 
 import android.app.Application
-import com.trainingtimer.domain.TrainingRepository
+import com.trainingtimer.data.TrainingRepository
 
 class TrainingTimerApplication : Application() {
 
