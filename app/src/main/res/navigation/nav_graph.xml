@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/trainingListFragment">
+
+    <fragment
+        android:id="@+id/trainingListFragment"
+        android:name="com.trainingtimer.ui.TrainingListFragment"
+        android:label="TrainingListFragment" >
+
+        <action
+            android:id="@+id/action_trainingListFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.trainingtimer.ui.TrainingFragment"
+        android:label="TrainingFragment" />
+
+</navigation>
