@@ -11,7 +11,7 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
     var onShopItemLongClickListener: ((Training) -> Unit)? = null
     var onShopItemClickListener: ((Training) -> Unit)? = null
 
-//    val MAX_POOL_SIZE = 10
+    val MAX_POOL_SIZE = 10
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
