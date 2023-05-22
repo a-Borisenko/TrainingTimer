@@ -135,8 +135,6 @@ class TrainingListFragment : Fragment() {
     private fun setupClickListener() {
         trainingListAdapter.onShopItemClickListener = {
             Log.d("MainActivity", "item with id ${it.id} clicked!")
-//            val intent = MainFragment.newIntentEditItem(this, it.id)
-//            startActivity(intent)
         }
     }
 
