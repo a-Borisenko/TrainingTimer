@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 
 private const val TAG = "TrainingFragment"
 private const val ARG_TRAINING_ID = "training_id"
 
-class TrainingFragment : Fragment() {
+class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     /*enum class TimerState {
         Stopped, Running
@@ -36,14 +37,14 @@ class TrainingFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
+    /*override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrainingBinding.inflate(inflater, container, false)
         return binding.root
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

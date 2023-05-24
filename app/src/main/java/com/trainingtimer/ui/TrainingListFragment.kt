@@ -16,7 +16,7 @@ import com.trainingtimer.databinding.FragmentTrainingListBinding
 
 private const val TAG = "TrainingListFragment"
 
-class TrainingListFragment : Fragment() {
+class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     /*interface Callbacks {
         fun onTrainingSelected(trainingId: Int)    //UUID
@@ -45,7 +45,7 @@ class TrainingListFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(
+    /*override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,9 +56,9 @@ class TrainingListFragment : Fragment() {
         trainingRecyclerView.layoutManager = LinearLayoutManager(context)
         trainingRecyclerView.adapter = trainingListAdapter
         return view*/
-        setupRecyclerView()
+
         return binding.root
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -67,6 +67,7 @@ class TrainingListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
         /*trainingListViewModel.trainingListLiveData.observe(viewLifecycleOwner) { trainings ->
             trainings?.let {
                 Log.i(TAG, "Got trainings ${trainings.size}")
