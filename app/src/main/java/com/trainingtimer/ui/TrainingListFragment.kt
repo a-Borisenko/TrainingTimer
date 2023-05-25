@@ -31,8 +31,9 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         ViewModelProvider(this)[TrainingListViewModel::class.java]
     }*/
 
-    private var _binding: FragmentTrainingListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentTrainingListBinding
+//    private var _binding: FragmentTrainingListBinding? = null
+//    private val binding get() = _binding!!
 
     /*override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,6 +68,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
         /*trainingListViewModel.trainingListLiveData.observe(viewLifecycleOwner) { trainings ->
             trainings?.let {
@@ -84,10 +86,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         callbacks = null
     }*/
 
-    override fun onDestroyView() {
+    /*override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 
     /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {

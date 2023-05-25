@@ -49,6 +49,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentTrainingBinding.bind(view)
         binding.trainingDone.setOnClickListener {
             startTimer()
         }
