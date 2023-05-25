@@ -24,8 +24,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var timer: CountDownTimer
 //    private var timerLengthSeconds = 0L
     private var secondsRemaining = 0L
-    private var _binding: FragmentTrainingBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentTrainingBinding
+//    private var _binding: FragmentTrainingBinding? = null
+//    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +58,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         updateCountdownUI()
     }
 
-    override fun onDestroyView() {
+    /*override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
+    }*/
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
