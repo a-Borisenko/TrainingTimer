@@ -2,15 +2,17 @@ package com.trainingtimer.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 
@@ -146,10 +148,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
                 bundleOf("id" to it.id),
                 navOptions {
                     anim {
-                        enter = com.google.android.material.R.anim.abc_popup_enter
-                        exit = com.google.android.material.R.anim.abc_popup_enter
-                        popEnter = com.google.android.material.R.anim.abc_popup_enter
-                        popExit = com.google.android.material.R.anim.abc_popup_enter
+                        enter = anim.abc_popup_enter
+                        exit = anim.abc_popup_enter
+                        popEnter = anim.abc_popup_enter
+                        popExit = anim.abc_popup_enter
                     }
                 }
             )
