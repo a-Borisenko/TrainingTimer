@@ -158,6 +158,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         }
     }
 
+    //entry class problem
     /*companion object {
         fun newInstance(): TrainingListFragment {
             return TrainingListFragment()
