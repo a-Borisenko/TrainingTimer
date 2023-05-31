@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
@@ -50,6 +51,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
+        val res = requireArguments().getInt("id") //getting id for 'new' or 'edit' mode
+        Toast.makeText(context, "$res", Toast.LENGTH_SHORT).show()
         binding.trainingDone.setOnClickListener {
             startTimer()
         }

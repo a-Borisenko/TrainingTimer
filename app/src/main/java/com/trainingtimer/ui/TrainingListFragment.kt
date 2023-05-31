@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
+import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
 
 private const val TAG = "TrainingListFragment"
 
@@ -24,10 +25,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         fun onTrainingSelected(trainingId: Int)    //UUID
     }*/
 
-//    private var callbacks: Callbacks? = null
+    //    private var callbacks: Callbacks? = null
     private lateinit var trainingRecyclerView: RecyclerView
 
-//    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
+    //    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
     private lateinit var trainingListAdapter: TrainingAdapter
     private lateinit var trainingListViewModel: TrainingListViewModel /*by lazy {
         ViewModelProvider(this)[TrainingListViewModel::class.java]
@@ -142,10 +143,24 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun setupClickListener() {
         trainingListAdapter.onShopItemClickListener = {
-            Log.d("MainActivity", "item with id ${it.id} clicked!")
+            Log.d("ListFrag", "item with id ${it.id} clicked!")
             findNavController().navigate(
                 R.id.action_trainingListFragment_to_trainingFragment,
                 bundleOf("id" to it.id),
+                navOptions {
+                    anim {
+                        enter = anim.abc_popup_enter
+                        exit = anim.abc_popup_enter
+                        popEnter = anim.abc_popup_enter
+                        popExit = anim.abc_popup_enter
+                    }
+                }
+            )
+        }
+        binding.newTraining.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_trainingListFragment_to_trainingFragment,
+                bundleOf("id" to UNDEFINED_ID),
                 navOptions {
                     anim {
                         enter = anim.abc_popup_enter
