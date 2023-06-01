@@ -21,48 +21,15 @@ private const val TAG = "TrainingListFragment"
 
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
-    /*interface Callbacks {
-        fun onTrainingSelected(trainingId: Int)    //UUID
-    }*/
-
-    //    private var callbacks: Callbacks? = null
-    private lateinit var trainingRecyclerView: RecyclerView
-
-    //    private var adapter: TrainingAdapter? = TrainingAdapter(emptyList())
     private lateinit var trainingListAdapter: TrainingAdapter
-    private lateinit var trainingListViewModel: TrainingListViewModel /*by lazy {
-        ViewModelProvider(this)[TrainingListViewModel::class.java]
-    }*/
-
+    private lateinit var trainingListViewModel: TrainingListViewModel
     private lateinit var binding: FragmentTrainingListBinding
-//    private var _binding: FragmentTrainingListBinding? = null
-//    private val binding get() = _binding!!
-
-    /*override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callbacks = context as Callbacks?
-    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         trainingListViewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
         setHasOptionsMenu(true)
     }
-
-    /*override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTrainingListBinding.inflate(inflater, container, false)
-        /*val view = inflater.inflate(R.layout.fragment_training_list, container, false)
-        trainingRecyclerView = view.findViewById(R.id.training_recycler_view) as RecyclerView
-        trainingRecyclerView.layoutManager = LinearLayoutManager(context)
-        trainingRecyclerView.adapter = trainingListAdapter
-        return view*/
-
-        return binding.root
-    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
@@ -83,16 +50,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             trainingListAdapter.submitList(it)
         }
     }
-
-    /*override fun onDetach() {
-        super.onDetach()
-        callbacks = null
-    }*/
-
-    /*override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }*/
 
     /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -172,11 +129,4 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             )
         }
     }
-
-    //entry class problem
-    /*companion object {
-        fun newInstance(): TrainingListFragment {
-            return TrainingListFragment()
-        }
-    }*/
 }

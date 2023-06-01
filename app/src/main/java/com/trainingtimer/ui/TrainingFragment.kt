@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
+import com.trainingtimer.domain.Training
 
 private const val TAG = "TrainingFragment"
 private const val ARG_TRAINING_ID = "training_id"
@@ -26,8 +27,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //    private var timerLengthSeconds = 0L
     private var secondsRemaining = 0L
     private lateinit var binding: FragmentTrainingBinding
-//    private var _binding: FragmentTrainingBinding? = null
-//    private val binding get() = _binding!!
+    private lateinit var viewModel: TrainingViewModel
+
+    private var trainingId = Training.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,20 +41,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    /*override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTrainingBinding.inflate(inflater, container, false)
-        return binding.root
-    }*/
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         val res = requireArguments().getInt("id") //getting id for 'new' or 'edit' mode
         Toast.makeText(context, "$res", Toast.LENGTH_SHORT).show()
+        launchRightMode(res)
         binding.trainingDone.setOnClickListener {
             startTimer()
         }
@@ -62,10 +56,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         updateCountdownUI()
     }
 
-    /*override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }*/
+    private fun launchRightMode(res: Int) {
+        when (res) {
+            -1 -> launchEditMode()
+            else -> launchAddMode()
+        }
+    }
+
+    private fun launchEditMode() {
+        viewModel.getTraining(trainingId)
+        viewModel.training.observe(viewLifecycleOwner) {}
+    }
+
+    private fun launchAddMode() {}
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
@@ -95,16 +98,4 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }.start()
     }
-
-    /*TODO: for future trainingList recycler
-    companion object {
-        fun newInstance(trainingId: UUID): TrainingFragment {
-            val args = Bundle().apply {
-                putSerializable(ARG_TRAINING_ID, trainingId)
-            }
-            return TrainingFragment().apply {
-                arguments = args
-            }
-        }
-    }*/
 }
