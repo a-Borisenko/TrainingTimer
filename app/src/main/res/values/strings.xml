@@ -11,8 +11,12 @@
     <string name="training_rest_hint">Enter rest time</string>
     <string name="training_rest">01:00</string>
     <string name="training_done">Set done</string>
+    <string name="training_save">Save training</string>
     <string name="new_training">New Training</string>
     <string name="time_set">Set time</string>
     <string name="cancel">Cancel</string>
     <string name="time">Time : </string>
+    <string name="error_input_sets">Invalid sets</string>
+    <string name="error_input_title">Invalid title</string>
+    <string name="error_input_times">Invalid times</string>
 </resources>
