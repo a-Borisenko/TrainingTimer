@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingListRepositoryImpl
 import com.trainingtimer.domain.DeleteTrainingUseCase
 import com.trainingtimer.domain.EditTrainingUseCase
+import com.trainingtimer.domain.GetTrainingListUseCase
 import com.trainingtimer.domain.Training
 
 class TrainingListViewModel : ViewModel() {
@@ -13,20 +14,21 @@ class TrainingListViewModel : ViewModel() {
     private val repository = TrainingListRepositoryImpl
 
 //    val trainingListLiveData = trainingRepository.getTrainings()
+    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
     private val deleteTrainingUseCase = DeleteTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
+
+    val trainingList = getTrainingListUseCase.getTrainingList() //MutableLiveData<List<Training>>()
+
+    fun deleteTraining(training: Training) {
+        deleteTrainingUseCase.deleteTraining(training)
+    }
 
 //    fun addTraining(training: Training) {
 //        trainingRepository.addTraining(training)
 //    }
 
-    val trainingList = MutableLiveData<List<Training>>()
-
     /*fun getTrainingList() {
         trainingList.value = getTrainingListUseCase.getTrainingList()
     }*/
-
-    fun deleteTraining(training: Training) {
-        deleteTrainingUseCase.deleteTraining(training)
-    }
 }

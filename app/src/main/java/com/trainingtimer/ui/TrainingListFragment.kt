@@ -21,57 +21,28 @@ private const val TAG = "TrainingListFragment"
 
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
-    private lateinit var trainingListAdapter: TrainingAdapter
-    private lateinit var trainingListViewModel: TrainingListViewModel
+    private lateinit var viewModel: TrainingListViewModel
+    private lateinit var listAdapter: TrainingAdapter
     private lateinit var binding: FragmentTrainingListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        trainingListViewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.fragment_training_list, menu)
+        viewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
-        /*trainingListViewModel.trainingListLiveData.observe(viewLifecycleOwner) { trainings ->
-            trainings?.let {
-                Log.i(TAG, "Got trainings ${trainings.size}")
-                updateUI()
-            }
-        }*/
-        trainingListViewModel.trainingList.observe(viewLifecycleOwner) {
-            trainingListAdapter.submitList(it)
+        viewModel.trainingList.observe(viewLifecycleOwner) {
+            listAdapter.submitList(it)
         }
     }
 
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.new_training -> {
-                val training = Training("", "", "x", "00:00")
-                trainingListViewModel.addTraining(training)
-                callbacks?.onTrainingSelected(training.id)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }*/
-
-    /*private fun updateUI() {
-        trainingListAdapter = TrainingAdapter()
-        trainingRecyclerView.adapter = trainingListAdapter
-    }*/
-
     private fun setupRecyclerView() {
         val rvTrainingList = binding.trainingRecyclerView
-        trainingListAdapter = TrainingAdapter()
-        rvTrainingList.adapter = trainingListAdapter
+        listAdapter = TrainingAdapter()
+        rvTrainingList.adapter = listAdapter
         setupClickListener()
         setupSwipeListener(rvTrainingList)
     }
@@ -90,8 +61,8 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = trainingListAdapter.currentList[viewHolder.adapterPosition]
-                trainingListViewModel.deleteTraining(item)
+                val item = listAdapter.currentList[viewHolder.adapterPosition]
+                viewModel.deleteTraining(item)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
@@ -99,7 +70,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun setupClickListener() {
-        trainingListAdapter.onShopItemClickListener = {
+        listAdapter.onShopItemClickListener = {
             Log.d("ListFrag", "item with id ${it.id} clicked!")
             findNavController().navigate(
                 R.id.action_trainingListFragment_to_trainingFragment,

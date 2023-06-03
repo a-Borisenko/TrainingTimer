@@ -22,14 +22,4 @@ class MainActivity : AppCompatActivity()/*, TrainingListFragment.Callbacks*/ {
                 .commit()
         }
     }
-
-    /*TODO: for future trainingList recycler
-    override fun onTrainingSelected(trainingId: UUID) {
-        val fragment = TrainingFragment.newInstance(trainingId)
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }*/
 }

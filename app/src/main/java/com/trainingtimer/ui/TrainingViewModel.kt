@@ -15,7 +15,7 @@ class TrainingViewModel : ViewModel() {
 
     private val repository = TrainingListRepositoryImpl
 //    private val trainingRepository = TrainingRepository.get()
-    private val trainingIdLiveData = MutableLiveData<UUID>()
+//    private val trainingIdLiveData = MutableLiveData<UUID>()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
@@ -61,7 +61,7 @@ class TrainingViewModel : ViewModel() {
         val rest = parseRest(inputRest)
         val fieldValid = validateInput(times, title, sets, rest)
         if (fieldValid) {
-            val training = Training(times, title, times, rest)
+            val training = Training(times, title, sets, rest)
             addTrainingUseCase.addTraining(training)
             finishWork()
         }
@@ -140,9 +140,9 @@ class TrainingViewModel : ViewModel() {
             trainingRepository.getTraining(trainingId)
         }*/
 
-    fun loadTraining(trainingId: UUID) {
+    /*fun loadTraining(trainingId: UUID) {
         trainingIdLiveData.value = trainingId
-    }
+    }*/
 
     /*fun saveTraining(training: Training) {
         trainingRepository.updateTraining(training)

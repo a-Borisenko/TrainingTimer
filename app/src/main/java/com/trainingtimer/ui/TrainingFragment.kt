@@ -3,6 +3,11 @@ package com.trainingtimer.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -38,17 +43,35 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             secondsRemaining = bundle.getLong("time")
             updateCountdownUI()
         }
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_training, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save_btn -> {
+                when (requireArguments().getInt("id")) {
+                    Training.UNDEFINED_ID -> addTraining()
+                    else -> editTraining()
+                }
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
-        launchRightMode(requireArguments().getInt("id"))
+        trainingId = requireArguments().getInt("id")
+        launchMode(trainingId)
+        addTextChangeListeners()
         observeViewModel()
-        binding.viewTimer.setOnClickListener {
-            TimePickerFragment().show(childFragmentManager, "timePicker")
-        }
         updateCountdownUI()
     }
 
@@ -79,32 +102,21 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    private fun launchRightMode(res: Int) {
-        when (res) {
-            Training.UNDEFINED_ID -> launchAddMode()
-            else -> launchEditMode()
-        }
-    }
-
-    private fun launchAddMode() {
-        binding.trainingBtn.text = getString(R.string.training_save)
-        binding.trainingBtn.setOnClickListener {
-            addTraining()
-        }
-    }
-
-    private fun launchEditMode() {
-        binding.trainingBtn.text = getString(R.string.training_done)
-        viewModel.getTraining(trainingId)
-        viewModel.training.observe(viewLifecycleOwner) {
-            binding.etTimes.setText(it.times)
-            binding.etTitle.setText(it.title)
-            binding.etSets.setText(it.sets)
-            binding.viewTimer.text = it.rest
-        }
+    private fun launchMode(id: Int) {
         binding.trainingBtn.setOnClickListener {
             startTimer()
-            editTraining()
+        }
+        binding.viewTimer.setOnClickListener {
+            TimePickerFragment().show(childFragmentManager, "timePicker")
+        }
+        if (id != Training.UNDEFINED_ID) {
+            viewModel.getTraining(trainingId)
+            viewModel.training.observe(viewLifecycleOwner) {
+                binding.etTimes.setText(it.times)
+                binding.etTitle.setText(it.title)
+                binding.etSets.setText(it.sets)
+                binding.viewTimer.text = it.rest
+            }
         }
     }
 
@@ -126,12 +138,44 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
+    private fun addTextChangeListeners() {
+        binding.etTimes.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTimes()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+        binding.etTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTitle()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+        binding.etSets.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputSets()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+    }
+
     private fun startTimer() {
 //        timerState = TimerState.Running
 
+        secondsRemaining = (binding.viewTimer.text.split(":"))[0].toLong() * 60 +
+                (binding.viewTimer.text.split(":"))[1].toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-                binding.viewTimer.text = "done!"
+                binding.viewTimer.text = getString(R.string.timer_done)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -143,12 +187,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
-        val minutesUntilFinished = secondsRemaining / 60
-        val secondsInMinuteUntilFinished = secondsRemaining - minutesUntilFinished * 60
-        val secondsStr = secondsInMinuteUntilFinished.toString()
+        val minutesFinished = secondsRemaining / 60
+        val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
+        val secondsStr = secondsInMinuteFinished.toString()
         binding.viewTimer.text = "${
-            if (minutesUntilFinished.toString().length == 2) minutesUntilFinished
-            else "0$minutesUntilFinished"
+            if (minutesFinished.toString().length == 2) minutesFinished
+            else "0$minutesFinished"
         }:${
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
