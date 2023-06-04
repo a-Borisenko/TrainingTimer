@@ -16,9 +16,6 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.domain.Training
 
-private const val TAG = "TrainingFragment"
-private const val ARG_TRAINING_ID = "training_id"
-
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     /*enum class TimerState {
@@ -26,14 +23,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }*/
 
 //    private var timerState = TimerState.Stopped
+    private var secondsRemaining = 0L
+    private var trainingId = Training.UNDEFINED_ID
 
     private lateinit var timer: CountDownTimer
-//    private var timerLengthSeconds = 0L
-    private var secondsRemaining = 0L
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
-
-    private var trainingId = Training.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

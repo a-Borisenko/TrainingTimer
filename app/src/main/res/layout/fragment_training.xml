@@ -7,16 +7,16 @@
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_times"
+        android:id="@+id/til_sets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_times"
+            android:id="@+id/et_sets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/training_times_hint" />
+            android:hint="@string/training_sets_hint" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -35,18 +35,19 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_sets"
+        android:id="@+id/til_times"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textSize="24sp" >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_sets"
+            android:id="@+id/et_times"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/training_sets_hint" />
+            android:hint="@string/training_times_hint" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

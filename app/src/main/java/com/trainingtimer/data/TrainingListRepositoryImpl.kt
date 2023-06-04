@@ -12,7 +12,10 @@ object TrainingListRepositoryImpl : TrainingListRepository {
     private var autoIncrementId = 0
 
     init {
-        for (i in 0 until 100) {
+        addTraining(Training("1", "подтягивания", "x5", "01:00"))
+        addTraining(Training("1", "отжимания", "x10", "01:00"))
+        addTraining(Training("1", "приседания", "x15", "01:00"))
+        for (i in 4 until 100) {
             val item = Training("$i","Training №$i", "x$i", "01:00")
             addTraining(item)
         }

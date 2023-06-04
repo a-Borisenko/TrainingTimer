@@ -21,6 +21,8 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:focusable="true"
+        style="@style/Theme.TrainingTimer"
+        app:backgroundTint="@color/design_default_color_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />

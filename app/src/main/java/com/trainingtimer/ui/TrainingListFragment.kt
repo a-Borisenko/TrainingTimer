@@ -2,8 +2,6 @@ package com.trainingtimer.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -16,8 +14,6 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
-
-private const val TAG = "TrainingListFragment"
 
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
