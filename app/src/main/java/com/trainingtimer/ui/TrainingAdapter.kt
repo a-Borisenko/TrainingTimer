@@ -25,7 +25,7 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
     override fun onBindViewHolder(holder: TrainingViewHolder, position: Int) {
         val training = getItem(position)
         with(holder) {
-            listSets.text = training.sets
+            listSets.text = training.sets.toString()
             listTitle.text = training.title
             listTimes.text = training.times
             listRest.text = training.rest

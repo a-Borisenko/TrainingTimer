@@ -107,9 +107,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         if (id != Training.UNDEFINED_ID) {
             viewModel.getTraining(trainingId)
             viewModel.training.observe(viewLifecycleOwner) {
-                binding.etTimes.setText(it.times)
+                binding.etSets.setText(it.sets.toString())
                 binding.etTitle.setText(it.title)
-                binding.etSets.setText(it.sets)
+                binding.etTimes.setText(it.times)
                 binding.viewTimer.text = it.rest
             }
         }
@@ -117,18 +117,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun addTraining() {
         viewModel.addTraining(
-            binding.etTimes.text?.toString(),
+            binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
-            binding.etSets.text?.toString(),
+            binding.etTimes.text?.toString(),
             binding.viewTimer.text?.toString()
         )
     }
 
     private fun editTraining() {
         viewModel.editTraining(
-            binding.etTimes.text?.toString(),
+            binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
-            binding.etSets.text?.toString(),
+            binding.etTimes.text?.toString(),
             binding.viewTimer.text?.toString()
         )
     }

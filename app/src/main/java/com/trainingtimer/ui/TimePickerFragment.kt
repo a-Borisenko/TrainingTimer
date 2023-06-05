@@ -2,7 +2,6 @@ package com.trainingtimer.ui
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -11,11 +10,10 @@ import com.trainingtimer.databinding.TimePickerDialogBinding
 
 class TimePickerFragment : DialogFragment() {
 
-    private var _binding: TimePickerDialogBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: TimePickerDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = TimePickerDialogBinding.inflate(LayoutInflater.from(context))
+        binding = TimePickerDialogBinding.bind(requireView())
         return AlertDialog.Builder(requireActivity())
             .setView(binding.root)
             .create()
@@ -29,10 +27,5 @@ class TimePickerFragment : DialogFragment() {
             setFragmentResult("key", bundleOf("time" to result))
             dismiss()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

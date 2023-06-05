@@ -2,14 +2,12 @@ package com.trainingtimer.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingListRepositoryImpl
 import com.trainingtimer.domain.AddTrainingUseCase
 import com.trainingtimer.domain.EditTrainingUseCase
 import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
-import java.util.*
 
 class TrainingViewModel : ViewModel() {
 
@@ -50,52 +48,53 @@ class TrainingViewModel : ViewModel() {
     }
 
     fun addTraining(
-        inputTimes: String?,
+        inputSets: Int?,
         inputTitle: String?,
-        inputSets: String?,
+        inputTimes: String?,
         inputRest: String?
     ) {
         val times = parseTimes(inputTimes)
         val title = parseTitle(inputTitle)
         val sets = parseSets(inputSets)
         val rest = parseRest(inputRest)
-        val fieldValid = validateInput(times, title, sets, rest)
+        val fieldValid = validateInput(sets, title, times, rest)
         if (fieldValid) {
-            val training = Training(times, title, sets, rest)
+            val training = Training(sets, title, times, rest)
             addTrainingUseCase.addTraining(training)
             finishWork()
         }
     }
 
     fun editTraining(
-        inputTimes: String?,
+        inputSets: Int?,
         inputTitle: String?,
-        inputSets: String?,
+        inputTimes: String?,
         inputRest: String?
     ) {
         val times = parseTimes(inputTimes)
         val title = parseTitle(inputTitle)
         val sets = parseSets(inputSets)
         val rest = parseRest(inputRest)
-        val fieldValid = validateInput(times, title, sets, rest)
+        val fieldValid = validateInput(sets, title, times, rest)
         if (fieldValid) {
             _training.value?.let {
-                val item = it.copy(times = times, title = title, sets = sets, rest = rest)
+                val item = it.copy(sets = sets, title = title, times = times, rest = rest)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
             }
         }
     }
 
-    private fun parseTimes(inputTimes: String?) = inputTimes?.trim() ?: ""
+    private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
+        ?: Training.UNDEFINED_ID
 
     private fun parseTitle(inputTitle: String?) = inputTitle?.trim() ?: ""
 
-    private fun parseSets(inputSets: String?) = inputSets?.trim() ?: ""
+    private fun parseTimes(inputTimes: String?) = inputTimes?.trim() ?: ""
 
     private fun parseRest(inputRest: String?) = inputRest?.trim() ?: ""
 
-    private fun validateInput(times: String, title: String, sets: String, rest: String): Boolean {
+    private fun validateInput(sets: Int, title: String, times: String, rest: String): Boolean {
         var res = true
         if (times.isBlank()) {
             _errorInputTimes.value = true
@@ -105,7 +104,7 @@ class TrainingViewModel : ViewModel() {
             _errorInputTitle.value = true
             res = false
         }
-        if (sets.isBlank()) {
+        if (sets.toString().isBlank()) {
             _errorInputSets.value = true
             res = false
         }

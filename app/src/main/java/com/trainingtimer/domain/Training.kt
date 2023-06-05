@@ -1,7 +1,7 @@
 package com.trainingtimer.domain
 
 data class Training(
-    val sets: String,
+    val sets: Int,
     val title: String,
     val times: String,
     val rest: String,
