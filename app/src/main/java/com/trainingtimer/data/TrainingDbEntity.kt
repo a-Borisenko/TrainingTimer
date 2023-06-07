@@ -22,4 +22,14 @@ data class TrainingDbEntity(
         rest = rest,
         id = id
     )
+
+    companion object {
+        fun fromUser(training: Training): TrainingDbEntity = TrainingDbEntity(
+            sets = training.sets,
+            title = training.title,
+            times = training.times,
+            rest = training.rest,
+            id = Training.UNDEFINED_ID
+        )
+    }
 }
