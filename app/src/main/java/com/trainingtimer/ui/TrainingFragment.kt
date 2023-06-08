@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -38,7 +39,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             secondsRemaining = bundle.getLong("time")
             updateCountdownUI()
         }
-        setHasOptionsMenu(true)
+//        setHasOptionsMenu(true)
+        addMenuProvider(object : MenuProvider {
+            menuInflater
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
