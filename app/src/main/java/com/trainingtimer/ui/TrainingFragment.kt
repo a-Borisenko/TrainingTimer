@@ -9,8 +9,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
@@ -39,34 +41,34 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             secondsRemaining = bundle.getLong("time")
             updateCountdownUI()
         }
-//        setHasOptionsMenu(true)
-        addMenuProvider(object : MenuProvider {
-            menuInflater
-        })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.fragment_training, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save_btn -> {
-                when (requireArguments().getInt("id")) {
-                    Training.UNDEFINED_ID -> addTraining()
-                    else -> editTraining()
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_training, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.save_btn -> {
+                        when (requireArguments().getInt("id")) {
+                            Training.UNDEFINED_ID -> addTraining()
+                            else -> editTraining()
+                        }
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         trainingId = requireArguments().getInt("id")
         launchMode(trainingId)
         addTextChangeListeners()
