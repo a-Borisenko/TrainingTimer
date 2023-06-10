@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -35,12 +36,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        childFragmentManager.setFragmentResultListener(
-            "key", this
-        ) { _, bundle ->
-            secondsRemaining = bundle.getLong("time")
-            updateCountdownUI()
-        }
+        dialogFragmentSettings()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +70,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         observeViewModel()
         updateCountdownUI()
+    }
+
+    private fun dialogFragmentSettings() {
+        childFragmentManager.setFragmentResultListener(
+            "key", this
+        ) { _, bundle ->
+            secondsRemaining = bundle.getLong("time")
+//            Toast.makeText(context, "$secondsRemaining", Toast.LENGTH_SHORT).show()
+            updateCountdownUI()
+        }
     }
 
     private fun observeViewModel() {
