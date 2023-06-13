@@ -12,7 +12,7 @@ data class TrainingDbEntity(
     val title: String,
     val times: String,
     val rest: String,
-    @PrimaryKey(autoGenerate = true) var id: Int
+    @PrimaryKey(autoGenerate = true) var trainingId: Int
 ) {
 
     fun toTraining(): Training = Training(
@@ -20,7 +20,7 @@ data class TrainingDbEntity(
         title = title,
         times = times,
         rest = rest,
-        id = id
+        id = trainingId
     )
 
     companion object {
@@ -29,7 +29,7 @@ data class TrainingDbEntity(
             title = training.title,
             times = training.times,
             rest = training.rest,
-            id = Training.UNDEFINED_ID
+            trainingId = Training.UNDEFINED_ID
         )
     }
 }
