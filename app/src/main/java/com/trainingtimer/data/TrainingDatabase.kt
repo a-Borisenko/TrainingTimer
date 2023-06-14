@@ -5,4 +5,6 @@ import androidx.room.RoomDatabase
 
 @Database(version = 1, entities = [TrainingDbEntity::class])
 abstract class TrainingDatabase : RoomDatabase() {
+
+    abstract fun trainingDao(): TrainingDao
 }
