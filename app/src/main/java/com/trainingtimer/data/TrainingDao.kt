@@ -14,11 +14,11 @@ interface TrainingDao {
     fun getTrainings(): LiveData<List<Training>>
 
     @Query("SELECT * FROM trainings WHERE trainingId = (:trainingId)")
-    fun getTraining(trainingId: Int): Training
+    fun getTraining(trainingId: Int): LiveData<Training?>
 
     @Update(entity = TrainingDbEntity::class)
     fun updateTraining(training: Training)
 
     @Insert
-    fun addTraining(training: Training)
+    fun addTraining(trainingDbEntity: TrainingDbEntity)
 }
