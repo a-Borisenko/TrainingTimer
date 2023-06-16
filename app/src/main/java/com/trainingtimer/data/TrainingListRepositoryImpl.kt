@@ -2,13 +2,23 @@ package com.trainingtimer.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingListRepository
 
+private const val DATABASE_NAME = "training-database"
+
 object TrainingListRepositoryImpl : TrainingListRepository {
+
+    private val database : TrainingDatabase = Room.databaseBuilder(
+        context,
+        TrainingDatabase::class.java,
+        DATABASE_NAME
+    ).build()
 
     private val trainingListLD = MutableLiveData<List<Training>>()
     private val trainingList = sortedSetOf<Training>({ p0, p1 -> p0.id.compareTo(p1.id) }) //временное хранение в переменной вместо БД
+    private val trainingDao = database.trainingDao()
     private var autoIncrementId = 0
 
     init {
