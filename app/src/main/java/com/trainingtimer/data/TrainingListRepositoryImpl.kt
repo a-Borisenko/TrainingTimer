@@ -11,7 +11,7 @@ private const val DATABASE_NAME = "training-database"
 object TrainingListRepositoryImpl : TrainingListRepository {
 
     private val database : TrainingDatabase = Room.databaseBuilder(
-        context,
+        this.context,
         TrainingDatabase::class.java,
         DATABASE_NAME
     ).build()
@@ -35,6 +35,7 @@ object TrainingListRepositoryImpl : TrainingListRepository {
         if (training.id == Training.UNDEFINED_ID) {
             training.id = autoIncrementId++
         }
+        trainingDao.addTraining()
         trainingList.add(training)
         updateList()
     }
