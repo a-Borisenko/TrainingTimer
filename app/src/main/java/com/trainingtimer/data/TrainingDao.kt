@@ -21,4 +21,7 @@ interface TrainingDao {
 
     @Insert
     fun addTraining(trainingDbEntity: TrainingDbEntity)
+
+    @Insert
+    fun deleteTraining(trainingDbEntity: TrainingDbEntity)
 }

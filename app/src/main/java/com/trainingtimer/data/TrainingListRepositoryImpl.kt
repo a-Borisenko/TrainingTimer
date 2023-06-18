@@ -35,12 +35,13 @@ object TrainingListRepositoryImpl : TrainingListRepository {
         if (training.id == Training.UNDEFINED_ID) {
             training.id = autoIncrementId++
         }
-        trainingDao.addTraining()
+//        trainingDao.addTraining(TrainingDbEntity.fromUser(training))
         trainingList.add(training)
         updateList()
     }
 
     override fun deleteTraining(training: Training) {
+//        trainingDao.deleteTraining(TrainingDbEntity.fromUser(training))
         trainingList.remove(training)
         updateList()
     }
@@ -61,6 +62,7 @@ object TrainingListRepositoryImpl : TrainingListRepository {
     }
 
     private fun updateList() {
+        trainingDao.updateTraining()
         trainingListLD.value = trainingList.toList()
     }
 }
