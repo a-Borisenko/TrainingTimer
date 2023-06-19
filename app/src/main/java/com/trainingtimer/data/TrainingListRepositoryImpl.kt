@@ -1,5 +1,6 @@
 package com.trainingtimer.data
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
@@ -8,10 +9,10 @@ import com.trainingtimer.domain.TrainingListRepository
 
 private const val DATABASE_NAME = "training-database"
 
-object TrainingListRepositoryImpl : TrainingListRepository {
+class TrainingListRepositoryImpl private constructor(context: Context) : TrainingListRepository {
 
     private val database : TrainingDatabase = Room.databaseBuilder(
-        this.context,
+        context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
     ).build()
@@ -62,7 +63,10 @@ object TrainingListRepositoryImpl : TrainingListRepository {
     }
 
     private fun updateList() {
-        trainingDao.updateTraining()
         trainingListLD.value = trainingList.toList()
     }
+
+    /*private fun updateTraining(training: Training) {
+        trainingDao.updateTraining(training)
+    }*/
 }
