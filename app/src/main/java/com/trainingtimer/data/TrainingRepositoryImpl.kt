@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
-import com.trainingtimer.domain.TrainingListRepository
+import com.trainingtimer.domain.TrainingRepository
 
 private const val DATABASE_NAME = "training-database"
 
-class TrainingListRepositoryImpl private constructor(context: Context) : TrainingListRepository {
+class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
 
     private val database : TrainingDatabase = Room.databaseBuilder(
         context.applicationContext,
@@ -69,4 +69,19 @@ class TrainingListRepositoryImpl private constructor(context: Context) : Trainin
     /*private fun updateTraining(training: Training) {
         trainingDao.updateTraining(training)
     }*/
+
+    companion object {
+        private var INSTANCE: TrainingRepositoryImpl? = null
+
+        fun initialize(context: Context) {
+            if (INSTANCE == null) {
+                INSTANCE = TrainingRepositoryImpl(context)
+            }
+        }
+
+        fun get(): TrainingRepositoryImpl {
+            return INSTANCE ?:
+            throw IllegalStateException("TrainingRepositoryImpl must be initialized")
+        }
+    }
 }

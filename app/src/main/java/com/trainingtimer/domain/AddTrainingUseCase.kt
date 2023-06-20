@@ -1,8 +1,8 @@
 package com.trainingtimer.domain
 
-class AddTrainingUseCase(private val trainingListRepository: TrainingListRepository) {
+class AddTrainingUseCase(private val trainingRepository: TrainingRepository) {
 
     fun addTraining(training: Training) {
-        trainingListRepository.addTraining(training)
+        trainingRepository.addTraining(training)
     }
 }

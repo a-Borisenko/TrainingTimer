@@ -2,7 +2,7 @@ package com.trainingtimer.domain
 
 import androidx.lifecycle.LiveData
 
-interface TrainingListRepository {
+interface TrainingRepository {
 
     fun addTraining(training: Training)
 

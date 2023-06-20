@@ -1,8 +1,8 @@
 package com.trainingtimer.domain
 
-class DeleteTrainingUseCase(private val trainingListRepository: TrainingListRepository) {
+class DeleteTrainingUseCase(private val trainingRepository: TrainingRepository) {
 
     fun deleteTraining(training: Training) {
-        trainingListRepository.deleteTraining(training)
+        trainingRepository.deleteTraining(training)
     }
 }

@@ -1,7 +1,7 @@
 package com.trainingtimer.ui
 
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.data.TrainingListRepositoryImpl
+import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.DeleteTrainingUseCase
 import com.trainingtimer.domain.EditTrainingUseCase
 import com.trainingtimer.domain.GetTrainingListUseCase
@@ -12,12 +12,12 @@ class TrainingListViewModel : ViewModel() {
     //import data.TrainingListRepositoryImpl
 
 //    private val trainingRepository = TrainingRepository.get()
-    private val repository = TrainingListRepositoryImpl
+    private val repository = TrainingRepositoryImpl
 
 //    val trainingListLiveData = trainingRepository.getTrainings()
-    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
-    private val deleteTrainingUseCase = DeleteTrainingUseCase(repository)
-    private val editTrainingUseCase = EditTrainingUseCase(repository)
+    private val getTrainingListUseCase = GetTrainingListUseCase(repository.get())
+    private val deleteTrainingUseCase = DeleteTrainingUseCase(repository.get())
+    private val editTrainingUseCase = EditTrainingUseCase(repository.get())
 
     val trainingList = getTrainingListUseCase.getTrainingList() //MutableLiveData<List<Training>>()
 
