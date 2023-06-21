@@ -49,16 +49,20 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun editTraining(training: Training) {
         val oldElement = getTraining(training.id)
+//        trainingDao.deleteTraining(TrainingDbEntity.fromUser(training))
+//        trainingDao.addTraining(TrainingDbEntity.fromUser(training))
         trainingList.remove(oldElement)
         addTraining(training)
     }
 
     override fun getTraining(trainingId: Int): Training {
+//        return trainingDao.getTraining(trainingId)
         return trainingList.find { it.id == trainingId }
             ?: throw RuntimeException("element with id$trainingId not found")
     }
 
     override fun getTrainingList(): LiveData<List<Training>> {
+//        return trainingDao.getTrainings()
         return trainingListLD
     }
 
