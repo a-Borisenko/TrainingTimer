@@ -49,7 +49,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun editTraining(training: Training) {
         val oldElement = getTraining(training.id)
-//        trainingDao.deleteTraining(TrainingDbEntity.fromUser(training))
+//        trainingDao.deleteTraining(oldElement)
 //        trainingDao.addTraining(TrainingDbEntity.fromUser(training))
         trainingList.remove(oldElement)
         addTraining(training)
@@ -67,6 +67,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     }
 
     private fun updateList() {
+//        trainingDao.getTrainings().value = trainingList.toList()
         trainingListLD.value = trainingList.toList()
     }
 
