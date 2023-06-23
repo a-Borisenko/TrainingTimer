@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "training-database"
 
@@ -19,8 +20,10 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     private val trainingListLD = MutableLiveData<List<Training>>()
     private val trainingList = sortedSetOf<Training>({ p0, p1 -> p0.id.compareTo(p1.id) }) //временное хранение в переменной вместо БД
-    private val trainingDao = database.trainingDao()
     private var autoIncrementId = 0
+
+    private val trainingDao = database.trainingDao()
+    private val executor = Executors.newSingleThreadExecutor()
 
     init {
         addTraining(Training(1, "подтягивания", "x5", "01:00"))
