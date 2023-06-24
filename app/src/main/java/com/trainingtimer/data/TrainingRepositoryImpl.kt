@@ -39,44 +39,52 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         if (training.id == Training.UNDEFINED_ID) {
             training.id = autoIncrementId++
         }
-//        trainingDao.addTraining(TrainingDbEntity.fromUser(training))
-        trainingList.add(training)
-        updateList()
+        executor.execute {
+            trainingDao.addTraining(training)
+        }
+//        trainingList.add(training)
+//        updateList()
     }
 
     override fun deleteTraining(training: Training) {
-//        trainingDao.deleteTraining(TrainingDbEntity.fromUser(training))
-        trainingList.remove(training)
-        updateList()
+        executor.execute {
+            trainingDao.deleteTraining(training)
+        }
+//        trainingList.remove(training)
+//        updateList()
     }
 
     override fun editTraining(training: Training) {
-        val oldElement = getTraining(training.id)
-//        trainingDao.deleteTraining(oldElement)
-//        trainingDao.addTraining(TrainingDbEntity.fromUser(training))
-        trainingList.remove(oldElement)
-        addTraining(training)
+        executor.execute {
+            val oldElement = getTraining(training.id)
+            trainingDao.deleteTraining(oldElement)
+            trainingDao.addTraining(training)
+        }
+//        trainingList.remove(oldElement)
+//        addTraining(training)
     }
 
-    override fun getTraining(trainingId: Int): Training {
-//        return trainingDao.getTraining(trainingId)
-        return trainingList.find { it.id == trainingId }
+    override fun getTraining(trainingId: Int): LiveData<Training?> {
+        return trainingDao.getTraining(trainingId)
+//        return trainingList.find { it.id == trainingId }
             ?: throw RuntimeException("element with id$trainingId not found")
     }
 
     override fun getTrainingList(): LiveData<List<Training>> {
-//        return trainingDao.getTrainings()
-        return trainingListLD
+        return trainingDao.getTrainings()
+//        return trainingListLD
     }
 
-    private fun updateList() {
-//        trainingDao.getTrainings().value = trainingList.toList()
+    /*private fun updateList() {
+        trainingDao.getTrainings().value = trainingList.toList()
         trainingListLD.value = trainingList.toList()
-    }
-
-    /*private fun updateTraining(training: Training) {
-        trainingDao.updateTraining(training)
     }*/
+
+    private fun updateTraining(training: Training) {
+        executor.execute {
+            trainingDao.updateTraining(training)
+        }
+    }
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null

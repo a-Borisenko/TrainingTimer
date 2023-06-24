@@ -10,7 +10,7 @@ interface TrainingRepository {
 
     fun editTraining(training: Training)
 
-    fun getTraining(trainingId: Int): Training
+    fun getTraining(trainingId: Int): LiveData<Training?>
 
     fun getTrainingList(): LiveData<List<Training>>
 }
