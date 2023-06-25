@@ -11,7 +11,7 @@ import com.trainingtimer.domain.Training
 
 class TrainingViewModel : ViewModel() {
 
-    private val repository = TrainingRepositoryImpl
+    private val repository = TrainingRepositoryImpl.get()
 //    private val trainingRepository = TrainingRepository.get()
 //    private val trainingIdLiveData = MutableLiveData<UUID>()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
@@ -43,8 +43,9 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        val item = getTrainingUseCase.getTraining(trainingId)
-        _training.value = item
+        val item = getTrainingUseCase.getTraining(trainingId).value
+        _training.value =
+            item ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
     fun addTraining(

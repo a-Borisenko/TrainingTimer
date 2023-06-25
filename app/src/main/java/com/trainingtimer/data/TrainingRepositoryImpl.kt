@@ -12,7 +12,7 @@ private const val DATABASE_NAME = "training-database"
 
 class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
 
-    private val database : TrainingDatabase = Room.databaseBuilder(
+    private val database: TrainingDatabase = Room.databaseBuilder(
         context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
@@ -30,7 +30,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         addTraining(Training(1, "отжимания", "x10", "01:00"))
         addTraining(Training(1, "приседания", "x15", "01:00"))
         for (i in 4 until 100) {
-            val item = Training(i,"Training №$i", "x$i", "01:00")
+            val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
         }
     }
@@ -56,7 +56,8 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun editTraining(training: Training) {
         executor.execute {
-            val oldElement = getTraining(training.id)
+            val oldElement = getTraining(training.id).value
+                ?: throw IllegalStateException("Training with id${training.id} not found")
             trainingDao.deleteTraining(oldElement)
             trainingDao.addTraining(training)
         }
@@ -96,8 +97,8 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
 
         fun get(): TrainingRepositoryImpl {
-            return INSTANCE ?:
-            throw IllegalStateException("TrainingRepositoryImpl must be initialized")
+            return INSTANCE
+                ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
         }
     }
 }
