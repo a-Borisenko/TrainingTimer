@@ -18,8 +18,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         DATABASE_NAME
     ).build()
 
-    private val trainingListLD = MutableLiveData<List<Training>>()
-    private val trainingList = sortedSetOf<Training>({ p0, p1 -> p0.id.compareTo(p1.id) }) //временное хранение в переменной вместо БД
     private var autoIncrementId = 0
 
     private val trainingDao = database.trainingDao()
@@ -42,16 +40,12 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         executor.execute {
             trainingDao.addTraining(training)
         }
-//        trainingList.add(training)
-//        updateList()
     }
 
     override fun deleteTraining(training: Training) {
         executor.execute {
             trainingDao.deleteTraining(training)
         }
-//        trainingList.remove(training)
-//        updateList()
     }
 
     override fun editTraining(training: Training) {
@@ -61,25 +55,15 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             trainingDao.deleteTraining(oldElement)
             trainingDao.addTraining(training)
         }
-//        trainingList.remove(oldElement)
-//        addTraining(training)
     }
 
     override fun getTraining(trainingId: Int): LiveData<Training?> {
         return trainingDao.getTraining(trainingId)
-//        return trainingList.find { it.id == trainingId }
-            ?: throw RuntimeException("element with id$trainingId not found")
     }
 
     override fun getTrainingList(): LiveData<List<Training>> {
         return trainingDao.getTrainings()
-//        return trainingListLD
     }
-
-    /*private fun updateList() {
-        trainingDao.getTrainings().value = trainingList.toList()
-        trainingListLD.value = trainingList.toList()
-    }*/
 
     private fun updateTraining(training: Training) {
         executor.execute {
