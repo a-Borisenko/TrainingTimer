@@ -11,7 +11,7 @@ import com.trainingtimer.domain.Training
 interface TrainingDao {
 
     @Query("SELECT * FROM trainings")
-    fun getTrainings(): LiveData<List<Training>>
+    fun getTrainings(): LiveData<List<Training>>    //java compiling problem
 
     @Query("SELECT * FROM trainings WHERE trainingId = (:trainingId)")
     fun getTraining(trainingId: Int): LiveData<Training?>
