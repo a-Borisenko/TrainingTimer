@@ -77,7 +77,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             secondsRemaining = bundle.getLong("time")
-//            Toast.makeText(context, "$secondsRemaining", Toast.LENGTH_SHORT).show()
             updateCountdownUI()
         }
     }
