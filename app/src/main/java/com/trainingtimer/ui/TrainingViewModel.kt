@@ -12,8 +12,6 @@ import com.trainingtimer.domain.Training
 class TrainingViewModel : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
-//    private val trainingRepository = TrainingRepository.get()
-//    private val trainingIdLiveData = MutableLiveData<UUID>()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
@@ -135,10 +133,6 @@ class TrainingViewModel : ViewModel() {
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
-    /*var trainingLiveData: LiveData<Training?> =
-        Transformations.switchMap(trainingIdLiveData) { trainingId ->
-            trainingRepository.getTraining(trainingId)
-        }*/
 
     /*fun loadTraining(trainingId: UUID) {
         trainingIdLiveData.value = trainingId
