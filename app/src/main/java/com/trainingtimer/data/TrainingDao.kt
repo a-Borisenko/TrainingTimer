@@ -14,14 +14,14 @@ interface TrainingDao {
     fun getTrainings(): LiveData<List<Training>>    //java compiling problem
 
     @Query("SELECT * FROM trainings WHERE trainingId = (:trainingId)")
-    fun getTraining(trainingId: Int): LiveData<Training?>
+    fun getTraining(trainingId: Int): LiveData<Training?>   //problem too
 
     @Update
-    fun updateTraining(training: Training)
+    fun updateTraining(training: Training)    //same problem
 
     @Insert
-    fun addTraining(training: Training)
+    fun addTraining(training: Training)    //and here
 
     @Insert
-    fun deleteTraining(training: Training)
+    fun deleteTraining(training: Training)    //here too
 }
