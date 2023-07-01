@@ -133,12 +133,4 @@ class TrainingViewModel : ViewModel() {
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
-
-    /*fun loadTraining(trainingId: UUID) {
-        trainingIdLiveData.value = trainingId
-    }*/
-
-    /*fun saveTraining(training: Training) {
-        trainingRepository.updateTraining(training)
-    }*/
 }
