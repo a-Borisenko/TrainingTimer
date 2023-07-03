@@ -9,6 +9,7 @@ import com.trainingtimer.domain.Training
 
 @Dao
 interface TrainingDao {
+    //There is a problem with the query: [SQLITE_ERROR] SQL error or missing database (no such table: training)
 
     @Query("SELECT * FROM trainings")
     fun getTrainings(): LiveData<List<Training>>    //java compiling problem
