@@ -13,7 +13,7 @@ interface TrainingDao {
     //The columns returned by the query does not have the fields [id] in com.trainingtimer.domain.Training even though they are annotated as non-null or primitive. Columns returned by the query: [sets,title,times,rest,trainingId]
     //public abstract androidx.lifecycle.LiveData<java.util.List<com.trainingtimer.domain.Training>> getTrainings();
 
-    @Query("SELECT * FROM trainings")
+    @Query("SELECT * FROM training")
     fun getTrainings(): LiveData<List<Training>>
 
     @Query("SELECT * FROM trainings WHERE trainingId = (:trainingId)")
