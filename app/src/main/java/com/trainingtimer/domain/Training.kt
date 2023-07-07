@@ -1,17 +1,15 @@
 package com.trainingtimer.domain
 
 import androidx.room.Entity
-import java.util.UUID
+import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "training"
-)
+@Entity
 data class Training(
     val sets: Int,
     val title: String,
     val times: String,
     val rest: String,
-    var id: Int = UUID.randomUUID().toString().toInt()
+    @PrimaryKey var id: Int = UNDEFINED_ID
 ) {
     companion object {
 
