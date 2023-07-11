@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.ui.list
 
 import androidx.recyclerview.widget.DiffUtil
 import com.trainingtimer.domain.Training

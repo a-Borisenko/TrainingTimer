@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.ui.list
 
 import android.os.Bundle
 import android.util.Log

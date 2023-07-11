@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.ui.list
 
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingRepositoryImpl

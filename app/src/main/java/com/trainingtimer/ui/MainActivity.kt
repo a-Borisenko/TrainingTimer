@@ -3,6 +3,7 @@ package com.trainingtimer.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.trainingtimer.R
+import com.trainingtimer.ui.list.TrainingListFragment
 
 class MainActivity : AppCompatActivity() {
 
