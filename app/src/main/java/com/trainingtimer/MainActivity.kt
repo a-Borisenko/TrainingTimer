@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
