@@ -19,7 +19,7 @@ interface TrainingDao {
     @Query("SELECT * FROM training")
     fun getTrainings(): LiveData<List<Training>>
 
-    @Query("SELECT * FROM trainings WHERE trainingId = (:id)")
+    @Query("SELECT * FROM training WHERE id = (:id)")
     fun getTraining(id: Int): LiveData<Training?>
 
     @Update
