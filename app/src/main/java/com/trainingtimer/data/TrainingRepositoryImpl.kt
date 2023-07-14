@@ -30,7 +30,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
         }
-//        val trainings: LiveData<List<Training>> = trainingDao.getTrainings()
     }
 
     override fun addTraining(training: Training) {
