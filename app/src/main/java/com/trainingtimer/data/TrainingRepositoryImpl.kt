@@ -30,7 +30,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
         }
-        val trainings: LiveData<List<Training>> = trainingDao.getTrainings()
+//        val trainings: LiveData<List<Training>> = trainingDao.getTrainings()
     }
 
     override fun addTraining(training: Training) {
@@ -49,12 +49,12 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     }
 
     override fun editTraining(training: Training) {
-        executor.execute {
+        /*executor.execute {
             val oldElement = getTraining(training.id).value
                 ?: throw IllegalStateException("Training with id${training.id} not found")
             trainingDao.deleteTraining(oldElement)
             trainingDao.addTraining(training)
-        }
+        }*/
     }
 
     override fun getTraining(trainingId: Int): LiveData<Training?> {
