@@ -37,9 +37,10 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             training.id = autoIncrementId++
         }
         executor.execute {
-            trainingDao.addTraining(training)   //pool-2-thread-1 Room cannot verify the data integrity.
+            trainingDao.addTraining(training)
+        //pool-2-thread-1 Room cannot verify the data integrity.
         // Looks like you've changed schema but forgot to update the version number.
-        // You can simply fix this by increasing the version number.
+        // You can simply fix this by increasing the version number - didn't helped
         }
     }
 
