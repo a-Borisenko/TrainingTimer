@@ -37,7 +37,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             training.id = autoIncrementId++
         }
         executor.execute {
-            trainingDao.addTraining(training)
+            trainingDao.addTraining(training)   //again
         }
     }
 
