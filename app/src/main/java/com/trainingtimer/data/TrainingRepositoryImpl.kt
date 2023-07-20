@@ -22,7 +22,8 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    init {
+    /*init {
+        //TODO: init must be only if there is no DataBase on the phone yet
         addTraining(Training(1, "подтягивания", "x5", "01:00"))
         addTraining(Training(1, "отжимания", "x10", "01:00"))
         addTraining(Training(1, "приседания", "x15", "01:00"))
@@ -30,7 +31,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
         }
-    }
+    }*/
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
