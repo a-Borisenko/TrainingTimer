@@ -1,5 +1,6 @@
 package com.trainingtimer.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,9 +42,11 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        val item = getTrainingUseCase.getTraining(trainingId).value
-        _training.value =
-            item ?: throw IllegalStateException("Training with id${trainingId} not found")
+        val item = TrainingRepositoryImpl.get().getTraining(trainingId).value    //getTrainingUseCase.getTraining(trainingId).value
+        Log.d("TrainingViewModel", "Training id $trainingId")
+        Log.d("TrainingViewModel", "Item value = $item")
+        _training.value = item
+            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
     fun addTraining(
