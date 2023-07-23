@@ -42,7 +42,7 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        val item = TrainingRepositoryImpl.get().getTraining(trainingId).value    //getTrainingUseCase.getTraining(trainingId).value
+        val item = getTrainingUseCase.getTraining(trainingId).value
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
         _training.value = item
