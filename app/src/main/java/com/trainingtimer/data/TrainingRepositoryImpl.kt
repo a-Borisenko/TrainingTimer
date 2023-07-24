@@ -6,6 +6,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance
 import androidx.room.Room
 import androidx.room.RoomDatabase.*
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.trainingtimer.data.TrainingDatabase.Companion.PREPOPULATE_DATA
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
@@ -18,27 +19,21 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
-    ).addCallback(object : Callback() {
+    )/*.addCallback(object : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             ioThread {
-                trainingDao().insertData(PREPOPULATE_DATA)
+                getInstance(context).trainingDao().insert(PREPOPULATE_DATA)
             }
         }
         //
-    })
+    })*/
         .build()
 
     private var autoIncrementId = 0
 
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
-
-    val PREPOPULATE_DATA = listOf(
-        Training(1, "подтягивания", "x5", "01:00"),
-        Training(1, "отжимания", "x10", "01:00"),
-        Training(1, "приседания", "x15", "01:00")
-    )
 
     /*init {
         //TODO: init must be only if there is no DataBase on the phone yet
