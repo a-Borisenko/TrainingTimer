@@ -22,7 +22,7 @@ abstract class TrainingDatabase : RoomDatabase() {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
 
-        private fun buildDatabase(context: Context) =
+        /*private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context.applicationContext,
                 TrainingDatabase::class.java, "Sample.db")
                 // prepopulate the database after onCreate was called
@@ -45,6 +45,6 @@ abstract class TrainingDatabase : RoomDatabase() {
 
         fun ioThread(f: () -> Unit) {
             Executors.newSingleThreadExecutor().execute(f)
-        }
+        }*/
     }
 }

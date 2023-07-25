@@ -6,7 +6,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance
 import androidx.room.Room
 import androidx.room.RoomDatabase.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.trainingtimer.data.TrainingDatabase.Companion.PREPOPULATE_DATA
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
@@ -19,15 +18,22 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
-    )/*.addCallback(object : Callback() {
+    ).addCallback(object : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             ioThread {
-                getInstance(context).trainingDao().insert(PREPOPULATE_DATA)
+                with(TrainingDatabase.getInstance(context).trainingDao()) {
+                    addTraining(Training(1, "подтягивания", "x5", "01:00"))
+                    addTraining(Training(1, "отжимания", "x10", "01:00"))
+                    addTraining(Training(1, "приседания", "x15", "01:00"))
+                    for (i in 4 until 100) {
+                        val item = Training(i, "Training №$i", "x$i", "01:00")
+                        addTraining(item)
+                    }
+                }
             }
         }
-        //
-    })*/
+    })
         .build()
 
     private var autoIncrementId = 0
