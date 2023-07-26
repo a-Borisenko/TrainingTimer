@@ -15,36 +15,60 @@ abstract class TrainingDatabase : RoomDatabase() {
 
     companion object {
 
-        @Volatile private var INSTANCE: TrainingDatabase? = null
+        @Volatile
+        private var INSTANCE: TrainingDatabase? = null
 
         fun getInstance(context: Context): TrainingDatabase =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+                INSTANCE ?: database(context).also { INSTANCE = it }
             }
 
-        /*private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext,
-                TrainingDatabase::class.java, "Sample.db")
-                // prepopulate the database after onCreate was called
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        // insert the data on the IO Thread
-                        ioThread {
-                            getInstance(context).trainingDao().insertData(PREPOPULATE_DATA)
-                        }
+        fun database(context: Context) = Room.databaseBuilder(
+            context.applicationContext,
+            TrainingDatabase::class.java,
+            "training-database"
+        ).addCallback(object : Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                ioThread {
+                    with(getInstance(context).trainingDao()) {
+                        addTraining(Training(1, "подтягивания", "x5", "01:00"))
+                        /*addTraining(Training(1, "отжимания", "x10", "01:00"))
+                        addTraining(Training(1, "приседания", "x15", "01:00"))
+                        for (i in 4 until 100) {
+                            val item = Training(i, "Training №$i", "x$i", "01:00")
+                            addTraining(item)
+                        }*/
                     }
-                })
-                .build()
-
-        val PREPOPULATE_DATA = listOf(
-            Training(1, "подтягивания", "x5", "01:00"),
-            Training(1, "отжимания", "x10", "01:00"),
-            Training(1, "приседания", "x15", "01:00")
-        )
+                }
+            }
+        })
+            .build()
 
         fun ioThread(f: () -> Unit) {
             Executors.newSingleThreadExecutor().execute(f)
-        }*/
+        }
+
+        /*private val database(context: Context): TrainingDatabase = Room.databaseBuilder(
+            context.applicationContext,
+            TrainingDatabase::class.java,
+            DATABASE_NAME
+        ).addCallback(object : Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                ioThread {
+                    with(getInstance(context).trainingDao()) {
+                        addTraining(Training(1, "подтягивания", "x5", "01:00"))
+                        addTraining(Training(1, "отжимания", "x10", "01:00"))
+                        addTraining(Training(1, "приседания", "x15", "01:00"))
+                        for (i in 4 until 100) {
+                            val item = Training(i, "Training №$i", "x$i", "01:00")
+                            addTraining(item)
+                        }
+                    }
+                }
+            }
+        })
+            .build()*/
     }
 }

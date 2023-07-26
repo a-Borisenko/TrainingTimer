@@ -10,11 +10,11 @@ import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
 
-private const val DATABASE_NAME = "training-database"
+//private const val DATABASE_NAME = "training-database"
 
 class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
 
-    private val database: TrainingDatabase = Room.databaseBuilder(
+    /*private val database: TrainingDatabase = Room.databaseBuilder(
         context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
@@ -34,11 +34,11 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             }
         }
     })
-        .build()
+        .build()*/
 
     private var autoIncrementId = 0
 
-    private val trainingDao = database.trainingDao()
+    private val trainingDao = TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
     /*init {
@@ -90,9 +90,9 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
     }
 
-    fun ioThread(f: () -> Unit) {
+    /*fun ioThread(f: () -> Unit) {
         Executors.newSingleThreadExecutor().execute(f)
-    }
+    }*/
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
