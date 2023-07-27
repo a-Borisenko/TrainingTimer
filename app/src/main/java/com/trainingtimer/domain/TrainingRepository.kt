@@ -6,6 +6,8 @@ interface TrainingRepository {
 
     fun addTraining(training: Training)
 
+    fun insertData(data: List<Training>)
+
     fun deleteTraining(training: Training)
 
     fun editTraining(training: Training)

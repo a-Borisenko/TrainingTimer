@@ -28,6 +28,9 @@ interface TrainingDao {
     @Insert
     fun addTraining(training: Training)
 
+    @Insert
+    fun insertData(data: List<Training>)
+
     @Delete
     fun deleteTraining(training: Training)
 

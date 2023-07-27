@@ -61,6 +61,17 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
     }
 
+    override fun insertData(data: List<Training>) {
+        for (i in 0 .. data.size) {
+            if (data[i].id == Training.UNDEFINED_ID) {
+                data[i].id = autoIncrementId++
+            }
+            executor.execute {
+                trainingDao.addTraining(data[i])
+            }
+        }
+    }
+
     override fun deleteTraining(training: Training) {
         executor.execute {
             trainingDao.deleteTraining(training)
