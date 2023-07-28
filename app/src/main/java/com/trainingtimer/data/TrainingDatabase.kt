@@ -39,6 +39,7 @@ abstract class TrainingDatabase : RoomDatabase() {
                             val item = Training(i, "Training №$i", "x$i", "01:00")
                             addTraining(item)
                         }*/
+                        //loadAllByIds
                     }
                 }
                 //update trainingList
@@ -49,27 +50,5 @@ abstract class TrainingDatabase : RoomDatabase() {
         fun ioThread(f: () -> Unit) {
             Executors.newSingleThreadExecutor().execute(f)
         }
-
-        /*private val database(context: Context): TrainingDatabase = Room.databaseBuilder(
-            context.applicationContext,
-            TrainingDatabase::class.java,
-            DATABASE_NAME
-        ).addCallback(object : Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                ioThread {
-                    with(getInstance(context).trainingDao()) {
-                        addTraining(Training(1, "подтягивания", "x5", "01:00"))
-                        addTraining(Training(1, "отжимания", "x10", "01:00"))
-                        addTraining(Training(1, "приседания", "x15", "01:00"))
-                        for (i in 4 until 100) {
-                            val item = Training(i, "Training №$i", "x$i", "01:00")
-                            addTraining(item)
-                        }
-                    }
-                }
-            }
-        })
-            .build()*/
     }
 }
