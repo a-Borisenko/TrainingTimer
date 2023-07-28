@@ -32,8 +32,7 @@ abstract class TrainingDatabase : RoomDatabase() {
                 super.onCreate(db)
                 ioThread {
                     with(getInstance(context).trainingDao()) {
-                        insertData(PREPOPULATE_DATA)
-//                        addTraining(Training(1, "подтягивания", "x5", "01:00"))
+                        addTraining(Training(1, "подтягивания", "x5", "01:00"))
                         /*addTraining(Training(1, "отжимания", "x10", "01:00"))
                         addTraining(Training(1, "приседания", "x15", "01:00"))
                         for (i in 4 until 100) {
@@ -42,15 +41,10 @@ abstract class TrainingDatabase : RoomDatabase() {
                         }*/
                     }
                 }
+                //update trainingList
             }
         })
             .build()
-
-        val PREPOPULATE_DATA = listOf(
-            Training(1, "подтягивания", "x5", "01:00"),
-            Training(1, "отжимания", "x10", "01:00"),
-            Training(1, "приседания", "x15", "01:00")
-        )
 
         fun ioThread(f: () -> Unit) {
             Executors.newSingleThreadExecutor().execute(f)
