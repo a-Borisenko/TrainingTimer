@@ -61,6 +61,10 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
     }
 
+    override fun loadAllByIds(id: IntArray): List<Training> {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteTraining(training: Training) {
         executor.execute {
             trainingDao.deleteTraining(training)

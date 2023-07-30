@@ -12,5 +12,7 @@ interface TrainingRepository {
 
     fun getTraining(trainingId: Int): LiveData<Training?>
 
+    fun loadAllByIds(id: IntArray): List<Training>
+
     fun getTrainingList(): LiveData<List<Training>>
 }
