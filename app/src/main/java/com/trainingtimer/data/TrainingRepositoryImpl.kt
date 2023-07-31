@@ -62,7 +62,13 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     }
 
     override fun loadAllByIds(id: IntArray): List<Training> {
-        TODO("Not yet implemented")
+        val hub = mutableListOf<Training>()
+        for (i in id.indices) {
+            val item = Training(i, "Training №$i", "x$i", "01:00")
+//            addTraining(item)
+            hub[i] = item
+        }
+        return hub.toList()
     }
 
     override fun deleteTraining(training: Training) {
