@@ -41,7 +41,6 @@ abstract class TrainingDatabase : RoomDatabase() {
                         }*/
                     }
                 }
-                //update trainingList
             }
         })
             .build()
