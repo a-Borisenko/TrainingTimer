@@ -40,7 +40,7 @@ abstract class TrainingDatabase : RoomDatabase() {
                             addTraining(item)
                         }*/
                     }
-
+                    //update list of trainings
                 }
             }
         })

@@ -2,10 +2,6 @@ package com.trainingtimer.data
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance
-import androidx.room.Room
-import androidx.room.RoomDatabase.*
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
