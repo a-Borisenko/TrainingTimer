@@ -13,7 +13,7 @@ abstract class TrainingDatabase : RoomDatabase() {
 
     abstract fun trainingDao(): TrainingDao
 
-    companion object {
+    /*companion object {
 
         @Volatile
         private var INSTANCE: TrainingDatabase? = null
@@ -33,12 +33,12 @@ abstract class TrainingDatabase : RoomDatabase() {
                 ioThread {
                     with(getInstance(context).trainingDao()) {
                         addTraining(Training(1, "подтягивания", "x5", "01:00"))
-                        /*addTraining(Training(1, "отжимания", "x10", "01:00"))
-                        addTraining(Training(1, "приседания", "x15", "01:00"))
-                        for (i in 4 until 100) {
-                            val item = Training(i, "Training №$i", "x$i", "01:00")
-                            addTraining(item)
-                        }*/
+//                        addTraining(Training(1, "отжимания", "x10", "01:00"))
+//                        addTraining(Training(1, "приседания", "x15", "01:00"))
+//                        for (i in 4 until 100) {
+//                            val item = Training(i, "Training №$i", "x$i", "01:00")
+//                            addTraining(item)
+//                        }
                     }
                     //update list of trainings
                 }
@@ -49,5 +49,5 @@ abstract class TrainingDatabase : RoomDatabase() {
         fun ioThread(f: () -> Unit) {
             Executors.newSingleThreadExecutor().execute(f)
         }
-    }
+    }*/
 }

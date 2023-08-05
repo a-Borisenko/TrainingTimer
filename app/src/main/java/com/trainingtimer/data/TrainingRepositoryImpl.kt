@@ -2,19 +2,23 @@ package com.trainingtimer.data
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
 
-//private const val DATABASE_NAME = "training-database"
+private const val DATABASE_NAME = "training-database"
 
 class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
 
-    /*private val database: TrainingDatabase = Room.databaseBuilder(
+    private val database: TrainingDatabase = Room.databaseBuilder(
         context.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
-    ).addCallback(object : Callback() {
+    )
+//        .createFromAsset("database/myapp.db")
+//        .createFromFile(File("mypath"))
+        /*.addCallback(object : Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             ioThread {
@@ -29,12 +33,12 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
                 }
             }
         }
-    })
-        .build()*/
+    })*/
+        .build()
 
     private var autoIncrementId = 0
 
-    private val trainingDao = TrainingDatabase.database(context).trainingDao()
+    private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
     /*init {
@@ -73,12 +77,12 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     }
 
     override fun editTraining(training: Training) {
-        /*executor.execute {
+        executor.execute {
             val oldElement = getTraining(training.id).value
                 ?: throw IllegalStateException("Training with id${training.id} not found")
             trainingDao.deleteTraining(oldElement)
             trainingDao.addTraining(training)
-        }*/
+        }
     }
 
     override fun getTraining(trainingId: Int): LiveData<Training?> {
