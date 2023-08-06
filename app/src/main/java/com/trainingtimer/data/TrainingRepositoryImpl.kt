@@ -61,15 +61,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
     }
 
-    /*override fun loadAllByIds(id: IntArray): List<Training> {
-        val hub = mutableListOf<Training>()
-        for (i in id.indices) {
-            val item = Training(i, "Training №$i", "x$i", "01:00")
-            hub[i] = item
-        }
-        return hub.toList()
-    }*/
-
     override fun deleteTraining(training: Training) {
         executor.execute {
             trainingDao.deleteTraining(training)
@@ -98,10 +89,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             trainingDao.updateTraining(training)
         }
     }
-
-    /*fun ioThread(f: () -> Unit) {
-        Executors.newSingleThreadExecutor().execute(f)
-    }*/
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null

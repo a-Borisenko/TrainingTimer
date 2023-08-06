@@ -42,9 +42,6 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        /*getTrainingUseCase.getTraining(trainingId).observe(viewLifecycleOwner) {
-            val item = Training(trainingId)
-        })*/
         val item = getTrainingUseCase.getTraining(trainingId).value
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
