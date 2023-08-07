@@ -3,6 +3,7 @@ package com.trainingtimer.ui
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.AddTrainingUseCase
@@ -42,11 +43,15 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        val item = getTrainingUseCase.getTraining(trainingId).value
+        getTrainingUseCase.getTraining(trainingId)
+        val item = Observer<Training> { training ->
+            // Update the UI, in this case, a TextView.
+            _training.value = training
+        }
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
-        _training.value = item
-            ?: throw IllegalStateException("Training with id${trainingId} not found")
+//        _training.value = item
+//            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
     fun addTraining(
