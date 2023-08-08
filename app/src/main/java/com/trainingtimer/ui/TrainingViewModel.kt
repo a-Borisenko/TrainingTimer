@@ -43,14 +43,12 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getTraining(trainingId: Int) {
-        getTrainingUseCase.getTraining(trainingId)
-        val item = Observer<Training> { training ->
-            // Update the UI, in this case, a TextView.
-            _training.value = training
-        }
+        val item = getTrainingUseCase.getTraining(trainingId)
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
-//        _training.value = item
+        item.observe() {
+            _training.value = it
+        }
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
