@@ -3,7 +3,6 @@ package com.trainingtimer.ui
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.AddTrainingUseCase
@@ -46,7 +45,7 @@ class TrainingViewModel : ViewModel() {
         val item = getTrainingUseCase.getTraining(trainingId)
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
-        item.observe() {
+        item.observe(this) {
             _training.value = it
         }
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
