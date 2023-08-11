@@ -117,12 +117,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
         if (id != Training.UNDEFINED_ID) {
             viewModel.getTraining(trainingId)
-            viewModel.training.observe(viewLifecycleOwner) {
+            viewModel.trainingLD.observe(viewLifecycleOwner) {
+                binding.etSets.setText(it?.sets.toString())
+                binding.etTitle.setText(it?.title)
+                binding.etTimes.setText(it?.times)
+                binding.viewTimer.text = it?.rest
+            }
+            /*viewModel.training.observe(viewLifecycleOwner) {
                 binding.etSets.setText(it.sets.toString())
                 binding.etTitle.setText(it.title)
                 binding.etTimes.setText(it.times)
                 binding.viewTimer.text = it.rest
-            }
+            }*/
         }
     }
 

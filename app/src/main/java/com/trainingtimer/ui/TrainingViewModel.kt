@@ -17,6 +17,8 @@ class TrainingViewModel : ViewModel() {
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
 
+    lateinit var trainingLD: LiveData<Training?>
+
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
         get() = _errorInputTimes
@@ -45,6 +47,7 @@ class TrainingViewModel : ViewModel() {
         val item = getTrainingUseCase.getTraining(trainingId)
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
+        trainingLD = item
         /*item.observe(this) {
             _training.value = it
         }*/
