@@ -45,9 +45,9 @@ class TrainingViewModel : ViewModel() {
         val item = getTrainingUseCase.getTraining(trainingId)
         Log.d("TrainingViewModel", "Training id $trainingId")
         Log.d("TrainingViewModel", "Item value = $item")
-        item.observe(this) {
+        /*item.observe(this) {
             _training.value = it
-        }
+        }*/
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
