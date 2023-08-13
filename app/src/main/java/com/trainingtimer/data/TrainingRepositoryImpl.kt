@@ -58,6 +58,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         }
         executor.execute {
             trainingDao.addTraining(training)   //add problem
+            //id starts from 0 and conflict with init group
         }
     }
 

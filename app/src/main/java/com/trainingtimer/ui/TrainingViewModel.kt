@@ -1,6 +1,5 @@
 package com.trainingtimer.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,8 +44,8 @@ class TrainingViewModel : ViewModel() {
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
-        Log.d("TrainingViewModel", "Training id $trainingId")
-        Log.d("TrainingViewModel", "Item value = $item")
+//        Log.d("TrainingViewModel", "Training id $trainingId")
+//        Log.d("TrainingViewModel", "Item value = $item")
         trainingLD = item
         /*item.observe(this) {
             _training.value = it
