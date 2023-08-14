@@ -36,7 +36,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     })*/
         .build()
 
-    private var autoIncrementId = 0
+    private var autoIncrementId = 100   //for init group
 
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
@@ -57,8 +57,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             training.id = autoIncrementId++
         }
         executor.execute {
-            trainingDao.addTraining(training)   //add problem
-            //id starts from 0 and conflict with init group
+            trainingDao.addTraining(training)
         }
     }
 
