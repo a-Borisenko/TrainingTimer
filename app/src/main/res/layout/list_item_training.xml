@@ -1,53 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/training_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/training_title_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/training_sets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/training_sets" />
+
+    <TextView
+        android:id="@+id/training_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/training_sets"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/training_title" />
+        android:layout_weight="1"
+        android:text="@string/training_title_label" />
 
     <TextView
         android:id="@+id/training_times"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/training_times"
-        app:layout_constraintEnd_toStartOf="@+id/training_rest"
-        app:layout_constraintStart_toEndOf="@+id/training_sets"
-        app:layout_constraintTop_toBottomOf="@+id/training_title" />
+        android:layout_marginStart="16dp"
+        android:text="@string/training_times" />
 
     <TextView
         android:id="@+id/training_rest"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/training_rest"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/training_title" />
+        android:layout_marginStart="16dp"
+        android:text="@string/training_rest" />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

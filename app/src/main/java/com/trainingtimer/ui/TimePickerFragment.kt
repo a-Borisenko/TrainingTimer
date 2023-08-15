@@ -1,22 +1,25 @@
-package com.trainingtimer
+package com.trainingtimer.ui
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.trainingtimer.R
 import com.trainingtimer.databinding.TimePickerDialogBinding
 
 class TimePickerFragment : DialogFragment() {
 
-    private var _binding: TimePickerDialogBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: TimePickerDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = TimePickerDialogBinding.inflate(LayoutInflater.from(context))
-        return AlertDialog.Builder(requireActivity())
+        binding = TimePickerDialogBinding.inflate(LayoutInflater.from(context))
+        return AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .create()
     }
@@ -24,15 +27,10 @@ class TimePickerFragment : DialogFragment() {
     override fun onResume() {
         super.onResume()
         binding.save.setOnClickListener {
-            val result = (binding.timePicker.getCurrentMinutes() * 60
+            val time = (binding.timePicker.getCurrentMinutes() * 60
                     + binding.timePicker.getCurrentSeconds()).toLong()
-            setFragmentResult("key", bundleOf("time" to result))
+            setFragmentResult("key", bundleOf("time" to time))
             dismiss()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
