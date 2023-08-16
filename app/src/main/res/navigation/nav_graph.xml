@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/trainingListFragment"
-        android:name="com.trainingtimer.ui.list.TrainingListFragment"
+        android:name="com.trainingtimer.views.list.TrainingListFragment"
         android:label="TrainingListFragment"
         tools:layout="@layout/fragment_training_list" >
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/trainingFragment"
-        android:name="com.trainingtimer.ui.TrainingFragment"
+        android:name="com.trainingtimer.views.details.TrainingFragment"
         android:label="TrainingFragment"
         tools:layout="@layout/fragment_training" />
 

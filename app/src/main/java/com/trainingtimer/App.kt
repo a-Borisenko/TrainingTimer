@@ -1,6 +1,7 @@
-package com.trainingtimer.data
+package com.trainingtimer
 
 import android.app.Application
+import com.trainingtimer.data.TrainingRepositoryImpl
 
 class App : Application() {
 

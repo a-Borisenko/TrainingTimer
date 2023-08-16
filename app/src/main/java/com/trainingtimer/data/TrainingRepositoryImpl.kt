@@ -1,11 +1,13 @@
 package com.trainingtimer.data
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
+import kotlin.properties.Delegates
 
 private const val DATABASE_NAME = "training-database"
 
@@ -36,10 +38,10 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     })*/
         .build()
 
-    private var autoIncrementId = 100   //for init group
-
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
+
+    private var autoIncrementId = trainingDao.getTrainings().value?.size ?: 100   //correct only for init group without extra trainings
 
     /*init {
         //TODO: init must be only if there is no DataBase on the phone yet
@@ -54,6 +56,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
+            Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
             training.id = autoIncrementId++
         }
         executor.execute {

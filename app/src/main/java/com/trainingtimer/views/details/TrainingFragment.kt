@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.views.details
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.domain.Training
+import com.trainingtimer.views.timepicker.TimePickerFragment
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
@@ -123,12 +123,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTimes.setText(it?.times)
                 binding.viewTimer.text = it?.rest
             }
-            /*viewModel.training.observe(viewLifecycleOwner) {
-                binding.etSets.setText(it.sets.toString())
-                binding.etTitle.setText(it.title)
-                binding.etTimes.setText(it.times)
-                binding.viewTimer.text = it.rest
-            }*/
         }
     }
 

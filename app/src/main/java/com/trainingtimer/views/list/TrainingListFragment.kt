@@ -1,7 +1,6 @@
-package com.trainingtimer.ui.list
+package com.trainingtimer.views.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -67,7 +66,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun setupClickListener() {
         listAdapter.onShopItemClickListener = {
-            Log.d("ListFrag", "item with id ${it.id} clicked!")
             findNavController().navigate(
                 R.id.action_trainingListFragment_to_trainingFragment,
                 bundleOf("id" to it.id),

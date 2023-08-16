@@ -1,4 +1,4 @@
-package com.trainingtimer.ui
+package com.trainingtimer.views.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,12 +44,7 @@ class TrainingViewModel : ViewModel() {
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
-//        Log.d("TrainingViewModel", "Training id $trainingId")
-//        Log.d("TrainingViewModel", "Item value = $item")
         trainingLD = item
-        /*item.observe(this) {
-            _training.value = it
-        }*/
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
