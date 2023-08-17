@@ -18,6 +18,9 @@ interface TrainingDao {
     @Query("SELECT * FROM training WHERE id = (:trainingId)")
     fun getTraining(trainingId: Int): LiveData<Training?>
 
+    @Query("SELECT * FROM training")
+    fun getItemCount(): List<Training>
+
     /*@Query("SELECT * FROM training WHERE id IN (:id)")
     fun loadAllByIds(id: IntArray): List<Training>*/
 
