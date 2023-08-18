@@ -2,6 +2,7 @@ package com.trainingtimer.data
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
@@ -43,6 +44,8 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     private var autoIncrementId = 0    //correct only for init group without extra trainings
 
+//    var a = trainingDao.getTrainings().value?.size ?: 100
+
     /*init {
         //TODO: init must be only if there is no DataBase on the phone yet
         addTraining(Training(1, "подтягивания", "x5", "01:00"))
@@ -56,7 +59,10 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun addTraining(training: Training) {
         if (autoIncrementId == 0) {
-            autoIncrementId = getItemCount().size
+            /*trainingDao.getTrainings().observe(LifecycleOwner) {
+                autoIncrementId = it.size
+            }*/
+            autoIncrementId = trainingDao.getTrainings().value?.size ?: 100  //getItemCount().size
         }
         if (training.id == Training.UNDEFINED_ID) {
             Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
