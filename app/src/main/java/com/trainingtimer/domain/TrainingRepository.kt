@@ -14,5 +14,5 @@ interface TrainingRepository {
 
     fun getTrainingList(): LiveData<List<Training>>
 
-    fun getItemCount(): List<Training>
+    fun getCount(): List<Int>
 }

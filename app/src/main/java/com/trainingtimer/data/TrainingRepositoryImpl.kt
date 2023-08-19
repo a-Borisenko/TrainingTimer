@@ -2,13 +2,11 @@ package com.trainingtimer.data
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
-import kotlin.properties.Delegates
 
 private const val DATABASE_NAME = "training-database"
 
@@ -46,23 +44,26 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
 //    var a = trainingDao.getTrainings().value?.size ?: 100
 
-    /*init {
+    init {
+        /*trainingDao.getTrainings().observe(LifecycleOwner()) {
+            autoIncrementId = it.size
+        }*/
         //TODO: init must be only if there is no DataBase on the phone yet
-        addTraining(Training(1, "подтягивания", "x5", "01:00"))
-        addTraining(Training(1, "отжимания", "x10", "01:00"))
-        addTraining(Training(1, "приседания", "x15", "01:00"))
-        for (i in 4 until 100) {
+//        addTraining(Training(1, "подтягивания", "x5", "01:00"))
+//        addTraining(Training(1, "отжимания", "x10", "01:00"))
+//        addTraining(Training(1, "приседания", "x15", "01:00"))
+        /*for (i in 4 until 100) {
             val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
-        }
-    }*/
+        }*/
+    }
 
     override fun addTraining(training: Training) {
         if (autoIncrementId == 0) {
             /*trainingDao.getTrainings().observe(LifecycleOwner) {
                 autoIncrementId = it.size
             }*/
-            autoIncrementId = trainingDao.getTrainings().value?.size ?: 100  //getItemCount().size
+            autoIncrementId = getCount().size
         }
         if (training.id == Training.UNDEFINED_ID) {
             Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
@@ -96,8 +97,8 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         return trainingDao.getTrainings()
     }
 
-    override fun getItemCount(): List<Training> {
-        return trainingDao.getItemCount()
+    override fun getCount(): List<Int> {
+        return trainingDao.getCount()
     }
 
     private fun updateTraining(training: Training) {
