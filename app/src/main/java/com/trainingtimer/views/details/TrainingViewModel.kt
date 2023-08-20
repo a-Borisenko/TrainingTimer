@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.AddTrainingUseCase
 import com.trainingtimer.domain.EditTrainingUseCase
+import com.trainingtimer.domain.GetTrainingListUseCase
 import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
 
@@ -15,8 +16,10 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingUseCase = GetTrainingUseCase(repository)
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
+    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     lateinit var trainingLD: LiveData<Training?>
+    lateinit var trainingCount: LiveData<List<Training>>
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
@@ -41,6 +44,10 @@ class TrainingViewModel : ViewModel() {
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
+
+    fun getTrainingCount() {
+        trainingCount = getTrainingListUseCase.getTrainingList()
+    }
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)

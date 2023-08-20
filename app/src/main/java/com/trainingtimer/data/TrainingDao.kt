@@ -10,7 +10,6 @@ import com.trainingtimer.domain.Training
 
 @Dao
 interface TrainingDao {
-    //training.value = null
 
     @Query("SELECT * FROM training")
     fun getTrainings(): LiveData<List<Training>>
