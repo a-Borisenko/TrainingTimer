@@ -19,7 +19,7 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     lateinit var trainingLD: LiveData<Training?>
-    lateinit var trainingCount: LiveData<List<Training>>
+    lateinit var trainingCount: LiveData<List<Training>>    //crash
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
