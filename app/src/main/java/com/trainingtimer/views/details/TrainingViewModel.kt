@@ -19,7 +19,6 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     lateinit var trainingLD: LiveData<Training?>
-    lateinit var trainingCount: LiveData<List<Training>>    //crash
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
@@ -44,10 +43,6 @@ class TrainingViewModel : ViewModel() {
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
-
-    fun getTrainingCount() {
-        trainingCount = getTrainingListUseCase.getTrainingList()
-    }
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)

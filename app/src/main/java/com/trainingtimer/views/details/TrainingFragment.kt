@@ -106,10 +106,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
-        viewModel.getTrainingCount()
-        viewModel.trainingCount.observe(viewLifecycleOwner) {
-            trainingCount = it.size
-        }
     }
 
     private fun launchMode(id: Int) {
@@ -207,9 +203,5 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
         }"
-    }
-
-    companion object {
-        var trainingCount = 0
     }
 }

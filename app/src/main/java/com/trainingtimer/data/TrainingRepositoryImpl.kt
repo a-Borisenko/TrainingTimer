@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
-import com.trainingtimer.views.details.TrainingFragment
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "training-database"
@@ -64,7 +63,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             /*trainingDao.getTrainings().observe(LifecycleOwner) {
                 autoIncrementId = it.size
             }*/
-            autoIncrementId = TrainingFragment.trainingCount
+            autoIncrementId = 1000
         }
         if (training.id == Training.UNDEFINED_ID) {
             Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
