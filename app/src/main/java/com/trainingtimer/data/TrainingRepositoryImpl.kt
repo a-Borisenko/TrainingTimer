@@ -40,7 +40,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = 0    //correct only for init group without extra trainings
+    private var autoIncrementId = 0
 
 //    var a = trainingDao.getTrainings().value?.size ?: 100
 
@@ -63,7 +63,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
             /*trainingDao.getTrainings().observe(LifecycleOwner) {
                 autoIncrementId = it.size
             }*/
-            autoIncrementId = 1000
+            autoIncrementId = 102     //get number of trainings in DataBase
         }
         if (training.id == Training.UNDEFINED_ID) {
             Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
@@ -95,10 +95,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun getTrainingList(): LiveData<List<Training>> {
         return trainingDao.getTrainings()
-    }
-
-    override fun getCount(): List<Int> {
-        return trainingDao.getCount()
     }
 
     private fun updateTraining(training: Training) {
