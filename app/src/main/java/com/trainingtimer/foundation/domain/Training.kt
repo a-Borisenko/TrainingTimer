@@ -1,4 +1,4 @@
-package com.trainingtimer.domain
+package com.trainingtimer.foundation.domain
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

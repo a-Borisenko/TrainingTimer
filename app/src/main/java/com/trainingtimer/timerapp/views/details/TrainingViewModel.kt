@@ -1,14 +1,14 @@
-package com.trainingtimer.views.details
+package com.trainingtimer.timerapp.views.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.data.TrainingRepositoryImpl
-import com.trainingtimer.domain.AddTrainingUseCase
-import com.trainingtimer.domain.EditTrainingUseCase
-import com.trainingtimer.domain.GetTrainingListUseCase
-import com.trainingtimer.domain.GetTrainingUseCase
-import com.trainingtimer.domain.Training
+import com.trainingtimer.foundation.data.TrainingRepositoryImpl
+import com.trainingtimer.foundation.domain.AddTrainingUseCase
+import com.trainingtimer.foundation.domain.EditTrainingUseCase
+import com.trainingtimer.foundation.domain.GetTrainingListUseCase
+import com.trainingtimer.foundation.domain.GetTrainingUseCase
+import com.trainingtimer.foundation.domain.Training
 
 class TrainingViewModel : ViewModel() {
 
@@ -16,7 +16,6 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingUseCase = GetTrainingUseCase(repository)
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
-    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     lateinit var trainingLD: LiveData<Training?>
 

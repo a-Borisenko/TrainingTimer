@@ -1,8 +1,9 @@
-package com.trainingtimer
+package com.trainingtimer.timerapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.trainingtimer.views.list.TrainingListFragment
+import com.trainingtimer.R
+import com.trainingtimer.timerapp.views.list.TrainingListFragment
 
 class MainActivity : AppCompatActivity() {
 

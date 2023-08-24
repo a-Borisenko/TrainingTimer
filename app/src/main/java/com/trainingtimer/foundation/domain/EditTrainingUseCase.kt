@@ -1,4 +1,4 @@
-package com.trainingtimer.domain
+package com.trainingtimer.foundation.domain
 
 class EditTrainingUseCase(private val trainingRepository: TrainingRepository) {
 

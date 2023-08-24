@@ -1,4 +1,4 @@
-package com.trainingtimer.domain
+package com.trainingtimer.foundation.domain
 
 import androidx.lifecycle.LiveData
 

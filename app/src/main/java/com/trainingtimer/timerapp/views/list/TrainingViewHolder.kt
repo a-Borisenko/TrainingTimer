@@ -1,4 +1,4 @@
-package com.trainingtimer.views.list
+package com.trainingtimer.timerapp.views.list
 
 import android.view.View
 import android.widget.TextView

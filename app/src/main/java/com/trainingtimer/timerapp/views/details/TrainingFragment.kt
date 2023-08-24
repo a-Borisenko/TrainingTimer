@@ -1,4 +1,4 @@
-package com.trainingtimer.views.details
+package com.trainingtimer.timerapp.views.details
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.domain.Training
-import com.trainingtimer.views.timepicker.TimePickerFragment
+import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 

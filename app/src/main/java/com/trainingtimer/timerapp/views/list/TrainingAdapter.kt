@@ -1,10 +1,10 @@
-package com.trainingtimer.views.list
+package com.trainingtimer.timerapp.views.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.R
-import com.trainingtimer.domain.Training
+import com.trainingtimer.foundation.domain.Training
 
 class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCallback()) {
 

@@ -1,4 +1,4 @@
-package com.trainingtimer.views.timepicker
+package com.trainingtimer.timerapp.views.timepicker
 
 import android.app.Dialog
 import android.os.Bundle

@@ -1,11 +1,11 @@
-package com.trainingtimer.data
+package com.trainingtimer.foundation.data
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import com.trainingtimer.domain.Training
-import com.trainingtimer.domain.TrainingRepository
+import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.foundation.domain.TrainingRepository
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "training-database"
@@ -45,9 +45,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 //    var a = trainingDao.getTrainings().value?.size ?: 100
 
     init {
-        /*trainingDao.getTrainings().observe(LifecycleOwner()) {
-            autoIncrementId = it.size
-        }*/
         //TODO: init must be only if there is no DataBase on the phone yet
 //        addTraining(Training(1, "подтягивания", "x5", "01:00"))
 //        addTraining(Training(1, "отжимания", "x10", "01:00"))

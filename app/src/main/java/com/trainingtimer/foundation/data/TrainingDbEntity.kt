@@ -1,8 +1,8 @@
-package com.trainingtimer.data
+package com.trainingtimer.foundation.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.trainingtimer.domain.Training
+import com.trainingtimer.foundation.domain.Training
 
 @Entity(
     tableName = "trainings"
