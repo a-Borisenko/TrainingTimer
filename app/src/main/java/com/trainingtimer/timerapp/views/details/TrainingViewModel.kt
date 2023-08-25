@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.AddTrainingUseCase
 import com.trainingtimer.foundation.domain.EditTrainingUseCase
-import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
 
