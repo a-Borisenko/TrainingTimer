@@ -42,8 +42,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     private var autoIncrementId = 0
 
-//    var a = trainingDao.getTrainings().value?.size ?: 100
-
     init {
         //TODO: init must be only if there is no DataBase on the phone yet
 //        addTraining(Training(1, "подтягивания", "x5", "01:00"))
