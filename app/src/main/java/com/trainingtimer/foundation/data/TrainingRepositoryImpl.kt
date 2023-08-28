@@ -40,7 +40,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = 0
+    private var autoIncrementId = 0    //suspend fun to get number of trainings in DataBase
 
     init {
         //TODO: init must be only if there is no DataBase on the phone yet
