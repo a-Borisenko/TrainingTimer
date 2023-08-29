@@ -1,5 +1,6 @@
 package com.trainingtimer.timerapp.views.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -79,10 +80,11 @@ class TrainingViewModel : ViewModel() {
         val fieldValid = validateInput(sets, title, times, rest)
         if (fieldValid) {
             _training.value?.let {
+                Log.d("viewModel", "_training.value = ${_training.value}")
                 val item = it.copy(sets = sets, title = title, times = times, rest = rest)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
-            }
+            } ?: Log.d("viewModel", "_training.value is null")
         }
     }
 
