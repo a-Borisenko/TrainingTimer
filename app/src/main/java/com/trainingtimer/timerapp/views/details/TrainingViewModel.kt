@@ -31,9 +31,9 @@ class TrainingViewModel : ViewModel() {
     val errorInputSets: LiveData<Boolean>
         get() = _errorInputSets
 
-    private val _errorInputRest = MutableLiveData<Boolean>()
+    /*private val _errorInputRest = MutableLiveData<Boolean>()
     val errorInputRest: LiveData<Boolean>
-        get() = _errorInputRest
+        get() = _errorInputRest*/
 
     private val _training = MutableLiveData<Training>()
     val training: LiveData<Training>
@@ -111,10 +111,10 @@ class TrainingViewModel : ViewModel() {
             _errorInputSets.value = true
             res = false
         }
-        if (rest.isBlank()) {
+        /*if (rest.isBlank()) {
             _errorInputRest.value = true
             res = false
-        }
+        }*/
         return res
     }
 
@@ -130,9 +130,9 @@ class TrainingViewModel : ViewModel() {
         _errorInputSets.value = false
     }
 
-    fun resetErrorInputRest() {
+    /*fun resetErrorInputRest() {
         _errorInputRest.value = false
-    }
+    }*/
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
