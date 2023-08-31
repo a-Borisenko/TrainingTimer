@@ -45,6 +45,7 @@ class TrainingViewModel : ViewModel() {
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
+//        _training.value = item
         trainingLD = item
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }

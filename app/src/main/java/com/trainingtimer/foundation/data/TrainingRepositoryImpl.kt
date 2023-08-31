@@ -92,11 +92,11 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         return trainingDao.getTrainings()
     }
 
-    private fun updateTraining(training: Training) {
+    /*private fun updateTraining(training: Training) {
         executor.execute {
             trainingDao.updateTraining(training)
         }
-    }
+    }*/
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
