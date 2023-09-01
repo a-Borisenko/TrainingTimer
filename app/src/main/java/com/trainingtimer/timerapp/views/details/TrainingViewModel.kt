@@ -3,6 +3,7 @@ package com.trainingtimer.timerapp.views.details
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.AddTrainingUseCase
@@ -45,7 +46,7 @@ class TrainingViewModel : ViewModel() {
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
-//        _training.value = item
+//        _training.value = item.observe(this, Observer { it })
         trainingLD = item
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
@@ -60,7 +61,7 @@ class TrainingViewModel : ViewModel() {
         val title = parseTitle(inputTitle)
         val sets = parseSets(inputSets)
         val rest = parseRest(inputRest)
-        val fieldValid = validateInput(sets, title, times, rest)
+        val fieldValid = validateInput(sets, title, times)
         if (fieldValid) {
             val training = Training(sets, title, times, rest)
             addTrainingUseCase.addTraining(training)
@@ -78,7 +79,7 @@ class TrainingViewModel : ViewModel() {
         val title = parseTitle(inputTitle)
         val sets = parseSets(inputSets)
         val rest = parseRest(inputRest)
-        val fieldValid = validateInput(sets, title, times, rest)
+        val fieldValid = validateInput(sets, title, times)
         if (fieldValid) {
             _training.value?.let {
                 Log.d("viewModel", "_training.value = ${_training.value}")
@@ -98,7 +99,7 @@ class TrainingViewModel : ViewModel() {
 
     private fun parseRest(inputRest: String?) = inputRest?.trim() ?: ""
 
-    private fun validateInput(sets: Int, title: String, times: String, rest: String): Boolean {
+    private fun validateInput(sets: Int, title: String, times: String): Boolean {
         var res = true
         if (times.isBlank()) {
             _errorInputTimes.value = true
