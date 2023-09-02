@@ -14,11 +14,15 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
+import com.trainingtimer.foundation.data.TrainingDao
+import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
+import kotlinx.coroutines.launch
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
@@ -43,7 +47,32 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
+        setMenu()
 
+        trainingId = requireArguments().getInt("id")
+        launchMode(trainingId)
+        addTextChangeListeners()
+        observeViewModel()
+        updateCountdownUI()
+        lifecycleScope.launch {
+            trainNumber()
+        }
+    }
+
+    private suspend fun trainNumber() {
+        TrainingRepositoryImpl.Companion
+    }
+
+    private fun dialogFragmentSettings() {
+        childFragmentManager.setFragmentResultListener(
+            "key", this
+        ) { _, bundle ->
+            secondsRemaining = bundle.getLong("time")
+            updateCountdownUI()
+        }
+    }
+
+    private fun setMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -64,21 +93,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        trainingId = requireArguments().getInt("id")
-        launchMode(trainingId)
-        addTextChangeListeners()
-        observeViewModel()
-        updateCountdownUI()
-    }
-
-    private fun dialogFragmentSettings() {
-        childFragmentManager.setFragmentResultListener(
-            "key", this
-        ) { _, bundle ->
-            secondsRemaining = bundle.getLong("time")
-            updateCountdownUI()
-        }
     }
 
     private fun observeViewModel() {

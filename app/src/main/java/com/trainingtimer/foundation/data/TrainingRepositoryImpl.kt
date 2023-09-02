@@ -2,6 +2,7 @@ package com.trainingtimer.foundation.data
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.foundation.domain.Training
@@ -100,10 +101,16 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
+        private var trainingsNumber: Int = 0
 
         fun initialize(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = TrainingRepositoryImpl(context)
+            }
+            if (trainingsNumber == 0) {
+                /*TrainingDao.getTrainings().observe(LifecycleOwner) {
+                    trainingsNumber = it.size
+                }*/
             }
         }
 
