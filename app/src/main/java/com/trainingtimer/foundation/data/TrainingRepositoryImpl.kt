@@ -103,6 +103,12 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         private var INSTANCE: TrainingRepositoryImpl? = null
         private var trainingsNumber: Int = 0
 
+        fun getTrainNumber() {
+            TrainingDao.getTrainings().observe(LifecycleOwner) {
+                trainingsNumber = it.size
+            }
+        }
+
         fun initialize(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = TrainingRepositoryImpl(context)
