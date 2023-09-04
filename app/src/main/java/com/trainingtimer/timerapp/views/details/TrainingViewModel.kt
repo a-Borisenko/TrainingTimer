@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.AddTrainingUseCase
 import com.trainingtimer.foundation.domain.EditTrainingUseCase
+import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
 
@@ -17,6 +18,7 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingUseCase = GetTrainingUseCase(repository)
     private val addTrainingUseCase = AddTrainingUseCase(repository)
     private val editTrainingUseCase = EditTrainingUseCase(repository)
+    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     lateinit var trainingLD: LiveData<Training?>
 
@@ -49,6 +51,10 @@ class TrainingViewModel : ViewModel() {
 //        _training.value = item.observe(this, Observer { it })
         trainingLD = item
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
+    }
+
+    fun getTrainingList() {
+        getTrainingListUseCase.getTrainingList().value
     }
 
     fun addTraining(

@@ -60,7 +60,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private suspend fun trainNumber() {
-        TrainingRepositoryImpl.getTrainNumber()
+        viewModel.getTrainingList()
+//        TrainingRepositoryImpl.getTrainNumber()
     }
 
     private fun dialogFragmentSettings() {

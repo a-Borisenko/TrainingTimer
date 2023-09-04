@@ -101,23 +101,23 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
-        private var trainingsNumber: Int = 0
+        /*private var trainingsNumber: Int = 0
 
         fun getTrainNumber() {
             TrainingDao.getTrainings().observe(LifecycleOwner) {
                 trainingsNumber = it.size
             }
-        }
+        }*/
 
         fun initialize(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = TrainingRepositoryImpl(context)
             }
-            if (trainingsNumber == 0) {
-                /*TrainingDao.getTrainings().observe(LifecycleOwner) {
+            /*if (trainingsNumber == 0) {
+                TrainingDao.getTrainings().observe(LifecycleOwner) {
                     trainingsNumber = it.size
-                }*/
-            }
+                }
+            }*/
         }
 
         fun get(): TrainingRepositoryImpl {
