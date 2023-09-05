@@ -58,7 +58,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun trainNumber() {
         viewModel.getTrainNumber()
         viewModel.trainNumber.observe(viewLifecycleOwner) {
-            trainNumber = it.size + 1
+            trainNumber = it.last().id + 1
         }
     }
 
