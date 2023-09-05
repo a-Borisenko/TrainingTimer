@@ -2,7 +2,6 @@ package com.trainingtimer.foundation.data
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.foundation.domain.Training
@@ -41,28 +40,23 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = 0    //suspend fun to get number of trainings in DataBase
+    private var autoIncrementId = 0    //for init only
 
-    init {
+    /*init {
         //TODO: init must be only if there is no DataBase on the phone yet
-//        addTraining(Training(1, "подтягивания", "x5", "01:00"))
-//        addTraining(Training(1, "отжимания", "x10", "01:00"))
-//        addTraining(Training(1, "приседания", "x15", "01:00"))
-        /*for (i in 4 until 100) {
+        addTraining(Training(1, "подтягивания", "x5", "01:00"))
+        addTraining(Training(1, "отжимания", "x10", "01:00"))
+        addTraining(Training(1, "приседания", "x15", "01:00"))
+        for (i in 4 until 100) {
             val item = Training(i, "Training №$i", "x$i", "01:00")
             addTraining(item)
-        }*/
-    }
+        }
+    }*/
 
     override fun addTraining(training: Training) {
-        if (autoIncrementId == 0) {
-            /*trainingDao.getTrainings().observe(LifecycleOwner) {
-                autoIncrementId = it.size
-            }*/
-            autoIncrementId = 102     //get number of trainings in DataBase
-        }
+//        Log.d("RepositoryImpl", "training.id = ${training.id}")
         if (training.id == Training.UNDEFINED_ID) {
-            Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
+//            Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
             training.id = autoIncrementId++
         }
         executor.execute {
@@ -101,23 +95,11 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
-        /*private var trainingsNumber: Int = 0
-
-        fun getTrainNumber() {
-            TrainingDao.getTrainings().observe(LifecycleOwner) {
-                trainingsNumber = it.size
-            }
-        }*/
 
         fun initialize(context: Context) {
             if (INSTANCE == null) {
                 INSTANCE = TrainingRepositoryImpl(context)
             }
-            /*if (trainingsNumber == 0) {
-                TrainingDao.getTrainings().observe(LifecycleOwner) {
-                    trainingsNumber = it.size
-                }
-            }*/
         }
 
         fun get(): TrainingRepositoryImpl {

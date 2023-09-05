@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -14,15 +15,11 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.foundation.data.TrainingDao
-import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
-import kotlinx.coroutines.launch
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
@@ -33,6 +30,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //    private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var trainingId = Training.UNDEFINED_ID
+    var trainNumber = 0
 
     private lateinit var timer: CountDownTimer
     private lateinit var binding: FragmentTrainingBinding
@@ -54,14 +52,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         observeViewModel()
         updateCountdownUI()
-        lifecycleScope.launch {
-            trainNumber()
-        }
+        trainNumber()
     }
 
-    private suspend fun trainNumber() {
-        viewModel.getTrainingList()
-//        TrainingRepositoryImpl.getTrainNumber()
+    private fun trainNumber() {
+        viewModel.getTrainNumber()
+        viewModel.trainNumber.observe(viewLifecycleOwner) {
+            trainNumber = it.size + 1
+        }
     }
 
     private fun dialogFragmentSettings() {
@@ -142,11 +140,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun addTraining() {
+        trainingId = trainNumber
+//        Log.d("addTraining", "trainingId = $trainingId")
         viewModel.addTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
             binding.etTimes.text?.toString(),
-            binding.viewTimer.text?.toString()
+            binding.viewTimer.text?.toString(),
+            trainingId = trainingId
         )
     }
 

@@ -3,7 +3,6 @@ package com.trainingtimer.timerapp.views.details
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.AddTrainingUseCase
@@ -46,6 +45,8 @@ class TrainingViewModel : ViewModel() {
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+    lateinit var trainNumber: LiveData<List<Training>>
+
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
 //        _training.value = item.observe(this, Observer { it })
@@ -53,15 +54,16 @@ class TrainingViewModel : ViewModel() {
 //            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
-    fun getTrainingList() {
-        getTrainingListUseCase.getTrainingList().value
+    fun getTrainNumber() {
+        trainNumber = getTrainingListUseCase.getTrainingList()
     }
 
     fun addTraining(
         inputSets: Int?,
         inputTitle: String?,
         inputTimes: String?,
-        inputRest: String?
+        inputRest: String?,
+        trainingId: Int
     ) {
         val times = parseTimes(inputTimes)
         val title = parseTitle(inputTitle)
@@ -69,7 +71,8 @@ class TrainingViewModel : ViewModel() {
         val rest = parseRest(inputRest)
         val fieldValid = validateInput(sets, title, times)
         if (fieldValid) {
-            val training = Training(sets, title, times, rest)
+            val training = Training(sets, title, times, rest, trainingId)
+//            Log.d("TrainingViewModel", "trainingId = $trainingId")
             addTrainingUseCase.addTraining(training)
             finishWork()
         }
