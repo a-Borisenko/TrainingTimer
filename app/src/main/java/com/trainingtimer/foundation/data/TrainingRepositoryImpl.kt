@@ -72,10 +72,11 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun editTraining(training: Training) {
         executor.execute {
-            val oldElement = getTraining(training.id).value
+            trainingDao.updateTraining(training)
+            /*val oldElement = getTraining(training.id).value
                 ?: throw IllegalStateException("Training with id${training.id} not found")
             trainingDao.deleteTraining(oldElement)
-            trainingDao.addTraining(training)
+            trainingDao.addTraining(training)*/
         }
     }
 

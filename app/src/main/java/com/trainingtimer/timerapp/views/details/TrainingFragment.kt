@@ -135,6 +135,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTitle.setText(it?.title)
                 binding.etTimes.setText(it?.times)
                 binding.viewTimer.text = it?.rest
+                trainingId = id   //it?.id ?: id
             }
         }
     }
@@ -152,11 +153,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun editTraining() {
+        Log.d("TrainingFragment", "editTraining clicked!")
         viewModel.editTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
             binding.etTimes.text?.toString(),
-            binding.viewTimer.text?.toString()
+            binding.viewTimer.text?.toString(),
+            trainingId = trainingId
         )
     }
 

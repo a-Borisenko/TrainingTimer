@@ -82,7 +82,8 @@ class TrainingViewModel : ViewModel() {
         inputSets: Int?,
         inputTitle: String?,
         inputTimes: String?,
-        inputRest: String?
+        inputRest: String?,
+        trainingId: Int
     ) {
         val times = parseTimes(inputTimes)
         val title = parseTitle(inputTitle)
@@ -90,12 +91,13 @@ class TrainingViewModel : ViewModel() {
         val rest = parseRest(inputRest)
         val fieldValid = validateInput(sets, title, times)
         if (fieldValid) {
-            _training.value?.let {
-                Log.d("viewModel", "_training.value = ${_training.value}")
-                val item = it.copy(sets = sets, title = title, times = times, rest = rest)
+//            val training = getTrainingUseCase.getTraining(trainingId).value ?: Log.d("viewModel", "_training.value is null")
+//            _training.value?.let {
+//                Log.d("viewModel", "_training.value = ${_training.value}")
+                val item = Training(sets, title, times, rest, trainingId)    //it.copy(sets = sets, title = title, times = times, rest = rest)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
-            } ?: Log.d("viewModel", "_training.value is null")
+//            } ?: Log.d("viewModel", "_training.value is null")
         }
     }
 
