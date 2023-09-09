@@ -135,14 +135,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTitle.setText(it?.title)
                 binding.etTimes.setText(it?.times)
                 binding.viewTimer.text = it?.rest
-                trainingId = id   //it?.id ?: id
+                trainingId = id
             }
         }
     }
 
     private fun addTraining() {
         trainingId = trainNumber
-//        Log.d("addTraining", "trainingId = $trainingId")
         viewModel.addTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),

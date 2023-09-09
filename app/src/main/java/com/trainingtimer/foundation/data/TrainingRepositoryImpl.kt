@@ -1,7 +1,6 @@
 package com.trainingtimer.foundation.data
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.foundation.domain.Training
@@ -54,9 +53,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     }*/
 
     override fun addTraining(training: Training) {
-//        Log.d("RepositoryImpl", "training.id = ${training.id}")
         if (training.id == Training.UNDEFINED_ID) {
-//            Log.d("RepositoryImpl", "autoIncrementId = $autoIncrementId")
             training.id = autoIncrementId++
         }
         executor.execute {
@@ -73,10 +70,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     override fun editTraining(training: Training) {
         executor.execute {
             trainingDao.updateTraining(training)
-            /*val oldElement = getTraining(training.id).value
-                ?: throw IllegalStateException("Training with id${training.id} not found")
-            trainingDao.deleteTraining(oldElement)
-            trainingDao.addTraining(training)*/
         }
     }
 
@@ -87,12 +80,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
     override fun getTrainingList(): LiveData<List<Training>> {
         return trainingDao.getTrainings()
     }
-
-    /*private fun updateTraining(training: Training) {
-        executor.execute {
-            trainingDao.updateTraining(training)
-        }
-    }*/
 
     companion object {
         private var INSTANCE: TrainingRepositoryImpl? = null
