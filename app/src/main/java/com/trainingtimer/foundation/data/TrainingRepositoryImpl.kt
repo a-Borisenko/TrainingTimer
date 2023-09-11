@@ -16,6 +16,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         TrainingDatabase::class.java,
         DATABASE_NAME
     )
+        .createFromAsset("initial_database.db")
 //        .createFromAsset("database/myapp.db")
 //        .createFromFile(File("mypath"))
         /*.addCallback(object : Callback() {
