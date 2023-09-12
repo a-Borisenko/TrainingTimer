@@ -17,24 +17,6 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         DATABASE_NAME
     )
         .createFromAsset("initial_database.db")
-//        .createFromAsset("database/myapp.db")
-//        .createFromFile(File("mypath"))
-        /*.addCallback(object : Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            ioThread {
-                with(TrainingDatabase.getInstance(context).trainingDao()) {
-                    addTraining(Training(1, "подтягивания", "x5", "01:00"))
-                    addTraining(Training(1, "отжимания", "x10", "01:00"))
-                    addTraining(Training(1, "приседания", "x15", "01:00"))
-                    for (i in 4 until 100) {
-                        val item = Training(i, "Training №$i", "x$i", "01:00")
-                        addTraining(item)
-                    }
-                }
-            }
-        }
-    })*/
         .build()
 
     private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
