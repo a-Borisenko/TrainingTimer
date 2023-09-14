@@ -3,6 +3,7 @@ package com.trainingtimer.timerapp.views.list
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         setupRecyclerView()
         viewModel.trainingList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
+        }
+        with(binding) {
+            progressBar.isVisible = false
+            trainingRecyclerView.isVisible = true
         }
     }
 
