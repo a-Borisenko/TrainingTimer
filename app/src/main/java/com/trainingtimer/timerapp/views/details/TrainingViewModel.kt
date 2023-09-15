@@ -3,12 +3,15 @@ package com.trainingtimer.timerapp.views.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
 import com.trainingtimer.foundation.domain.AddTrainingUseCase
 import com.trainingtimer.foundation.domain.EditTrainingUseCase
 import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TrainingViewModel : ViewModel() {
 
@@ -62,15 +65,18 @@ class TrainingViewModel : ViewModel() {
         inputRest: String?,
         trainingId: Int
     ) {
-        val times = parseTimes(inputTimes)
-        val title = parseTitle(inputTitle)
-        val sets = parseSets(inputSets)
-        val rest = parseRest(inputRest)
-        val fieldValid = validateInput(sets, title, times)
-        if (fieldValid) {
-            val training = Training(sets, title, times, rest, trainingId)
-            addTrainingUseCase.addTraining(training)
-            finishWork()
+        viewModelScope.launch {
+            delay(3000)
+            val times = parseTimes(inputTimes)
+            val title = parseTitle(inputTitle)
+            val sets = parseSets(inputSets)
+            val rest = parseRest(inputRest)
+            val fieldValid = validateInput(sets, title, times)
+            if (fieldValid) {
+                val training = Training(sets, title, times, rest, trainingId)
+                addTrainingUseCase.addTraining(training)
+                finishWork()
+            }
         }
     }
 
@@ -81,15 +87,18 @@ class TrainingViewModel : ViewModel() {
         inputRest: String?,
         trainingId: Int
     ) {
-        val times = parseTimes(inputTimes)
-        val title = parseTitle(inputTitle)
-        val sets = parseSets(inputSets)
-        val rest = parseRest(inputRest)
-        val fieldValid = validateInput(sets, title, times)
-        if (fieldValid) {
+        viewModelScope.launch {
+            delay(3000)
+            val times = parseTimes(inputTimes)
+            val title = parseTitle(inputTitle)
+            val sets = parseSets(inputSets)
+            val rest = parseRest(inputRest)
+            val fieldValid = validateInput(sets, title, times)
+            if (fieldValid) {
                 val item = Training(sets, title, times, rest, trainingId)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
+            }
         }
     }
 

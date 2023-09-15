@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -142,6 +146,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun addTraining() {
         trainingId = trainNumber
+        with(binding) {
+            tilSets.isVisible = false
+            tilTitle.isVisible = false
+            tilTimes.isVisible = false
+            viewTimer.isVisible = false
+            trainingBtn.isVisible = false
+            progressBar.isVisible = true
+        }
+        hideKeyboard()
         viewModel.addTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
@@ -151,8 +164,25 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
+    private fun hideKeyboard() {
+        val insets = ViewCompat.getRootWindowInsets(view ?: return)
+        val imeVisible = insets?.isVisible(WindowInsetsCompat.Type.ime())
+//        val imeHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom
+        if (imeVisible!!) {
+            val imm = getSystemService(context) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+        }
+    }
+
     private fun editTraining() {
-        Log.d("TrainingFragment", "editTraining clicked!")
+        with(binding) {
+            tilSets.isVisible = false
+            tilTitle.isVisible = false
+            tilTimes.isVisible = false
+            viewTimer.isVisible = false
+            trainingBtn.isVisible = false
+            progressBar.isVisible = true
+        }
         viewModel.editTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
