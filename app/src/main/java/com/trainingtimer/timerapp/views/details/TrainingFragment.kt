@@ -1,6 +1,8 @@
 package com.trainingtimer.timerapp.views.details
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -24,6 +26,7 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
+
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
@@ -164,13 +167,28 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
+    @SuppressLint("ResourceType")
     private fun hideKeyboard() {
+        val view = childFragmentManager.findFragmentById(R.layout.fragment_training)
+        view.let {
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
         val insets = ViewCompat.getRootWindowInsets(view ?: return)
         val imeVisible = insets?.isVisible(WindowInsetsCompat.Type.ime())
 //        val imeHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom
         if (imeVisible!!) {
-            val imm = getSystemService(context) as InputMethodManager
+            val imm = getSystemService(requireContext(), this::class.java) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
+        }
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val view = activity.findViewById<View>(android.R.id.content)
+        if (view != null) {
+            val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 
@@ -183,6 +201,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             trainingBtn.isVisible = false
             progressBar.isVisible = true
         }
+        hideKeyboard()
         viewModel.editTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
