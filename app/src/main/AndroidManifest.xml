@@ -10,7 +10,7 @@
         android:theme="@style/Theme.TrainingTimer"
         android:name=".timerapp.App">
         <activity
-            android:name=".timerapp.MainActivity"
+            android:name=".timerapp.SplashScreen"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
@@ -18,6 +18,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".timerapp.MainActivity">
         </activity>
     </application>
 
