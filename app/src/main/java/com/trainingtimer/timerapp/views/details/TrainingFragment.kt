@@ -40,6 +40,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
+    //TODO #1: lost of data changes when rotation
+
+    //TODO #2: rotation make countdown lost & crash app after time up
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dialogFragmentSettings()
