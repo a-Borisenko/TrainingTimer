@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
@@ -40,7 +41,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
-    //TODO #1: lost of data changes when rotation
+    //TODO #1: lost of data changes when rotation: 1) user content form; 2) onTypeListener; 3) content sending to database
+
+    val saveDraftHandler = Handler()
 
     //TODO #2: rotation make countdown lost & crash app after time up
 
@@ -100,6 +103,22 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun textWatcher() {
+        binding.tilSets.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString() != "") {
+                    binding.tilSets.hint = ""
+                    saveDraftHandler.removeCallbacksAndMessages(null);
+                    saveDraftHandler.postDelayed({ saveDraft(p0.toString()) }, 1000)
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
     private fun observeViewModel() {
