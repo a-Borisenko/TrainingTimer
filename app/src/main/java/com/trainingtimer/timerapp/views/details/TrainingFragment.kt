@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
@@ -106,7 +107,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun textWatcher() {
-        binding.tilSets.addTextChangedListener(object : TextWatcher {
+        binding.tilSets.addOnEditTextAttachedListener(object : TextWatcher,
+            TextInputLayout.OnEditTextAttachedListener {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString() != "") {
                     binding.tilSets.hint = ""
@@ -115,10 +117,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //
+            }
+            override fun onEditTextAttached(textInputLayout: TextInputLayout) {
+                //
             }
         })
+    }
+
+    fun saveDraft(text: String){
+        //
     }
 
     private fun observeViewModel() {
