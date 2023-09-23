@@ -128,8 +128,26 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         })
     }
 
-    fun saveDraft(text: String){
-        //
+    fun saveDraft(text: String) {
+        /*user?.getIdToken(true)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val idToken: String? = task.result?.token
+                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                    Fuel.post("./saveDraft.php", listOf("uid" to uid, "idToken" to idToken, "creationDate" to creationDate, "text" to text, "title" to title)).responseString { request, response, result ->
+                        val (saveResult, error) = result
+                        if (saveResult == "Success"){
+                            Snackbar.make(findViewById<EditText>(R.id.edit_story), "Saved", Snackbar.LENGTH_LONG).show()
+                        }
+                        else
+                        {
+                            Log.e(TAG, "Failed to save user story.")
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "Failed to generate user token")
+                }
+            }*/
     }
 
     private fun observeViewModel() {
