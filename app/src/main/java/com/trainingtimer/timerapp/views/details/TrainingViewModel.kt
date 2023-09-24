@@ -102,6 +102,16 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
+    fun draftTraining(
+        inputSets: Int?,
+        inputTitle: String?,
+        inputTimes: String?,
+        inputRest: String?,
+        trainingId: Int
+    ) {
+        //
+    }
+
     private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
         ?: Training.UNDEFINED_ID
 
