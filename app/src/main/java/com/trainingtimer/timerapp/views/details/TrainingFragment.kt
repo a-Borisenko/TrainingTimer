@@ -44,8 +44,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #1: lost of data changes when rotation: 1) user content form; 2) onTypeListener; 3) content sending to database
 
-    val saveDraftHandler = Handler()
-
     //TODO #2: rotation make countdown lost & crash app after time up
 
     override fun onCreate(savedInstanceState: Bundle?) {

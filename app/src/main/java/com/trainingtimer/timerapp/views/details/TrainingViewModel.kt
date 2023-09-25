@@ -36,10 +36,6 @@ class TrainingViewModel : ViewModel() {
     val errorInputSets: LiveData<Boolean>
         get() = _errorInputSets
 
-    /*private val _errorInputRest = MutableLiveData<Boolean>()
-    val errorInputRest: LiveData<Boolean>
-        get() = _errorInputRest*/
-
     private val _training = MutableLiveData<Training>()
     val training: LiveData<Training>
         get() = _training
@@ -51,7 +47,6 @@ class TrainingViewModel : ViewModel() {
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
         trainingLD = item
-//            ?: throw IllegalStateException("Training with id${trainingId} not found")
     }
 
     fun getTrainNumber() {
@@ -102,16 +97,6 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
-    fun draftTraining(
-        inputSets: Int?,
-        inputTitle: String?,
-        inputTimes: String?,
-        inputRest: String?,
-        trainingId: Int
-    ) {
-        //
-    }
-
     private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
         ?: Training.UNDEFINED_ID
 
@@ -135,10 +120,6 @@ class TrainingViewModel : ViewModel() {
             _errorInputSets.value = true
             res = false
         }
-        /*if (rest.isBlank()) {
-            _errorInputRest.value = true
-            res = false
-        }*/
         return res
     }
 
@@ -153,10 +134,6 @@ class TrainingViewModel : ViewModel() {
     fun resetErrorInputSets() {
         _errorInputSets.value = false
     }
-
-    /*fun resetErrorInputRest() {
-        _errorInputRest.value = false
-    }*/
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
