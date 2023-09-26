@@ -105,14 +105,20 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     //moved to viewModel
-    /*private fun textWatcher() {
+    private fun textWatcher() {
         binding.tilSets.addOnEditTextAttachedListener(object : TextWatcher,
             TextInputLayout.OnEditTextAttachedListener {
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString() != "") {
-                    binding.tilSets.hint = ""
-                    saveDraftHandler.removeCallbacksAndMessages(null);
-                    saveDraftHandler.postDelayed({ saveDraft(p0.toString()) }, 1000)
+                    viewModel.draftTraining(
+                        binding.etSets.text.toString().toInt(),
+                        binding.etTitle.text.toString(),
+                        binding.etTimes.text.toString(),
+                        binding.viewTimer.text.toString()
+                    )
+//                    binding.tilSets.hint = ""
+//                    saveDraftHandler.removeCallbacksAndMessages(null)
+//                    saveDraftHandler.postDelayed({ saveDraft(p0.toString()) }, 1000)
                 }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -125,7 +131,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 //
             }
         })
-    }*/
+    }
 
     private fun observeViewModel() {
         viewModel.errorInputSets.observe(viewLifecycleOwner) {

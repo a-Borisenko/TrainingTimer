@@ -97,6 +97,15 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
+    fun draftTraining(
+        inputSets: Int,
+        inputTitle: String,
+        inputTimes: String,
+        inputRest: String
+    ) {
+        draft = Training(inputSets, inputTitle, inputTimes, inputRest)
+    }
+
     private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
         ?: Training.UNDEFINED_ID
 
@@ -137,5 +146,9 @@ class TrainingViewModel : ViewModel() {
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
+    }
+
+    companion object Draft {
+        var draft = Training(0, "0", "0", "0", 0)
     }
 }
