@@ -104,7 +104,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    //moved to viewModel
     private fun textWatcher() {
         binding.tilSets.addOnEditTextAttachedListener(object : TextWatcher,
             TextInputLayout.OnEditTextAttachedListener {
