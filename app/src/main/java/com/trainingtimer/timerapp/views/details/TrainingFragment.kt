@@ -8,6 +8,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -63,6 +64,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         observeViewModel()
         updateCountdownUI()
         trainNumber()
+        textWatcher()
     }
 
     private fun trainNumber() {
@@ -115,6 +117,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                         binding.etTimes.text.toString(),
                         binding.viewTimer.text.toString()
                     )
+                    Log.d("TrainingFragment", "draft saved!!!")
 //                    binding.tilSets.hint = ""
 //                    saveDraftHandler.removeCallbacksAndMessages(null)
 //                    saveDraftHandler.postDelayed({ saveDraft(p0.toString()) }, 1000)
