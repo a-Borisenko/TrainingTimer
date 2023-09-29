@@ -43,9 +43,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
-    //TODO #1: lost of data changes when rotation: 1) user content form; 2) onTypeListener; 3) content sending to database
+    //TODO #1: drafting changes before saving data
 
-    //TODO #2: rotation make countdown lost & crash app after time up
+    //TODO #2: background countdown
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         observeViewModel()
         updateCountdownUI()
         trainNumber()
-        textWatcher()
+//        textWatcher()
     }
 
     private fun trainNumber() {
@@ -106,7 +106,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun textWatcher() {
+    /*private fun textWatcher() {
         binding.tilSets.addOnEditTextAttachedListener(object : TextWatcher,
             TextInputLayout.OnEditTextAttachedListener {
             override fun afterTextChanged(p0: Editable?) {
@@ -133,7 +133,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 //
             }
         })
-    }
+    }*/
 
     private fun observeViewModel() {
         viewModel.errorInputSets.observe(viewLifecycleOwner) {
