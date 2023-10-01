@@ -14,6 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -267,7 +268,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 (binding.viewTimer.text.split(":"))[1].toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-                binding.viewTimer.text = getString(R.string.timer_done)
+                Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -279,6 +280,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
+//        binding.viewTimer.text = timeStringFromLong(secondsRemaining * 1000)
         val minutesFinished = secondsRemaining / 60
         val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
         val secondsStr = secondsInMinuteFinished.toString()
@@ -289,5 +291,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
         }"
+    }
+
+    private fun timeStringFromLong(ms: Long): String {
+        val seconds = (ms / 1000) % 60
+        val minutes = (ms / (1000 * 60) % 60)
+        return String().format("%02d:%02d", minutes, seconds)
     }
 }
