@@ -31,11 +31,11 @@ import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    /*enum class TimerState {
+    enum class TimerState {
         Stopped, Running
-    }*/
+    }
 
-//    private var timerState = TimerState.Stopped
+    private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
@@ -262,12 +262,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-//        timerState = TimerState.Running
+        timerState = TimerState.Running
 
         secondsRemaining = (binding.viewTimer.text.split(":"))[0].toLong() * 60 +
                 (binding.viewTimer.text.split(":"))[1].toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
+                timerState = TimerState.Stopped
                 Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
             }
 
