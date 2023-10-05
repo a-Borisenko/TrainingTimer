@@ -29,27 +29,27 @@ class TimerWorker(context: Context, parameters: WorkerParameters) :
         .setContentText(progress)
         .addAction(android.R.drawable.ic_delete, cancel, intent)
         .build()
-}
-
-suspend fun download(
-    inputUrl: String,
-    outputFile: String,
-    callback: suspend (progress: String) -> Unit
-): Nothing = TODO()
-
-fun createForegroundInfo(progress: String): ForegroundInfo {
-    return ForegroundInfo(id.toString().toInt(), notification(progress))
-}
-
-override suspend fun getForegroundInfo(): ForegroundInfo {
-    return super.getForegroundInfo()
-}
-
-override suspend fun doWork(): Result {
-    download(inputUrl, outputFile) { progress ->
-        val progress = "Progress $progress %"
-        setForeground(createForegroundInfo(progress))
     }
-    return Result.success()
-}*/
+
+    suspend fun download(
+        inputUrl: String,
+        outputFile: String,
+        callback: suspend (progress: String) -> Unit
+    ): Nothing = TODO()
+
+    fun createForegroundInfo(progress: String): ForegroundInfo {
+        return ForegroundInfo(id.toString().toInt(), notification(progress))
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return super.getForegroundInfo()
+    }
+
+    override suspend fun doWork(): Result {
+        download(inputUrl, outputFile) { progress ->
+            val progress = "Progress $progress %"
+            setForeground(createForegroundInfo(progress))
+        }
+        return Result.success()
+    }*/
 }
