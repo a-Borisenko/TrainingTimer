@@ -2,13 +2,14 @@ package com.trainingtimer.timerapp.views.details
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -22,10 +23,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputLayout
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.utils.AlarmReceiver
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 
 
@@ -35,11 +36,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Stopped, Running
     }
 
+//    private val calendar = Calendar.getInstance()
+    private var alarmMgr: AlarmManager? = null
     private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
 
+    private lateinit var alarmIntent: PendingIntent
     private lateinit var timer: CountDownTimer
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
@@ -66,6 +70,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         updateCountdownUI()
         trainNumber()
 //        textWatcher()
+        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+            intent.putExtra("key", secondsRemaining.toString())
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        }
     }
 
     private fun trainNumber() {
@@ -165,6 +174,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun launchMode(id: Int) {
         binding.trainingBtn.setOnClickListener {
+//            calendar.set(Calendar.HOUR_OF_DAY, binding)
+//            calendar.set(Calendar.MINUTE, binding)
+            alarmMgr?.setExact(
+                AlarmManager.RTC_WAKEUP,
+                secondsRemaining * 1000,
+                alarmIntent
+            )
             startTimer()
         }
         binding.viewTimer.setOnClickListener {
@@ -294,9 +310,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }"
     }
 
-    private fun timeStringFromLong(ms: Long): String {
+    /*private fun timeStringFromLong(ms: Long): String {
         val seconds = (ms / 1000) % 60
         val minutes = (ms / (1000 * 60) % 60)
         return String().format("%02d:%02d", minutes, seconds)
-    }
+    }*/
 }
