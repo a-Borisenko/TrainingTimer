@@ -28,6 +28,7 @@ import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.utils.AlarmReceiver
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
+import java.util.Calendar
 
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
@@ -36,7 +37,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Stopped, Running
     }
 
-//    private val calendar = Calendar.getInstance()
+    private val calendar = Calendar.getInstance()
     private var alarmMgr: AlarmManager? = null
     private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
@@ -280,8 +281,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun startTimer() {
         timerState = TimerState.Running
 
-        secondsRemaining = (binding.viewTimer.text.split(":"))[0].toLong() * 60 +
-                (binding.viewTimer.text.split(":"))[1].toLong()
+        val min = (binding.viewTimer.text.split(":"))[0].toLong()
+        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
+        alarmDate(min, sec)
+
+        secondsRemaining = min * 60 + sec
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
                 timerState = TimerState.Stopped
@@ -310,9 +314,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }"
     }
 
-    /*private fun timeStringFromLong(ms: Long): String {
-        val seconds = (ms / 1000) % 60
-        val minutes = (ms / (1000 * 60) % 60)
-        return String().format("%02d:%02d", minutes, seconds)
-    }*/
+    private fun alarmDate(min: Long, sec: Long) {
+        //TODO: set calendar date & time from now + time left
+        val nowHour = calendar.time.hours.toLong()
+        val nowMinute = calendar.time.minutes.toLong()
+    }
 }
