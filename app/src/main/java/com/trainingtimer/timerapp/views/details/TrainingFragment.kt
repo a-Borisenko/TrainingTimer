@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -33,16 +34,17 @@ import java.util.Calendar
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    enum class TimerState {
+    /*enum class TimerState {
         Stopped, Running
-    }
+    }*/
 
     private val calendar = Calendar.getInstance()
     private var alarmMgr: AlarmManager? = null
-    private var timerState = TimerState.Stopped
+//    private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
+    private var alarmDateTime = Calendar.getInstance()
 
     private lateinit var alarmIntent: PendingIntent
     private lateinit var timer: CountDownTimer
@@ -73,9 +75,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //        textWatcher()
         alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("key", secondsRemaining.toString())
+            intent.putExtra("key1", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
+        Log.d("TrainingFragment", "alarmIntent 1")
     }
 
     private fun trainNumber() {
@@ -175,8 +178,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun launchMode(id: Int) {
         binding.trainingBtn.setOnClickListener {
-//            calendar.set(Calendar.HOUR_OF_DAY, binding)
-//            calendar.set(Calendar.MINUTE, binding)
             alarmMgr?.setExact(
                 AlarmManager.RTC_WAKEUP,
                 secondsRemaining * 1000,
@@ -279,16 +280,17 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-        timerState = TimerState.Running
+//        timerState = TimerState.Running
 
-        val min = (binding.viewTimer.text.split(":"))[0].toLong()
-        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
+        val min = (binding.viewTimer.text.split(":"))[0].toInt()
+        val sec = (binding.viewTimer.text.split(":"))[1].toInt()
         alarmDate(min, sec)
+        Log.d("TrainingFragment", "startTimer")
 
-        secondsRemaining = min * 60 + sec
+        secondsRemaining = (min * 60 + sec).toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-                timerState = TimerState.Stopped
+//                timerState = TimerState.Stopped
                 Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
             }
 
@@ -297,6 +299,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateCountdownUI()
             }
         }.start()
+
+        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+            intent.putExtra("key2", "$alarmDateTime")
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        }
+        Log.d("TrainingFragment", "$alarmDateTime")
+        Log.d("TrainingFragment", "alarmIntent 2")
     }
 
     @SuppressLint("SetTextI18n")
@@ -314,9 +323,33 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }"
     }
 
-    private fun alarmDate(min: Long, sec: Long) {
+    private fun alarmDate(min: Int, sec: Int) {
         //TODO: set calendar date & time from now + time left
-        val nowHour = calendar.time.hours.toLong()
-        val nowMinute = calendar.time.minutes.toLong()
+        var alarmYear = calendar.get(Calendar.YEAR)
+        var alarmMonth = calendar.get(Calendar.MONTH)
+        var alarmDate = calendar.get(Calendar.DAY_OF_MONTH)
+        var alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
+        var alarmMin = calendar.get(Calendar.MINUTE) + min
+        var alarmSec = calendar.get(Calendar.SECOND) + sec
+
+        /*if (alarmSec >= 60) {
+            alarmSec -= 60
+            alarmMin++
+        }
+        if (alarmMin >= 60) {
+            alarmMin -= 60
+            alarmHour++
+        }
+        if (alarmHour >= 24) {
+            alarmHour -= 24
+            alarmDate++
+        }*/
+
+        alarmDateTime.set(Calendar.YEAR, alarmYear)
+        alarmDateTime.set(Calendar.MONTH, alarmMonth)
+        alarmDateTime.set(Calendar.DAY_OF_MONTH, alarmDate)
+        alarmDateTime.set(Calendar.HOUR_OF_DAY, alarmHour)
+        alarmDateTime.set(Calendar.MINUTE, alarmMin)
+        alarmDateTime.set(Calendar.SECOND, alarmSec)
     }
 }
