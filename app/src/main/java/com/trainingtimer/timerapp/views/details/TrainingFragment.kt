@@ -74,11 +74,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         trainNumber()
 //        textWatcher()
         alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+
+        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmInfoPendingIntent)
+        alarmMgr?.setAlarmClock(alarmClockInfo, alarmActionPendingIntent)
+        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key1", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }
-        Log.d("TrainingFragment", "alarmIntent 1")
+        }*/
+//        Log.d("TrainingFragment", "alarmIntent 1")
     }
 
     private fun trainNumber() {
@@ -300,12 +303,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }.start()
 
-        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.d("TrainingFragment", "$alarmDateTime")
-        Log.d("TrainingFragment", "alarmIntent 2")
+        Log.d("TrainingFragment", "alarmIntent 2")*/
     }
 
     @SuppressLint("SetTextI18n")
@@ -325,12 +328,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun alarmDate(min: Int, sec: Int) {
         //TODO: set calendar date & time from now + time left
-        var alarmYear = calendar.get(Calendar.YEAR)
-        var alarmMonth = calendar.get(Calendar.MONTH)
-        var alarmDate = calendar.get(Calendar.DAY_OF_MONTH)
-        var alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
-        var alarmMin = calendar.get(Calendar.MINUTE) + min
-        var alarmSec = calendar.get(Calendar.SECOND) + sec
+//        var alarmYear = calendar.get(Calendar.YEAR)
+//        var alarmMonth = calendar.get(Calendar.MONTH)
+        val alarmDate = calendar.get(Calendar.DAY_OF_MONTH)
+        val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val alarmMin = calendar.get(Calendar.MINUTE) + min
+        val alarmSec = calendar.get(Calendar.SECOND) + sec
 
         /*if (alarmSec >= 60) {
             alarmSec -= 60
@@ -345,11 +348,29 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             alarmDate++
         }*/
 
-        alarmDateTime.set(Calendar.YEAR, alarmYear)
-        alarmDateTime.set(Calendar.MONTH, alarmMonth)
+//        alarmDateTime.set(Calendar.YEAR, alarmYear)
+//        alarmDateTime.set(Calendar.MONTH, alarmMonth)
         alarmDateTime.set(Calendar.DAY_OF_MONTH, alarmDate)
         alarmDateTime.set(Calendar.HOUR_OF_DAY, alarmHour)
         alarmDateTime.set(Calendar.MINUTE, alarmMin)
         alarmDateTime.set(Calendar.SECOND, alarmSec)
     }
+
+    private val alarmInfoPendingIntent: PendingIntent
+        get() {
+            val alarmInfoIntent = Intent(context, TrainingFragment::class.java)
+            alarmInfoIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            return PendingIntent.getActivity(
+                context,
+                0,
+                alarmInfoIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    private val alarmActionPendingIntent: PendingIntent
+        get() {
+            val intent = Intent(context, TrainingFragment::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
 }
