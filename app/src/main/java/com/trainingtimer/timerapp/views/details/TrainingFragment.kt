@@ -75,13 +75,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //        textWatcher()
         alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmInfoPendingIntent)
-        alarmMgr?.setAlarmClock(alarmClockInfo, alarmActionPendingIntent)
-        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+//        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmInfoPendingIntent)
+//        alarmMgr?.setAlarmClock(alarmClockInfo, alarmActionPendingIntent)
+        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key1", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }*/
-//        Log.d("TrainingFragment", "alarmIntent 1")
+        }
+        Log.d("TrainingFragment", "alarmIntent 1")
     }
 
     private fun trainNumber() {
@@ -303,12 +303,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }.start()
 
-        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.d("TrainingFragment", "$alarmDateTime")
-        Log.d("TrainingFragment", "alarmIntent 2")*/
+        Log.d("TrainingFragment", "alarmIntent 2")
     }
 
     @SuppressLint("SetTextI18n")
@@ -356,7 +356,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         alarmDateTime.set(Calendar.SECOND, alarmSec)
     }
 
-    private val alarmInfoPendingIntent: PendingIntent
+    /*private val alarmInfoPendingIntent: PendingIntent
         get() {
             val alarmInfoIntent = Intent(context, TrainingFragment::class.java)
             alarmInfoIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -372,5 +372,5 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             val intent = Intent(context, TrainingFragment::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        }*/
 }
