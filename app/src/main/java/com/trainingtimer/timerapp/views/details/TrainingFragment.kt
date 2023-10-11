@@ -34,13 +34,8 @@ import java.util.Calendar
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    /*enum class TimerState {
-        Stopped, Running
-    }*/
-
     private val calendar = Calendar.getInstance()
     private var alarmMgr: AlarmManager? = null
-//    private var timerState = TimerState.Stopped
     private var secondsRemaining = 0L
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
@@ -72,7 +67,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         observeViewModel()
         updateCountdownUI()
         trainNumber()
-//        textWatcher()
         alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 //        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmInfoPendingIntent)
@@ -122,35 +116,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
-    /*private fun textWatcher() {
-        binding.tilSets.addOnEditTextAttachedListener(object : TextWatcher,
-            TextInputLayout.OnEditTextAttachedListener {
-            override fun afterTextChanged(p0: Editable?) {
-                if (p0.toString() != "") {
-                    viewModel.draftTraining(
-                        binding.etSets.text.toString().toInt(),
-                        binding.etTitle.text.toString(),
-                        binding.etTimes.text.toString(),
-                        binding.viewTimer.text.toString()
-                    )
-                    Log.d("TrainingFragment", "draft saved!!!")
-//                    binding.tilSets.hint = ""
-//                    saveDraftHandler.removeCallbacksAndMessages(null)
-//                    saveDraftHandler.postDelayed({ saveDraft(p0.toString()) }, 1000)
-                }
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //
-            }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //
-            }
-            override fun onEditTextAttached(textInputLayout: TextInputLayout) {
-                //
-            }
-        })
-    }*/
 
     private fun observeViewModel() {
         viewModel.errorInputSets.observe(viewLifecycleOwner) {
@@ -260,7 +225,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputTimes()
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
+            override fun afterTextChanged(p0: Editable?) {
+                //drafting in viewModel
+            }
         })
         binding.etTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -269,7 +236,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputTitle()
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
+            override fun afterTextChanged(p0: Editable?) {
+                //drafting in viewModel
+            }
         })
         binding.etSets.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -278,13 +247,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputSets()
             }
 
-            override fun afterTextChanged(p0: Editable?) {}
+            override fun afterTextChanged(p0: Editable?) {
+                //drafting in viewModel
+            }
         })
     }
 
     private fun startTimer() {
-//        timerState = TimerState.Running
-
         val min = (binding.viewTimer.text.split(":"))[0].toInt()
         val sec = (binding.viewTimer.text.split(":"))[1].toInt()
         alarmDate(min, sec)
@@ -293,7 +262,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         secondsRemaining = (min * 60 + sec).toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-//                timerState = TimerState.Stopped
                 Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
             }
 
@@ -317,6 +285,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         val minutesFinished = secondsRemaining / 60
         val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
         val secondsStr = secondsInMinuteFinished.toString()
+        binding.progressBar.progress = secondsRemaining.toInt()
+        Log.d("progressBar", "progress = $secondsRemaining")
         binding.viewTimer.text = "${
             if (minutesFinished.toString().length == 2) minutesFinished
             else "0$minutesFinished"
