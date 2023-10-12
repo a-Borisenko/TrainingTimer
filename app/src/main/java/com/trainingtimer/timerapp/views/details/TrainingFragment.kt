@@ -40,15 +40,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
     private var alarmDateTime = Calendar.getInstance()
+    private var progr = 100f
+    private var step = 0f
 
     private lateinit var alarmIntent: PendingIntent
     private lateinit var timer: CountDownTimer
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
-    //TODO #1: drafting changes before saving data
-
-    //TODO #2: background countdown
+    //TODO: background countdown on UI (counting already exist) & toast bug
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,10 +62,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setMenu()
 
         trainingId = requireArguments().getInt("id")
-        launchMode(trainingId)
+        launchMode(trainingId, savedInstanceState)
         addTextChangeListeners()
         observeViewModel()
-        updateCountdownUI()
         trainNumber()
         alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -76,6 +75,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.d("TrainingFragment", "alarmIntent 1")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("sets", binding.etSets.text.toString())
+        outState.putString("title", binding.etTitle.text.toString())
+        outState.putString("times", binding.etTimes.text.toString())
+        outState.putString("rest", binding.viewTimer.text.toString())
     }
 
     private fun trainNumber() {
@@ -90,6 +97,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             secondsRemaining = bundle.getLong("time")
+            progr = 100f
+            step = progr / (secondsRemaining.toFloat())
             updateCountdownUI()
         }
     }
@@ -144,7 +153,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    private fun launchMode(id: Int) {
+    private fun launchMode(id: Int, savedInstanceState: Bundle?) {
         binding.trainingBtn.setOnClickListener {
             alarmMgr?.setExact(
                 AlarmManager.RTC_WAKEUP,
@@ -156,29 +165,29 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.viewTimer.setOnClickListener {
             TimePickerFragment().show(childFragmentManager, "timePicker")
         }
-        if (id != Training.UNDEFINED_ID) {
-            viewModel.getTraining(trainingId)
-            viewModel.trainingLD.observe(viewLifecycleOwner) {
-                binding.etSets.setText(it?.sets.toString())
-                binding.etTitle.setText(it?.title)
-                binding.etTimes.setText(it?.times)
-                binding.viewTimer.text = it?.rest
-                trainingId = id
+
+        if (savedInstanceState != null) {
+            binding.etSets.setText(savedInstanceState.getString("sets"))
+            binding.etTitle.setText(savedInstanceState.getString("title"))
+            binding.etTimes.setText(savedInstanceState.getString("times"))
+            binding.viewTimer.text = savedInstanceState.getString("rest")
+        } else {
+            if (id != Training.UNDEFINED_ID) {
+                viewModel.getTraining(trainingId)
+                viewModel.trainingLD.observe(viewLifecycleOwner) {
+                    binding.etSets.setText(it?.sets.toString())
+                    binding.etTitle.setText(it?.title)
+                    binding.etTimes.setText(it?.times)
+                    binding.viewTimer.text = it?.rest
+                    trainingId = id
+                }
             }
         }
     }
 
     private fun addTraining() {
         trainingId = trainNumber
-        with(binding) {
-            tilSets.isVisible = false
-            tilTitle.isVisible = false
-            tilTimes.isVisible = false
-            viewTimer.isVisible = false
-            trainingBtn.isVisible = false
-            progressBar.isVisible = true
-        }
-        hideKeyboard()
+        hideView()
         viewModel.addTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
@@ -188,26 +197,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    private fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
-    }
-
-    private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager
-        = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     private fun editTraining() {
-        with(binding) {
-            tilSets.isVisible = false
-            tilTitle.isVisible = false
-            tilTimes.isVisible = false
-            viewTimer.isVisible = false
-            trainingBtn.isVisible = false
-            progressBar.isVisible = true
-        }
-        hideKeyboard()
+        hideView()
         viewModel.editTraining(
             binding.etSets.text?.toString()?.toInt(),
             binding.etTitle.text?.toString(),
@@ -215,6 +206,25 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.viewTimer.text?.toString(),
             trainingId = trainingId
         )
+    }
+
+    private fun hideView() {
+        with(binding) {
+            tilSets.isVisible = false
+            tilTitle.isVisible = false
+            tilTimes.isVisible = false
+            viewTimer.isVisible = false
+            trainingBtn.isVisible = false
+            countdownBar.isVisible = false
+            progressBar.isVisible = true
+        }
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager
+                = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun addTextChangeListeners() {
@@ -225,9 +235,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputTimes()
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-                //drafting in viewModel
-            }
+            override fun afterTextChanged(p0: Editable?) {}
         })
         binding.etTitle.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -236,9 +244,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputTitle()
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-                //drafting in viewModel
-            }
+            override fun afterTextChanged(p0: Editable?) {}
         })
         binding.etSets.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -247,9 +253,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewModel.resetErrorInputSets()
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-                //drafting in viewModel
-            }
+            override fun afterTextChanged(p0: Editable?) {}
         })
     }
 
@@ -281,12 +285,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
-//        binding.viewTimer.text = timeStringFromLong(secondsRemaining * 1000)
         val minutesFinished = secondsRemaining / 60
         val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
         val secondsStr = secondsInMinuteFinished.toString()
-        binding.progressBar.progress = secondsRemaining.toInt()
-        Log.d("progressBar", "progress = $secondsRemaining")
+
+        binding.countdownBar.progress = progr.toInt()
+        if (step == 0f && secondsRemaining > 0) {
+            step = progr / (secondsRemaining.toFloat())
+        }
+        progr -= step
+
         binding.viewTimer.text = "${
             if (minutesFinished.toString().length == 2) minutesFinished
             else "0$minutesFinished"
