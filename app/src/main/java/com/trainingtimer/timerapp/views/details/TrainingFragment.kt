@@ -16,7 +16,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -101,6 +101,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             step = progr / (secondsRemaining.toFloat())
             updateCountdownUI()
         }
+
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    binding.countdownBar.progress = 0
+                    findNavController().popBackStack()
+                }
+            })
     }
 
     private fun setMenu() {
@@ -171,16 +180,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
             binding.viewTimer.text = savedInstanceState.getString("rest")
-        } else {
-            if (id != Training.UNDEFINED_ID) {
-                viewModel.getTraining(trainingId)
-                viewModel.trainingLD.observe(viewLifecycleOwner) {
-                    binding.etSets.setText(it?.sets.toString())
-                    binding.etTitle.setText(it?.title)
-                    binding.etTimes.setText(it?.times)
-                    binding.viewTimer.text = it?.rest
-                    trainingId = id
-                }
+            startTimer()
+        } else if (id != Training.UNDEFINED_ID) {
+            updateProgressBarUI()
+            viewModel.getTraining(trainingId)
+            viewModel.trainingLD.observe(viewLifecycleOwner) {
+                binding.etSets.setText(it?.sets.toString())
+                binding.etTitle.setText(it?.title)
+                binding.etTimes.setText(it?.times)
+                binding.viewTimer.text = it?.rest
+                trainingId = id
             }
         }
     }
@@ -266,12 +275,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         secondsRemaining = (min * 60 + sec).toLong()
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-                Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
             }
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
                 updateCountdownUI()
+                updateProgressBarUI()
             }
         }.start()
 
@@ -289,12 +299,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
         val secondsStr = secondsInMinuteFinished.toString()
 
-        binding.countdownBar.progress = progr.toInt()
-        if (step == 0f && secondsRemaining > 0) {
-            step = progr / (secondsRemaining.toFloat())
-        }
-        progr -= step
-
         binding.viewTimer.text = "${
             if (minutesFinished.toString().length == 2) minutesFinished
             else "0$minutesFinished"
@@ -302,6 +306,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
         }"
+        Log.d("countdown", "sec remain = $secondsRemaining")
+    }
+
+    private fun updateProgressBarUI() {
+        binding.countdownBar.progress = progr.toInt()
+        if (step == 0f && secondsRemaining > 0) {
+            step = progr / (secondsRemaining.toFloat())
+        }
+        progr -= step
     }
 
     private fun alarmDate(min: Int, sec: Int) {
