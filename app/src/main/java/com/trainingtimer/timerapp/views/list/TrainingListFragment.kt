@@ -36,6 +36,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         with(binding) {
             progressBar.isVisible = false
             trainingRecyclerView.isVisible = true
+            newTraining.isVisible = true
         }
     }
 

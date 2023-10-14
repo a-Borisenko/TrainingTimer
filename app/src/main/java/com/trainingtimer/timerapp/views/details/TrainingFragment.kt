@@ -36,7 +36,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private val calendar = Calendar.getInstance()
     private var alarmMgr: AlarmManager? = null
-    private var secondsRemaining = 0L
+
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
     private var alarmDateTime = Calendar.getInstance()
@@ -97,6 +97,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             secondsRemaining = bundle.getLong("time")
+            secondsStart = secondsRemaining
             progr = 100f
             step = progr / (secondsRemaining.toFloat())
             updateCountdownUI()
@@ -180,6 +181,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
             binding.viewTimer.text = savedInstanceState.getString("rest")
+
+            Log.d("saveState", "secondsStart = $secondsStart")
+            progr = ((secondsRemaining * 100) / secondsStart).toFloat()
+            Log.d("saveState", "progr = $progr")
             startTimer()
         } else if (id != Training.UNDEFINED_ID) {
             updateProgressBarUI()
@@ -273,6 +278,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Log.d("TrainingFragment", "startTimer")
 
         secondsRemaining = (min * 60 + sec).toLong()
+        if (secondsStart == 0L) secondsStart = secondsRemaining
         timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
 //                Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
@@ -284,6 +290,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateProgressBarUI()
             }
         }.start()
+//        Timer.start()
 
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
@@ -364,4 +371,21 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }*/
+
+    /*object Timer : CountDownTimer(secondsRemaining * 1000, 1000) {
+        override fun onFinish() {
+            Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onTick(millisUntilFinished: Long) {
+            secondsRemaining = millisUntilFinished / 1000
+            updateCountdownUI()
+            updateProgressBarUI()
+        }
+    }*/
+
+    companion object {
+        private var secondsStart = 0L
+        private var secondsRemaining = 0L
+    }
 }
