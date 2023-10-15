@@ -48,7 +48,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
-    //TODO: background countdown on UI (counting already exist) & toast bug
+    //TODO #1: background countdown on UI (counting already exist)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +101,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             progr = 100f
             step = progr / (secondsRemaining.toFloat())
             updateCountdownUI()
+            updateProgressBarUI()
         }
 
         requireActivity()
@@ -182,9 +183,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTimes.setText(savedInstanceState.getString("times"))
             binding.viewTimer.text = savedInstanceState.getString("rest")
 
-            Log.d("saveState", "secondsStart = $secondsStart")
             progr = ((secondsRemaining * 100) / secondsStart).toFloat()
-            Log.d("saveState", "progr = $progr")
             startTimer()
         } else if (id != Training.UNDEFINED_ID) {
             updateProgressBarUI()
@@ -275,13 +274,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         val min = (binding.viewTimer.text.split(":"))[0].toInt()
         val sec = (binding.viewTimer.text.split(":"))[1].toInt()
         alarmDate(min, sec)
-        Log.d("TrainingFragment", "startTimer")
 
         secondsRemaining = (min * 60 + sec).toLong()
         if (secondsStart == 0L) secondsStart = secondsRemaining
-        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+
+        isClickable()
+        /*timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
-//                Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
+                isClickable()
+                updateProgressBarUI()
+                Log.d("TrainingFragment", "done!!!")
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -289,8 +291,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateCountdownUI()
                 updateProgressBarUI()
             }
-        }.start()
-//        Timer.start()
+        }.start()*/
+        TrainingViewModel.Timer.start()
+        /*viewModel.secRem.observe(viewLifecycleOwner) {
+            secondsRemaining = it
+        }*/
 
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
@@ -298,6 +303,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
         Log.d("TrainingFragment", "$alarmDateTime")
         Log.d("TrainingFragment", "alarmIntent 2")
+    }
+
+    //TODO #2: counting down in viewModel + liveData for trainingFragment ui
+
+    private fun isClickable() {
+        with(binding) {
+            trainingBtn.isClickable = !trainingBtn.isClickable
+            viewTimer.isClickable = !viewTimer.isClickable
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -386,6 +400,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     companion object {
         private var secondsStart = 0L
-        private var secondsRemaining = 0L
+        var secondsRemaining = 0L
     }
 }

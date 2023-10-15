@@ -1,5 +1,7 @@
 package com.trainingtimer.timerapp.views.details
 
+import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,7 @@ import com.trainingtimer.foundation.domain.EditTrainingUseCase
 import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.views.details.TrainingFragment.Companion.secondsRemaining
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,6 +46,10 @@ class TrainingViewModel : ViewModel() {
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
+
+    private val _secRem = MutableLiveData<Long>()
+    val secRem: LiveData<Long>
+        get() = _secRem
 
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
@@ -97,15 +104,6 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
-    fun draftTraining(
-        inputSets: Int,
-        inputTitle: String,
-        inputTimes: String,
-        inputRest: String
-    ) {
-        draft = Training(inputSets, inputTitle, inputTimes, inputRest)
-    }
-
     private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
         ?: Training.UNDEFINED_ID
 
@@ -148,7 +146,14 @@ class TrainingViewModel : ViewModel() {
         _shouldCloseScreen.value = Unit
     }
 
-    companion object Draft {
-        var draft = Training(0, "0", "0", "0", 0)
+    object Timer : CountDownTimer(secondsRemaining * 1000, 1000) {
+        override fun onFinish() {
+            Log.d("new Timer", "done!!!")
+        }
+
+        override fun onTick(millisUntilFinished: Long) {
+            secondsRemaining = millisUntilFinished / 1000
+            Log.d("new Timer", secondsRemaining.toString())
+        }
     }
 }
