@@ -401,5 +401,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     companion object {
         private var secondsStart = 0L
         var secondsRemaining = 0L
+
+        /*timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+            override fun onFinish() {
+                Log.d("TrainingFragment", "done!!!")
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                secondsRemaining = millisUntilFinished / 1000
+                Log.d("TrainingFragment", secondsRemaining.toString())
+            }
+        }*/
     }
 }
