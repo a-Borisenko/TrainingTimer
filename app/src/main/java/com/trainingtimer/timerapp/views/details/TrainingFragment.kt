@@ -28,6 +28,7 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.utils.AlarmReceiver
+import com.trainingtimer.timerapp.utils.TimerService
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 import java.util.Calendar
 
@@ -49,6 +50,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var viewModel: TrainingViewModel
 
     //TODO #1: background countdown on UI (counting already exist)
+
+    //TODO #2: counting down in viewModel + liveData for trainingFragment ui
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +78,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.d("TrainingFragment", "alarmIntent 1")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        moveToBackground()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // Moving the service to foreground when the app is in background / not visible
+        moveToForeground()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -293,9 +308,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }.start()*/
         TrainingViewModel.Timer.start()
-        /*viewModel.secRem.observe(viewLifecycleOwner) {
-            secondsRemaining = it
-        }*/
 
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
@@ -304,8 +316,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Log.d("TrainingFragment", "$alarmDateTime")
         Log.d("TrainingFragment", "alarmIntent 2")
     }
-
-    //TODO #2: counting down in viewModel + liveData for trainingFragment ui
 
     private fun isClickable() {
         with(binding) {
@@ -412,5 +422,47 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 Log.d("TrainingFragment", secondsRemaining.toString())
             }
         }*/
+    }
+
+    private fun getStopwatchStatus() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.GET_STATUS)
+        activity?.startService(stopwatchService)
+    }
+
+    private fun startStopwatch() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.START)
+        activity?.startService(stopwatchService)
+    }
+
+    private fun pauseStopwatch() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.PAUSE)
+        activity?.startService(stopwatchService)
+    }
+
+    private fun resetStopwatch() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.RESET)
+        activity?.startService(stopwatchService)
+    }
+
+    private fun moveToForeground() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(
+            TimerService.STOPWATCH_ACTION,
+            TimerService.MOVE_TO_FOREGROUND
+        )
+        activity?.startService(stopwatchService)
+    }
+
+    private fun moveToBackground() {
+        val stopwatchService = Intent(context, TimerService::class.java)
+        stopwatchService.putExtra(
+            TimerService.STOPWATCH_ACTION,
+            TimerService.MOVE_TO_BACKGROUND
+        )
+        activity?.startService(stopwatchService)
     }
 }
