@@ -47,10 +47,6 @@ class TrainingViewModel : ViewModel() {
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    /*private val _secRem = MutableLiveData<Long>()
-    val secRem: LiveData<Long>
-        get() = _secRem*/
-
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
         trainingLD = item
@@ -58,10 +54,6 @@ class TrainingViewModel : ViewModel() {
 
     fun getTrainNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
-    }
-
-    fun getTimer(time: Long) {
-        var timer = Timer
     }
 
     fun addTraining(
@@ -158,10 +150,6 @@ class TrainingViewModel : ViewModel() {
         override fun onTick(millisUntilFinished: Long) {
             secondsRemaining = millisUntilFinished / 1000
             Log.d("new Timer", secondsRemaining.toString())
-        }
-
-        fun sendMessage() {
-
         }
     }
 }

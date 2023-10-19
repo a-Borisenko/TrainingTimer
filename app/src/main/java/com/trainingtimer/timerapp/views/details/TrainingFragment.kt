@@ -396,32 +396,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }*/
 
-    /*object Timer : CountDownTimer(secondsRemaining * 1000, 1000) {
-        override fun onFinish() {
-            Toast.makeText(context, R.string.timer_done, Toast.LENGTH_SHORT).show()
-        }
-
-        override fun onTick(millisUntilFinished: Long) {
-            secondsRemaining = millisUntilFinished / 1000
-            updateCountdownUI()
-            updateProgressBarUI()
-        }
-    }*/
-
     companion object {
         private var secondsStart = 0L
         var secondsRemaining = 0L
-
-        /*timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
-            override fun onFinish() {
-                Log.d("TrainingFragment", "done!!!")
-            }
-
-            override fun onTick(millisUntilFinished: Long) {
-                secondsRemaining = millisUntilFinished / 1000
-                Log.d("TrainingFragment", secondsRemaining.toString())
-            }
-        }*/
     }
 
     private fun getStopwatchStatus() {
