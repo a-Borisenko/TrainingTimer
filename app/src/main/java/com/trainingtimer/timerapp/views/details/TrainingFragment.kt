@@ -49,9 +49,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 
-    //TODO #1: background countdown on UI (counting already exist)
+    //TODO #1: countdown in foreground
 
-    //TODO #2: counting down in viewModel + liveData for trainingFragment ui
+    //TODO #2: refactor (move to viewModel) + liveData for trainingFragment ui
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,14 +82,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onStart() {
         super.onStart()
-        moveToBackground()
+//        moveToBackground()
     }
 
     override fun onPause() {
         super.onPause()
 
         // Moving the service to foreground when the app is in background / not visible
-        moveToForeground()
+//        moveToForeground()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        timer.cancel()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -294,7 +299,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         if (secondsStart == 0L) secondsStart = secondsRemaining
 
         isClickable()
-        /*timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
                 isClickable()
                 updateProgressBarUI()
@@ -306,8 +311,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateCountdownUI()
                 updateProgressBarUI()
             }
-        }.start()*/
-        TrainingViewModel.Timer.start()
+        }.start()
+//        TrainingViewModel.Timer.start()
 
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")
