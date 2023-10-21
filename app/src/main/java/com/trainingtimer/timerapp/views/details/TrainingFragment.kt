@@ -51,6 +51,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #1: countdown in foreground
 
+    //bug: back to list while countdown running & return with start new counting ruins progress UI
+
     //TODO #2: refactor (move to viewModel) + liveData for trainingFragment ui
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,6 +131,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             .addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     binding.countdownBar.progress = 0
+//                    step = progr / (secondsStart.toFloat())
+//                    progr = ((secondsRemaining * 100) / secondsStart).toFloat()
+//                    progr = 100f
+//                    step = 0f
                     findNavController().popBackStack()
                 }
             })
