@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -22,13 +23,13 @@ class TimerService : Service() {
     private var secRemain: Int = 0
     private var isTimerRunning = false
 
-    private var updateTimer = Timer()
-    private var countdownTimer = Timer()
+    private lateinit var updateTimer: CountDownTimer
+    private lateinit var countdownTimer: CountDownTimer
 
     private lateinit var notificationManager: NotificationManager
 
     override fun onBind(p0: Intent?): IBinder? {
-        Log.d("Stopwatch", "Stopwatch onBind")
+        Log.d("TimerService", "Countdown onBind")
         return null
     }
 
@@ -36,9 +37,9 @@ class TimerService : Service() {
         createChannel()
         getNotificationManager()
 
-        val action = intent?.getStringExtra(STOPWATCH_ACTION)!!
+        val action = intent?.getStringExtra(COUNTDOWN_ACTION)!!
 
-        Log.d("Stopwatch", "onStartCommand Action: $action")
+        Log.d("TimerService", "onStartCommand Action: $action")
 
         when (action) {
             START -> startCountdown()
@@ -56,7 +57,7 @@ class TimerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID,
-                "Stopwatch",
+                "Countdown",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationChannel.setSound(null, null)
@@ -75,8 +76,8 @@ class TimerService : Service() {
 
     private fun sendStatus() {
         val statusIntent = Intent()
-        statusIntent.action = STOPWATCH_STATUS
-        statusIntent.putExtra(IS_STOPWATCH_RUNNING, isTimerRunning)
+        statusIntent.action = COUNTDOWN_STATUS
+        statusIntent.putExtra(IS_COUNTDOWN_RUNNING, isTimerRunning)
         statusIntent.putExtra(TIME_ELAPSED, secRemain)
         sendBroadcast(statusIntent)
     }
@@ -86,11 +87,26 @@ class TimerService : Service() {
 
         sendStatus()
 
-        countdownTimer = Timer()
+        countdownTimer = object : CountDownTimer(TrainingFragment.secondsRemaining * 1000, 1000) {
+            override fun onFinish() {
+                Log.d("TimerService", "done!!!")
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                val countdownIntent = Intent()
+                countdownIntent.action = COUNTDOWN_TICK
+
+                TrainingFragment.secondsRemaining = millisUntilFinished / 1000
+
+                countdownIntent.putExtra(TIME_ELAPSED, secRemain)
+                sendBroadcast(countdownIntent)
+            }
+        }.start()
+        /*countdownTimer = Timer()
         countdownTimer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 val countdownIntent = Intent()
-                countdownIntent.action = STOPWATCH_TICK
+                countdownIntent.action = COUNTDOWN_TICK
 
                 if (secRemain > 0) {
                     secRemain--
@@ -101,38 +117,26 @@ class TimerService : Service() {
                 countdownIntent.putExtra(TIME_ELAPSED, secRemain)
                 sendBroadcast(countdownIntent)
             }
-        }, 0, 1000)
+        }, 0, 1000)*/
     }
 
-    /*
-    * This function pauses the stopwatch
-    * Sends an update of the current state of the stopwatch
-    * */
     private fun pauseCountdown() {
         countdownTimer.cancel()
         isTimerRunning = false
         sendStatus()
     }
 
-    /*
-    * This function resets the stopwatch
-    * Sends an update of the current state of the stopwatch
-    * */
     private fun resetCountdown() {
         pauseCountdown()
         secRemain = 0
         sendStatus()
     }
 
-    /*
-    * This function is responsible for building and returning a Notification with the current
-    * state of the stopwatch along with the timeElapsed
-    * */
     private fun buildNotification(): Notification {
         val title = if (isTimerRunning) {
-            "Stopwatch is running!"
+            "Countdown is running!"
         } else {
-            "Stopwatch is paused!"
+            "Countdown is paused!"
         }
 
         val hours: Int = secRemain.div(60).div(60)
@@ -167,9 +171,6 @@ class TimerService : Service() {
     }
 
 
-    /*
-    * This function uses the notificationManager to update the existing notification with the new notification
-    * */
     private fun updateNotification() {
         notificationManager.notify(
             1,
@@ -177,32 +178,31 @@ class TimerService : Service() {
         )
     }
 
-    /*
-    * This function is triggered when the app is not visible to the user anymore
-    * It check if the stopwatch is running, if it is then it starts a foreground service
-    * with the notification.
-    * We run another timer to update the notification every second.
-    * */
     private fun moveToForeground() {
 
         if (isTimerRunning) {
             startForeground(1, buildNotification())
 
-            updateTimer = Timer()
+            updateTimer = object : CountDownTimer(TrainingFragment.secondsRemaining * 1000, 1000) {
+                override fun onFinish() {
+                    Log.d("TimerService", "done!!!")
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    TrainingFragment.secondsRemaining = millisUntilFinished / 1000
+                    updateNotification()
+                }
+            }.start()
+            /*updateTimer = Timer()
 
             updateTimer.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     updateNotification()
                 }
-            }, 0, 1000)
+            }, 0, 1000)*/
         }
     }
 
-    /*
-    * This function is triggered when the app is visible again to the user
-    * It cancels the timer which was updating the notification every second
-    * It also stops the foreground service and removes the notification
-    * */
     private fun moveToBackground() {
         updateTimer.cancel()
         stopForeground(true)
@@ -210,7 +210,7 @@ class TimerService : Service() {
 
     companion object {
         // Channel ID for notifications
-        const val CHANNEL_ID = "Stopwatch_Notifications"
+        const val CHANNEL_ID = "Countdown_Notifications"
 
         // Service Actions
         const val START = "START"
@@ -221,12 +221,12 @@ class TimerService : Service() {
         const val MOVE_TO_BACKGROUND = "MOVE_TO_BACKGROUND"
 
         // Intent Extras
-        const val STOPWATCH_ACTION = "STOPWATCH_ACTION"
+        const val COUNTDOWN_ACTION = "COUNTDOWN_ACTION"
         const val TIME_ELAPSED = "TIME_ELAPSED"
-        const val IS_STOPWATCH_RUNNING = "IS_STOPWATCH_RUNNING"
+        const val IS_COUNTDOWN_RUNNING = "IS_COUNTDOWN_RUNNING"
 
         // Intent Actions
-        const val STOPWATCH_TICK = "STOPWATCH_TICK"
-        const val STOPWATCH_STATUS = "STOPWATCH_STATUS"
+        const val COUNTDOWN_TICK = "COUNTDOWN_TICK"
+        const val COUNTDOWN_STATUS = "COUNTDOWN_STATUS"
     }
 }

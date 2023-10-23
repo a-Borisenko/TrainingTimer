@@ -412,45 +412,45 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         var secondsRemaining = 0L
     }
 
-    private fun getStopwatchStatus() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.GET_STATUS)
-        activity?.startService(stopwatchService)
+    private fun getCountdownStatus() {
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.GET_STATUS)
+        activity?.startService(countdownService)
     }
 
-    private fun startStopwatch() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.START)
-        activity?.startService(stopwatchService)
+    private fun startCountdown() {
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.START)
+        activity?.startService(countdownService)
     }
 
-    private fun pauseStopwatch() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.PAUSE)
-        activity?.startService(stopwatchService)
+    private fun pauseCountdown() {
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.PAUSE)
+        activity?.startService(countdownService)
     }
 
-    private fun resetStopwatch() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(TimerService.STOPWATCH_ACTION, TimerService.RESET)
-        activity?.startService(stopwatchService)
+    private fun resetCountdown() {
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.RESET)
+        activity?.startService(countdownService)
     }
 
     private fun moveToForeground() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(
-            TimerService.STOPWATCH_ACTION,
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(
+            TimerService.COUNTDOWN_ACTION,
             TimerService.MOVE_TO_FOREGROUND
         )
-        activity?.startService(stopwatchService)
+        activity?.startService(countdownService)
     }
 
     private fun moveToBackground() {
-        val stopwatchService = Intent(context, TimerService::class.java)
-        stopwatchService.putExtra(
-            TimerService.STOPWATCH_ACTION,
+        val countdownService = Intent(context, TimerService::class.java)
+        countdownService.putExtra(
+            TimerService.COUNTDOWN_ACTION,
             TimerService.MOVE_TO_BACKGROUND
         )
-        activity?.startService(stopwatchService)
+        activity?.startService(countdownService)
     }
 }
