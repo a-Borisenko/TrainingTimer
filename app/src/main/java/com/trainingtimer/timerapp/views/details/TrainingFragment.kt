@@ -82,18 +82,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Log.d("TrainingFragment", "alarmIntent 1")
     }
 
-    override fun onStart() {
-        super.onStart()
-//        moveToBackground()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        // Moving the service to foreground when the app is in background / not visible
-//        moveToForeground()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         timer.cancel()
@@ -131,10 +119,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             .addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     binding.countdownBar.progress = 0
-//                    step = progr / (secondsStart.toFloat())
-//                    progr = ((secondsRemaining * 100) / secondsStart).toFloat()
-//                    progr = 100f
-//                    step = 0f
                     findNavController().popBackStack()
                 }
             })
@@ -318,7 +302,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateProgressBarUI()
             }
         }.start()
-//        TrainingViewModel.Timer.start()
 
         alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key2", "$alarmDateTime")

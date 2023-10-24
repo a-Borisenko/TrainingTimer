@@ -141,15 +141,4 @@ class TrainingViewModel : ViewModel() {
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
-
-    object Timer : CountDownTimer(secondsRemaining * 1000, 1000) {
-        override fun onFinish() {
-            Log.d("new Timer", "done!!!")
-        }
-
-        override fun onTick(millisUntilFinished: Long) {
-            secondsRemaining = millisUntilFinished / 1000
-            Log.d("new Timer", secondsRemaining.toString())
-        }
-    }
 }
