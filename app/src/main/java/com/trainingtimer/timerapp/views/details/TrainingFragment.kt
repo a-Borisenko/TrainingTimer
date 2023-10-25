@@ -71,15 +71,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         observeViewModel()
         trainNumber()
-        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-//        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmInfoPendingIntent)
-//        alarmMgr?.setAlarmClock(alarmClockInfo, alarmActionPendingIntent)
-        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
             intent.putExtra("key1", "$alarmDateTime")
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }
-        Log.d("TrainingFragment", "alarmIntent 1")
+        }*/
+//        Log.d("TrainingFragment", "alarmIntent 1")
     }
 
     override fun onDestroyView() {
@@ -176,11 +174,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun launchMode(id: Int, savedInstanceState: Bundle?) {
         binding.trainingBtn.setOnClickListener {
-            alarmMgr?.setExact(
+            /*alarmMgr?.setExact(
                 AlarmManager.RTC_WAKEUP,
                 secondsRemaining * 1000,
                 alarmIntent
-            )
+            )*/
             startTimer()
         }
         binding.viewTimer.setOnClickListener {
@@ -241,7 +239,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             countdownBar.isVisible = false
             progressBar.isVisible = true
         }
-        view?.let { activity?.hideKeyboard(it) }
+        view?.let { requireActivity().hideKeyboard(it) }
     }
 
     private fun Context.hideKeyboard(view: View) {
@@ -283,7 +281,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun startTimer() {
         val min = (binding.viewTimer.text.split(":"))[0].toInt()
         val sec = (binding.viewTimer.text.split(":"))[1].toInt()
-        alarmDate(min, sec)
+//        alarmDate(min, sec)
 
         secondsRemaining = (min * 60 + sec).toLong()
         if (secondsStart == 0L) secondsStart = secondsRemaining
@@ -342,35 +340,17 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         progr -= step
     }
 
-    private fun alarmDate(min: Int, sec: Int) {
-        //TODO: set calendar date & time from now + time left
-//        var alarmYear = calendar.get(Calendar.YEAR)
-//        var alarmMonth = calendar.get(Calendar.MONTH)
+    /*private fun alarmDate(min: Int, sec: Int) {
         val alarmDate = calendar.get(Calendar.DAY_OF_MONTH)
         val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
         val alarmMin = calendar.get(Calendar.MINUTE) + min
         val alarmSec = calendar.get(Calendar.SECOND) + sec
 
-        /*if (alarmSec >= 60) {
-            alarmSec -= 60
-            alarmMin++
-        }
-        if (alarmMin >= 60) {
-            alarmMin -= 60
-            alarmHour++
-        }
-        if (alarmHour >= 24) {
-            alarmHour -= 24
-            alarmDate++
-        }*/
-
-//        alarmDateTime.set(Calendar.YEAR, alarmYear)
-//        alarmDateTime.set(Calendar.MONTH, alarmMonth)
         alarmDateTime.set(Calendar.DAY_OF_MONTH, alarmDate)
         alarmDateTime.set(Calendar.HOUR_OF_DAY, alarmHour)
         alarmDateTime.set(Calendar.MINUTE, alarmMin)
         alarmDateTime.set(Calendar.SECOND, alarmSec)
-    }
+    }*/
 
     /*private val alarmInfoPendingIntent: PendingIntent
         get() {
