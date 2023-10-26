@@ -239,7 +239,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             countdownBar.isVisible = false
             progressBar.isVisible = true
         }
-        view?.let { requireActivity().hideKeyboard(it) }
+        requireActivity().hideKeyboard(requireView())
     }
 
     private fun Context.hideKeyboard(view: View) {
