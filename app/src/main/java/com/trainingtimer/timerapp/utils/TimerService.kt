@@ -29,7 +29,6 @@ class TimerService : Service() {
     private lateinit var notificationManager: NotificationManager
 
     override fun onBind(p0: Intent?): IBinder? {
-        Log.d("TimerService", "Countdown onBind")
         return null
     }
 
@@ -37,7 +36,8 @@ class TimerService : Service() {
         createChannel()
         getNotificationManager()
 
-        val action = intent?.getStringExtra(COUNTDOWN_ACTION)!!
+        val action = intent?.getStringExtra(COUNTDOWN_ACTION)
+        secRemain = intent?.getIntExtra("TimeValue", 0) ?: 0
 
         Log.d("TimerService", "onStartCommand Action: $action")
 

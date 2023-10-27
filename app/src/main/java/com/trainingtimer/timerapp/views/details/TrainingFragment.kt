@@ -318,7 +318,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
-        val minutesFinished = secondsRemaining / 60
+        val min = secondsRemaining / 60
+        val sec = secondsRemaining % 60
+        binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
+
+        /*val minutesFinished = secondsRemaining / 60
         val secondsInMinuteFinished = secondsRemaining - minutesFinished * 60
         val secondsStr = secondsInMinuteFinished.toString()
 
@@ -328,7 +332,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }:${
             if (secondsStr.length == 2) secondsStr
             else "0$secondsStr"
-        }"
+        }"*/
         Log.d("countdown", "sec remain = $secondsRemaining")
     }
 
