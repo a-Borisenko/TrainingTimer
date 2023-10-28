@@ -28,7 +28,6 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 import com.trainingtimer.timerapp.utils.AlarmReceiver
-import com.trainingtimer.timerapp.utils.TimerService
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 import java.util.Calendar
 
@@ -301,12 +300,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }.start()
 
-        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("key2", "$alarmDateTime")
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }
-        Log.d("TrainingFragment", "$alarmDateTime")
-        Log.d("TrainingFragment", "alarmIntent 2")
+//        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+//            intent.putExtra("key2", "$alarmDateTime")
+//            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+//        }
+//        Log.d("TrainingFragment", "$alarmDateTime")
+//        Log.d("TrainingFragment", "alarmIntent 2")
     }
 
     private fun isClickable() {
@@ -377,47 +376,5 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     companion object {
         private var secondsStart = 0L
         var secondsRemaining = 0L
-    }
-
-    private fun getCountdownStatus() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.GET_STATUS)
-        activity?.startService(countdownService)
-    }
-
-    private fun startCountdown() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.START)
-        activity?.startService(countdownService)
-    }
-
-    private fun pauseCountdown() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.PAUSE)
-        activity?.startService(countdownService)
-    }
-
-    private fun resetCountdown() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(TimerService.COUNTDOWN_ACTION, TimerService.RESET)
-        activity?.startService(countdownService)
-    }
-
-    private fun moveToForeground() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(
-            TimerService.COUNTDOWN_ACTION,
-            TimerService.MOVE_TO_FOREGROUND
-        )
-        activity?.startService(countdownService)
-    }
-
-    private fun moveToBackground() {
-        val countdownService = Intent(context, TimerService::class.java)
-        countdownService.putExtra(
-            TimerService.COUNTDOWN_ACTION,
-            TimerService.MOVE_TO_BACKGROUND
-        )
-        activity?.startService(countdownService)
     }
 }
