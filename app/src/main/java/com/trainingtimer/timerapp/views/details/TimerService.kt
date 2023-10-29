@@ -6,9 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.Color
-import android.os.CountDownTimer
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.trainingtimer.R
@@ -17,7 +15,7 @@ import java.util.TimerTask
 
 class TimerService : Service() {
 
-    private var secRemain: Int = 0
+    private var secRemain: Long = 0
 //    private var isTimerRunning = false
 
 //    private lateinit var updateTimer: CountDownTimer
@@ -25,12 +23,12 @@ class TimerService : Service() {
 
     private lateinit var notificationManager: NotificationManager
 
-    override fun onBind(p0: Intent?): IBinder? {
+    override fun onBind(p0: Intent): IBinder? {
         return null
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        secRemain = intent.getIntExtra("TimeValue", 0)
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        secRemain  = intent.getLongExtra("TimeValue", 0)
         val timer = Timer()
         getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
@@ -61,10 +59,10 @@ class TimerService : Service() {
     private fun buildNotification(): Notification {
         val title = "Countdown is running!"
 
-        val minutes: Int = secRemain.div(60)
-        val seconds: Int = secRemain.rem(60)
+        val minutes = secRemain.div(60)
+        val seconds = secRemain.rem(60)
 
-        val intent = Intent(this, TimerFragment::class.java)
+        val intent = Intent(this, TrainingFragment::class.java)
         val pIntent = PendingIntent.getActivity(
             this,
             0,
@@ -91,24 +89,6 @@ class TimerService : Service() {
     }
 
     companion object {
-        // Channel ID for notifications
-        const val CHANNEL_ID = "Countdown_Notifications"
-
-        // Service Actions
-        const val START = "START"
-        const val PAUSE = "PAUSE"
-        const val RESET = "RESET"
-        const val GET_STATUS = "GET_STATUS"
-        const val MOVE_TO_FOREGROUND = "MOVE_TO_FOREGROUND"
-        const val MOVE_TO_BACKGROUND = "MOVE_TO_BACKGROUND"
-
-        // Intent Extras
-        const val COUNTDOWN_ACTION = "COUNTDOWN_ACTION"
-        const val TIME_ELAPSED = "TIME_ELAPSED"
-        const val IS_COUNTDOWN_RUNNING = "IS_COUNTDOWN_RUNNING"
-
-        // Intent Actions
-        const val COUNTDOWN_TICK = "COUNTDOWN_TICK"
-        const val COUNTDOWN_STATUS = "COUNTDOWN_STATUS"
+        const val CHANNEL_ID = "NotificationChannelID"
     }
 }

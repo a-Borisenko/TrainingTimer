@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -23,36 +25,39 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
-import com.trainingtimer.timerapp.utils.AlarmReceiver
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 import java.util.Calendar
 
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    private val calendar = Calendar.getInstance()
-    private var alarmMgr: AlarmManager? = null
+//    private val calendar = Calendar.getInstance()
+//    private var alarmMgr: AlarmManager? = null
 
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
-    private var alarmDateTime = Calendar.getInstance()
+//    private var alarmDateTime = Calendar.getInstance()
     private var progr = 100f
     private var step = 0f
 
-    private lateinit var alarmIntent: PendingIntent
-    private lateinit var timer: CountDownTimer
+//    private lateinit var alarmIntent: PendingIntent
+//    private lateinit var timer: CountDownTimer
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
+    private lateinit var timeReceiver: BroadcastReceiver
 
-    //TODO #1: countdown in foreground
+    //bug #1: not clickable after countdown finished
 
-    //bug: back to list while countdown running & return with start new counting ruins progress UI
+    //bug #2: acceleration counting after rotating
 
-    //TODO #2: refactor (move to viewModel) + liveData for trainingFragment ui
+    //old bug: back to list while countdown running & return with start new counting ruins progress UI
+
+    //need refactor (move to viewModel) + liveData for trainingFragment ui
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +74,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         launchMode(trainingId, savedInstanceState)
         addTextChangeListeners()
         observeViewModel()
-        trainNumber()
+        trainingNumber()
 //        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
@@ -81,7 +86,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        timer.cancel()
+        LocalBroadcastManager.getInstance(requireActivity().applicationContext).unregisterReceiver(timeReceiver)
+//        timer.cancel()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -92,8 +98,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         outState.putString("rest", binding.viewTimer.text.toString())
     }
 
-    private fun trainNumber() {
-        viewModel.getTrainNumber()
+    private fun trainingNumber() {
+        viewModel.getTrainingNumber()
         viewModel.trainNumber.observe(viewLifecycleOwner) {
             trainNumber = it.last().id + 1
         }
@@ -284,9 +290,26 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
         secondsRemaining = (min * 60 + sec).toLong()
         if (secondsStart == 0L) secondsStart = secondsRemaining
-
         isClickable()
-        timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
+
+        val intentService = Intent(context, TimerService::class.java)
+        intentService.putExtra("TimeValue", secondsRemaining)
+        requireActivity().startService(intentService)
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("Counter")
+
+        timeReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                secondsRemaining = intent.getLongExtra("TimeRemaining", 0)
+                updateCountdownUI()
+                updateProgressBarUI()
+                if (secondsRemaining <= 0) isClickable()
+            }
+        }
+        requireActivity().registerReceiver(timeReceiver, intentFilter)
+
+        /*timer = object : CountDownTimer(secondsRemaining * 1000, 1000) {
             override fun onFinish() {
                 isClickable()
                 updateProgressBarUI()
@@ -298,14 +321,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 updateCountdownUI()
                 updateProgressBarUI()
             }
-        }.start()
+        }.start()*/
 
-//        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-//            intent.putExtra("key2", "$alarmDateTime")
-//            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-//        }
-//        Log.d("TrainingFragment", "$alarmDateTime")
-//        Log.d("TrainingFragment", "alarmIntent 2")
+        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+            intent.putExtra("key2", "$alarmDateTime")
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        }
+        Log.d("TrainingFragment", "$alarmDateTime")
+        Log.d("TrainingFragment", "alarmIntent 2")*/
     }
 
     private fun isClickable() {

@@ -1,7 +1,5 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +10,6 @@ import com.trainingtimer.foundation.domain.EditTrainingUseCase
 import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
-import com.trainingtimer.timerapp.views.details.TrainingFragment.Companion.secondsRemaining
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -52,7 +49,7 @@ class TrainingViewModel : ViewModel() {
         trainingLD = item
     }
 
-    fun getTrainNumber() {
+    fun getTrainingNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
     }
 
