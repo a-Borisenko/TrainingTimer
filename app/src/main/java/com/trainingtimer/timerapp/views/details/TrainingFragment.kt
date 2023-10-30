@@ -24,6 +24,8 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
@@ -284,11 +286,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-        val min = (binding.viewTimer.text.split(":"))[0].toInt()
-        val sec = (binding.viewTimer.text.split(":"))[1].toInt()
+        val min = (binding.viewTimer.text.split(":"))[0].toLong()
+        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
 //        alarmDate(min, sec)
 
-        secondsRemaining = (min * 60 + sec).toLong()
+        secondsRemaining = (min * 60 + sec)
         if (secondsStart == 0L) secondsStart = secondsRemaining
         isClickable()
 
@@ -356,6 +358,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             else "0$secondsStr"
         }"*/
         Log.d("countdown", "sec remain = $secondsRemaining")
+
+        val newMin = (binding.viewTimer.text.split(":"))[0].toLong()
+        val newSec = (binding.viewTimer.text.split(":"))[1].toLong()
+
+        if ((newSec + newMin) != secondsRemaining) {
+            binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
+        }
     }
 
     private fun updateProgressBarUI() {
