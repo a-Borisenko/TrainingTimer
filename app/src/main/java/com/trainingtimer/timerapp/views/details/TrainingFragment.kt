@@ -89,7 +89,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onDestroyView() {
         super.onDestroyView()
         LocalBroadcastManager.getInstance(requireActivity().applicationContext).unregisterReceiver(timeReceiver)
-//        timer.cancel()
+//        timer.cancel()  //intent to service
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -199,7 +199,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.viewTimer.text = savedInstanceState.getString("rest")
 
             progr = ((secondsRemaining * 100) / secondsStart).toFloat()
-            startTimer()
+            startTimer()    //start -> update without requireActivity().startService(intent)
         } else if (id != Training.UNDEFINED_ID) {
             updateProgressBarUI()
             viewModel.getTraining(trainingId)
