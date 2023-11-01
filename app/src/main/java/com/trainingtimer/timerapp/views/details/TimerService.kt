@@ -35,14 +35,14 @@ class TimerService : Service() {
             override fun run() {
                 val intentLocal = Intent()
                 intentLocal.action = "Counter"
-                if (secRemain > 0) {
+                if (secRemain >= 0) {
                     secRemain--
                     updateNotification()
+                    intentLocal.putExtra("TimeRemaining", secRemain)
                 } else {
                     timer.cancel()
                     notificationManager.cancelAll()
                 }
-                intentLocal.putExtra("TimeRemaining", secRemain)
                 sendBroadcast(intentLocal)
             }
         }, 0, 1000)

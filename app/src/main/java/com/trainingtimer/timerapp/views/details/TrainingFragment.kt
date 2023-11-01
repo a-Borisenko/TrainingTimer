@@ -55,8 +55,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //bug #1: not clickable after countdown finished
 
-    //bug #2: acceleration counting after rotating
-
     //old bug: back to list while countdown running & return with start new counting ruins progress UI
 
     //need refactor (move to viewModel) + liveData for trainingFragment ui
@@ -88,8 +86,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        LocalBroadcastManager.getInstance(requireActivity().applicationContext).unregisterReceiver(timeReceiver)
-//        timer.cancel()  //intent to service
+        LocalBroadcastManager.getInstance(requireActivity().applicationContext)
+            .unregisterReceiver(timeReceiver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -199,7 +197,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.viewTimer.text = savedInstanceState.getString("rest")
 
             progr = ((secondsRemaining * 100) / secondsStart).toFloat()
-            startTimer()    //start -> update without requireActivity().startService(intent)
+            updateTimer()
         } else if (id != Training.UNDEFINED_ID) {
             updateProgressBarUI()
             viewModel.getTraining(trainingId)
@@ -292,7 +290,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
         secondsRemaining = (min * 60 + sec)
         if (secondsStart == 0L) secondsStart = secondsRemaining
-        isClickable()
+        isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
         intentService.putExtra("TimeValue", secondsRemaining)
@@ -303,10 +301,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
         timeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                secondsRemaining = intent.getLongExtra("TimeRemaining", 0)
+                val secIntent = intent.getLongExtra("TimeRemaining", 0)
+                if (secIntent > 0) {
+                    secondsRemaining = secIntent
+                } else {
+                    secondsRemaining = 0
+                    isClickable(true)
+                }
                 updateCountdownUI()
                 updateProgressBarUI()
-                if (secondsRemaining <= 0) isClickable()
             }
         }
         requireActivity().registerReceiver(timeReceiver, intentFilter)
@@ -333,10 +336,39 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         Log.d("TrainingFragment", "alarmIntent 2")*/
     }
 
-    private fun isClickable() {
-        with(binding) {
-            trainingBtn.isClickable = !trainingBtn.isClickable
-            viewTimer.isClickable = !viewTimer.isClickable
+    private fun updateTimer() {
+        val min = (binding.viewTimer.text.split(":"))[0].toLong()
+        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
+
+        secondsRemaining = (min * 60 + sec)
+        if (secondsStart == 0L) secondsStart = secondsRemaining
+        isClickable(false)
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("Counter")
+
+        timeReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val secIntent = intent.getLongExtra("TimeRemaining", 0)
+                if (secIntent > 0) {
+                    secondsRemaining = secIntent
+                } else {
+                    secondsRemaining = 0
+                    isClickable(true)
+                }
+                updateCountdownUI()
+                updateProgressBarUI()
+            }
+        }
+        requireActivity().registerReceiver(timeReceiver, intentFilter)
+    }
+
+    private fun isClickable(status: Boolean) {
+        if (secondsRemaining > 0) {
+            with(binding) {
+                trainingBtn.isClickable = status
+                viewTimer.isClickable = status
+            }
         }
     }
 
@@ -407,6 +439,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     companion object {
         private var secondsStart = 0L
-        var secondsRemaining = 0L
+        private var secondsRemaining = 0L
     }
 }
