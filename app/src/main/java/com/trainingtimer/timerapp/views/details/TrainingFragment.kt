@@ -53,9 +53,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private lateinit var viewModel: TrainingViewModel
     private lateinit var timeReceiver: BroadcastReceiver
 
-    //bug #1: not clickable after countdown finished
-
-    //old bug: back to list while countdown running & return with start new counting ruins progress UI
+    //bug: back to list while countdown running & return with start new counting ruins progress UI + double timer
 
     //need refactor (move to viewModel) + liveData for trainingFragment ui
 
@@ -364,7 +362,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun isClickable(status: Boolean) {
-        if (secondsRemaining > 0) {
+        if (secondsRemaining >= 0) {
             with(binding) {
                 trainingBtn.isClickable = status
                 viewTimer.isClickable = status
