@@ -40,6 +40,10 @@ class TrainingViewModel : ViewModel() {
     val training: LiveData<Training>
         get() = _training
 
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean>
+        get() = _loading
+
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
@@ -62,9 +66,9 @@ class TrainingViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             delay(3000)
-            val times = parseTimes(inputTimes)
-            val title = parseTitle(inputTitle)
             val sets = parseSets(inputSets)
+            val title = parseTitle(inputTitle)
+            val times = parseTimes(inputTimes)
             val rest = parseRest(inputRest)
             val fieldValid = validateInput(sets, title, times)
             if (fieldValid) {
@@ -82,14 +86,16 @@ class TrainingViewModel : ViewModel() {
         inputRest: String?,
         trainingId: Int
     ) {
-        viewModelScope.launch {
-            delay(3000)
-            val times = parseTimes(inputTimes)
-            val title = parseTitle(inputTitle)
-            val sets = parseSets(inputSets)
-            val rest = parseRest(inputRest)
-            val fieldValid = validateInput(sets, title, times)
-            if (fieldValid) {
+        val sets = parseSets(inputSets)
+        val title = parseTitle(inputTitle)
+        val times = parseTimes(inputTimes)
+        val rest = parseRest(inputRest)
+        val fieldValid = validateInput(sets, title, times)
+        if (fieldValid) {
+            viewModelScope.launch {
+                startLoad()
+                delay(3000)
+                finishLoad()
                 val item = Training(sets, title, times, rest, trainingId)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
@@ -137,5 +143,13 @@ class TrainingViewModel : ViewModel() {
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
+    }
+
+    private fun startLoad() {
+        _loading.value = true
+    }
+
+    private fun finishLoad() {
+        _loading.value = false
     }
 }
