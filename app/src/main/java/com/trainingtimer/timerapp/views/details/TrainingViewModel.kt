@@ -58,29 +58,7 @@ class TrainingViewModel : ViewModel() {
     }
 
     fun addTraining(
-        inputSets: Int?,
-        inputTitle: String?,
-        inputTimes: String?,
-        inputRest: String?,
-        trainingId: Int
-    ) {
-        viewModelScope.launch {
-            delay(3000)
-            val sets = parseSets(inputSets)
-            val title = parseTitle(inputTitle)
-            val times = parseTimes(inputTimes)
-            val rest = parseRest(inputRest)
-            val fieldValid = validateInput(sets, title, times)
-            if (fieldValid) {
-                val training = Training(sets, title, times, rest, trainingId)
-                addTrainingUseCase.addTraining(training)
-                finishWork()
-            }
-        }
-    }
-
-    fun editTraining(
-        inputSets: Int?,
+        inputSets: String?,
         inputTitle: String?,
         inputTimes: String?,
         inputRest: String?,
@@ -96,15 +74,38 @@ class TrainingViewModel : ViewModel() {
                 startLoad()
                 delay(3000)
                 finishLoad()
-                val item = Training(sets, title, times, rest, trainingId)
+                val training = Training(sets.toInt(), title, times, rest, trainingId)
+                addTrainingUseCase.addTraining(training)
+                finishWork()
+            }
+        }
+    }
+
+    fun editTraining(
+        inputSets: String?,
+        inputTitle: String?,
+        inputTimes: String?,
+        inputRest: String?,
+        trainingId: Int
+    ) {
+        val sets = parseSets(inputSets)
+        val title = parseTitle(inputTitle)
+        val times = parseTimes(inputTimes)
+        val rest = parseRest(inputRest)
+        val fieldValid = validateInput(sets, title, times)
+        if (fieldValid) {
+            viewModelScope.launch {
+                startLoad()
+                delay(3000)
+                finishLoad()
+                val item = Training(sets.toInt(), title, times, rest, trainingId)
                 editTrainingUseCase.editTraining(item)
                 finishWork()
             }
         }
     }
 
-    private fun parseSets(inputSets: Int?) = inputSets?.toString()?.trim()?.toInt()
-        ?: Training.UNDEFINED_ID
+    private fun parseSets(inputSets: String?) = inputSets?.trim() ?: ""
 
     private fun parseTitle(inputTitle: String?) = inputTitle?.trim() ?: ""
 
@@ -112,7 +113,7 @@ class TrainingViewModel : ViewModel() {
 
     private fun parseRest(inputRest: String?) = inputRest?.trim() ?: ""
 
-    private fun validateInput(sets: Int, title: String, times: String): Boolean {
+    private fun validateInput(sets: String, title: String, times: String): Boolean {
         var res = true
         if (times.isBlank()) {
             _errorInputTimes.value = true
@@ -122,7 +123,7 @@ class TrainingViewModel : ViewModel() {
             _errorInputTitle.value = true
             res = false
         }
-        if (sets.toString().isBlank()) {
+        if (sets.isBlank()) {
             _errorInputSets.value = true
             res = false
         }
