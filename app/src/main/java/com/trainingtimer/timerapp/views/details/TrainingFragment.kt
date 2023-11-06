@@ -32,16 +32,10 @@ import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-//    private val calendar = Calendar.getInstance()
-//    private var alarmMgr: AlarmManager? = null
-
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
-//    private var alarmDateTime = Calendar.getInstance()
     private var progr = 100f
 
-//    private lateinit var alarmIntent: PendingIntent
-//    private lateinit var timer: CountDownTimer
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
     private lateinit var timeReceiver: BroadcastReceiver
@@ -64,13 +58,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         inputErrorsObserve()
         getNumberOfTrainings()
-//        alarmMgr = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("key1", "$alarmDateTime")
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }*/
-//        Log.d("TrainingFragment", "alarmIntent 1")
     }
 
     override fun onDestroyView() {
@@ -103,17 +90,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             updateProgressBarUI()
         }
     }
-
-    /*private fun fragmentBackPressedSettings() {
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    binding.countdownBar.progress = 0
-                    findNavController().popBackStack()
-                }
-            })
-    }*/
 
     private fun setMenu() {
         val menuHost: MenuHost = requireActivity()
@@ -167,11 +143,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            /*alarmMgr?.setExact(
-                AlarmManager.RTC_WAKEUP,
-                secondsRemaining * 1000,
-                alarmIntent
-            )*/
             startTimer()
         }
         binding.viewTimer.setOnClickListener {
@@ -257,52 +228,17 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etSets.textChangedListener(viewModel.resetErrorInputSets())
         binding.etTitle.textChangedListener(viewModel.resetErrorInputTitle())
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
-        /*binding.etSets.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputSets()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputTitle()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etTimes.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputTimes()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })*/
     }
 
     private fun startTimer() {
         val min = (binding.viewTimer.text.split(":"))[0].toLong()
         val sec = (binding.viewTimer.text.split(":"))[1].toLong()
-//        alarmDate(min, sec)
         secondsRemaining = (min * 60 + sec)
         isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
         intentService.putExtra("TimeValue", secondsRemaining)
         requireActivity().startService(intentService)
-
-        /*alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("key2", "$alarmDateTime")
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        }
-        Log.d("TrainingFragment", "$alarmDateTime")
-        Log.d("TrainingFragment", "alarmIntent 2")*/
     }
 
     private fun registerReceiver() {
@@ -361,36 +297,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun updateProgressBarUI() {
         binding.countdownBar.progress = progr.toInt()
     }
-
-    /*private fun alarmDate(min: Int, sec: Int) {
-        val alarmDate = calendar.get(Calendar.DAY_OF_MONTH)
-        val alarmHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val alarmMin = calendar.get(Calendar.MINUTE) + min
-        val alarmSec = calendar.get(Calendar.SECOND) + sec
-
-        alarmDateTime.set(Calendar.DAY_OF_MONTH, alarmDate)
-        alarmDateTime.set(Calendar.HOUR_OF_DAY, alarmHour)
-        alarmDateTime.set(Calendar.MINUTE, alarmMin)
-        alarmDateTime.set(Calendar.SECOND, alarmSec)
-    }*/
-
-    /*private val alarmInfoPendingIntent: PendingIntent
-        get() {
-            val alarmInfoIntent = Intent(context, TrainingFragment::class.java)
-            alarmInfoIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            return PendingIntent.getActivity(
-                context,
-                0,
-                alarmInfoIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-    private val alarmActionPendingIntent: PendingIntent
-        get() {
-            val intent = Intent(context, TrainingFragment::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }*/
 
     companion object {
         private var secondsRemaining = 0L
