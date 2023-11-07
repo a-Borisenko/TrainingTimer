@@ -150,6 +150,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
+    //launchController 1:02:35
     private fun launchMode(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             binding.etSets.setText(savedInstanceState.getString("sets"))
