@@ -1,6 +1,5 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,7 +8,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -58,6 +56,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         inputErrorsObserve()
         getNumberOfTrainings()
+
+        viewModel.secRemain.observe(viewLifecycleOwner) {
+            val min = it / 60
+            val sec = it % 60
+            binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
+        }
     }
 
     override fun onDestroyView() {
@@ -71,7 +75,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         outState.putString("sets", binding.etSets.text.toString())
         outState.putString("title", binding.etTitle.text.toString())
         outState.putString("times", binding.etTimes.text.toString())
-        outState.putString("rest", binding.viewTimer.text.toString())
+//        outState.putString("rest", binding.viewTimer.text.toString())
     }
 
     private fun getNumberOfTrainings() {
@@ -85,8 +89,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         childFragmentManager.setFragmentResultListener(
             "key", this
         ) { _, bundle ->
-            secondsRemaining = bundle.getLong("time")
-            updateCountdownUI()
+            viewModel.updateTime(bundle.getLong("time"))
+//            updateCountdownUI()
             updateProgressBarUI()
         }
     }
@@ -156,8 +160,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etSets.setText(savedInstanceState.getString("sets"))
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
-            binding.viewTimer.text = savedInstanceState.getString("rest")
-            updateTimer()
+//            binding.viewTimer.text = savedInstanceState.getString("rest")
+//            updateTimer()
         } else if (trainingId != Training.UNDEFINED_ID) {
             updateProgressBarUI()
             viewModel.getTraining(trainingId)
@@ -165,7 +169,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etSets.setText(it?.sets.toString())
                 binding.etTitle.setText(it?.title)
                 binding.etTimes.setText(it?.times)
-                binding.viewTimer.text = it?.rest
+//                binding.viewTimer.text = it?.rest
+                viewModel.updateTime(getTime(it?.rest.toString()))
             }
         }
     }
@@ -231,14 +236,20 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
     }
 
+    private fun getTime(time: String): Long {
+        val min = (time.split(":"))[0].toLong()
+        val sec = (time.split(":"))[1].toLong()
+        return (min * 60 + sec)
+    }
+
     private fun startTimer() {
-        val min = (binding.viewTimer.text.split(":"))[0].toLong()
-        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
-        secondsRemaining = (min * 60 + sec)
+//        val min = (binding.viewTimer.text.split(":"))[0].toLong()
+//        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
+//        viewModel.updateTime(min * 60 + sec)
         isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
-        intentService.putExtra("TimeValue", secondsRemaining)
+        intentService.putExtra("TimeValue", getTime(binding.viewTimer.text.toString()))
         requireActivity().startService(intentService)
     }
 
@@ -251,35 +262,35 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 val secIntent = intent.getLongExtra("TimeRemaining", 0)
                 progr = intent.getFloatExtra("Progress", 100f)
                 if (secIntent > 0) {
-                    secondsRemaining = secIntent
+                    viewModel.updateTime(secIntent)
                 } else {
-                    secondsRemaining = 0
+                    viewModel.updateTime(0)
                     isClickable(true)
                 }
-                updateCountdownUI()
+//                updateCountdownUI()
                 updateProgressBarUI()
             }
         }
         requireActivity().registerReceiver(timeReceiver, intentFilter)
     }
 
-    private fun updateTimer() {
+    /*private fun updateTimer() {
         val min = (binding.viewTimer.text.split(":"))[0].toLong()
         val sec = (binding.viewTimer.text.split(":"))[1].toLong()
-        secondsRemaining = (min * 60 + sec)
+        viewModel.updateTime(min * 60 + sec)
         isClickable(false)
-    }
+    }*/
 
     private fun isClickable(status: Boolean) {
-        if (secondsRemaining >= 0) {
+//        if (secondsRemaining >= 0) {
             with(binding) {
                 trainingBtn.isClickable = status
                 viewTimer.isClickable = status
             }
-        }
+//        }
     }
 
-    @SuppressLint("SetTextI18n")
+    /*@SuppressLint("SetTextI18n")
     private fun updateCountdownUI() {
         val min = secondsRemaining / 60
         val sec = secondsRemaining % 60
@@ -293,13 +304,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         if ((newSec + newMin) != secondsRemaining) {
             binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
         }
-    }
+    }*/
 
     private fun updateProgressBarUI() {
         binding.countdownBar.progress = progr.toInt()
     }
 
-    companion object {
+    /*companion object {
         private var secondsRemaining = 0L
-    }
+    }*/
 }

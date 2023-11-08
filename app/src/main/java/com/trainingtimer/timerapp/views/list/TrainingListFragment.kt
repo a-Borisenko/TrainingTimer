@@ -71,7 +71,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun setupClickListener() {
-        listAdapter.onShopItemClickListener = {
+        listAdapter.onTrainingClickListener = {
             findNavController().navigate(
                 R.id.action_trainingListFragment_to_trainingFragment,
                 bundleOf("id" to it.id),

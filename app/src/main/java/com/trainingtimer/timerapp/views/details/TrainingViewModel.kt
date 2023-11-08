@@ -1,5 +1,7 @@
 package com.trainingtimer.timerapp.views.details
 
+import android.content.BroadcastReceiver
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +23,9 @@ class TrainingViewModel : ViewModel() {
     private val editTrainingUseCase = EditTrainingUseCase(repository)
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
+    var isCounting = false
+    var progr = 100f
+    lateinit var timeReceiver: BroadcastReceiver
     lateinit var trainingLD: LiveData<Training?>
     lateinit var trainNumber: LiveData<List<Training>>
 
@@ -44,6 +49,14 @@ class TrainingViewModel : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
+    private val _secRemain = MutableLiveData<Long>()
+    val secRemain: LiveData<Long>
+        get() = _secRemain
+
+    private val _progress = MutableLiveData<Float>()
+    val progress: LiveData<Float>
+        get() = _progress
+
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
@@ -56,6 +69,53 @@ class TrainingViewModel : ViewModel() {
     fun getTrainingNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
     }
+
+    fun updateTime(sec: Long) {
+        _secRemain.value = sec
+        Log.d("viewModel", "sec remain = $sec")
+    }
+
+    /*fun getTime() {
+        //get time from DataBase
+    }
+
+    fun getDialogTime() {
+        //get time from dialogFragment
+    }
+
+    fun startTimer() {
+        //start TimerService
+    }
+
+    fun stopTimer() {
+        //stop TimerService
+    }
+
+    fun registerReceiver() {
+        //receive counting down
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("Counter")
+
+        timeReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val secIntent = intent.getLongExtra("TimeRemaining", 0)
+                progr = intent.getFloatExtra("Progress", 100f)
+                if (secIntent > 0) {
+                    updateTime(secIntent)
+                } else {
+                    updateTime(0)
+//                    isClickable(true)
+                }
+//                updateCountdownUI()
+//                updateProgressBarUI()
+            }
+        }
+//        requireActivity().registerReceiver(timeReceiver, intentFilter)
+    }
+
+    fun unregisterReceiver() {
+        //stop receiving countdown
+    }*/
 
     fun addTraining(
         inputSets: String?,

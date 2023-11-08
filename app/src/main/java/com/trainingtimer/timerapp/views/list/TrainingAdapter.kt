@@ -8,8 +8,8 @@ import com.trainingtimer.foundation.domain.Training
 
 class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCallback()) {
 
-    var onShopItemLongClickListener: ((Training) -> Unit)? = null
-    var onShopItemClickListener: ((Training) -> Unit)? = null
+    var onTrainingLongClickListener: ((Training) -> Unit)? = null
+    var onTrainingClickListener: ((Training) -> Unit)? = null
 
     val MAX_POOL_SIZE = 10
 
@@ -31,10 +31,10 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
             listRest.text = training.rest
         }
         holder.view.setOnClickListener {
-            onShopItemClickListener?.invoke(training)
+            onTrainingClickListener?.invoke(training)
         }
         holder.view.setOnLongClickListener {
-            onShopItemLongClickListener?.invoke(training)
+            onTrainingLongClickListener?.invoke(training)
             true
         }
     }
