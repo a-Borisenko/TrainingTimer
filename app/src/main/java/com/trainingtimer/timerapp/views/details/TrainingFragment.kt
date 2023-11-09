@@ -62,6 +62,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             val sec = it % 60
             binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
         }
+        //secRemain (ViewModel) live after destroying Fragment, new Fragment create second ViewModel
     }
 
     override fun onDestroyView() {
@@ -170,7 +171,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTitle.setText(it?.title)
                 binding.etTimes.setText(it?.times)
 //                binding.viewTimer.text = it?.rest
-                viewModel.updateTime(getTime(it?.rest.toString()))
+                //state counting condition
+                if (progr == 100f) {
+                    viewModel.updateTime(getTime(it?.rest.toString()))
+                }
             }
         }
     }
@@ -243,9 +247,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-//        val min = (binding.viewTimer.text.split(":"))[0].toLong()
-//        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
-//        viewModel.updateTime(min * 60 + sec)
+        /*val min = (binding.viewTimer.text.split(":"))[0].toLong()
+        val sec = (binding.viewTimer.text.split(":"))[1].toLong()
+        viewModel.updateTime(min * 60 + sec)*/
         isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
