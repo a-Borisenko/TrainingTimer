@@ -32,7 +32,6 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         secRemain  = intent.getLongExtra("TimeValue", 0)
         step = progr / (secRemain.toFloat())
-//        progr = ((secRemain * 100) / secStart).toFloat()
         val timer = Timer()
         getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {

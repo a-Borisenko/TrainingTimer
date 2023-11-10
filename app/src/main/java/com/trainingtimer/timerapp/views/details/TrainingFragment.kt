@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -45,13 +46,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
+        try {
+            Log.d("TrainingFragment", "viewModel = $viewModel")
+        } catch (e: Exception) {
+            Log.d("TrainingFragment", "viewModel = xxx")
+        }
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
         trainingId = requireArguments().getInt("id")
 
         setMenu()
         onClickListeners()
         setDialogFragmentListener()
-        launchMode(savedInstanceState)
+        savedInstance(savedInstanceState)
+        launchMode()
         registerReceiver()
         addTextChangeListeners()
         inputErrorsObserve()
@@ -155,15 +162,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //launchController 1:02:35
-    private fun launchMode(savedInstanceState: Bundle?) {
+    private fun savedInstance(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             binding.etSets.setText(savedInstanceState.getString("sets"))
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
 //            binding.viewTimer.text = savedInstanceState.getString("rest")
 //            updateTimer()
-        } else if (trainingId != Training.UNDEFINED_ID) {
+        }
+    }
+
+    //viewModel 58:00; launchController 1:02:35
+    private fun launchMode() {
+        if (trainingId != Training.UNDEFINED_ID) {
             updateProgressBarUI()
             viewModel.getTraining(trainingId)
             viewModel.trainingLD.observe(viewLifecycleOwner) {
