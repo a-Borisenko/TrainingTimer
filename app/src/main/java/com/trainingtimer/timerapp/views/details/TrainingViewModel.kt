@@ -75,6 +75,10 @@ class TrainingViewModel : ViewModel() {
         Log.d("viewModel", "sec remain = $sec")
     }
 
+    fun updateProgress(progr: Float) {
+        _progress.value = progr
+    }
+
     /*fun getTime() {
         //get time from DataBase
     }

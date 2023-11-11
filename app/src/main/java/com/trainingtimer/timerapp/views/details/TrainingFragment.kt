@@ -69,13 +69,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             val sec = it % 60
             binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
         }
-        //secRemain (ViewModel) live after destroying Fragment, new Fragment create second ViewModel
+        viewModel.progress.observe(viewLifecycleOwner) {
+            binding.countdownBar.progress = progr.toInt()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        LocalBroadcastManager.getInstance(requireActivity().applicationContext)
-            .unregisterReceiver(timeReceiver)
+        requireActivity().unregisterReceiver(timeReceiver)
+//        LocalBroadcastManager.getInstance(requireActivity().applicationContext).unregisterReceiver(timeReceiver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -99,7 +101,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         ) { _, bundle ->
             viewModel.updateTime(bundle.getLong("time"))
 //            updateCountdownUI()
-            updateProgressBarUI()
+//            updateProgressBarUI()
         }
     }
 
@@ -175,7 +177,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     //viewModel 58:00; launchController 1:02:35
     private fun launchMode() {
         if (trainingId != Training.UNDEFINED_ID) {
-            updateProgressBarUI()
+//            updateProgressBarUI()
             viewModel.getTraining(trainingId)
             viewModel.trainingLD.observe(viewLifecycleOwner) {
                 binding.etSets.setText(it?.sets.toString())
@@ -278,12 +280,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 progr = intent.getFloatExtra("Progress", 100f)
                 if (secIntent > 0) {
                     viewModel.updateTime(secIntent)
+                    viewModel.updateProgress(progr)
                 } else {
                     viewModel.updateTime(0)
+                    viewModel.updateProgress(0f)
                     isClickable(true)
                 }
 //                updateCountdownUI()
-                updateProgressBarUI()
+//                updateProgressBarUI()
             }
         }
         requireActivity().registerReceiver(timeReceiver, intentFilter)
@@ -321,9 +325,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }*/
 
-    private fun updateProgressBarUI() {
+    /*private fun updateProgressBarUI() {
         binding.countdownBar.progress = progr.toInt()
-    }
+    }*/
 
     /*companion object {
         private var secondsRemaining = 0L
