@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -21,7 +20,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
@@ -46,11 +44,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-        try {
-            Log.d("TrainingFragment", "viewModel = $viewModel")
-        } catch (e: Exception) {
-            Log.d("TrainingFragment", "viewModel = xxx")
-        }
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
         trainingId = requireArguments().getInt("id")
 
@@ -63,15 +56,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
         inputErrorsObserve()
         getNumberOfTrainings()
-
-        viewModel.secRemain.observe(viewLifecycleOwner) {
-            val min = it / 60
-            val sec = it % 60
-            binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
-        }
-        viewModel.progress.observe(viewLifecycleOwner) {
-            binding.countdownBar.progress = progr.toInt()
-        }
+        timeObservers()
     }
 
     override fun onDestroyView() {
@@ -86,6 +71,24 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         outState.putString("title", binding.etTitle.text.toString())
         outState.putString("times", binding.etTimes.text.toString())
 //        outState.putString("rest", binding.viewTimer.text.toString())
+    }
+
+    private fun timeObservers() {
+        var timing = 0L
+        viewModel.secRemain.observe(viewLifecycleOwner) {
+            val min = it / 60
+            val sec = it % 60
+            binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
+            timing = it
+        }
+        viewModel.progress.observe(viewLifecycleOwner) {
+//            var time = getTime(binding.viewTimer.text.toString()).toInt()
+            if (timing > 0) {
+                binding.countdownBar.progress = it.toInt()
+            } else {
+                binding.countdownBar.progress = 0
+            }
+        }
     }
 
     private fun getNumberOfTrainings() {
@@ -174,7 +177,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //viewModel 58:00; launchController 1:02:35
+    //viewModel 58:00; launchController 1:02:35 & 1:25:48
     private fun launchMode() {
         if (trainingId != Training.UNDEFINED_ID) {
 //            updateProgressBarUI()
@@ -185,7 +188,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTimes.setText(it?.times)
 //                binding.viewTimer.text = it?.rest
                 //state counting condition
-                if (progr == 100f) {
+                if (!TimerService.isCounting) {
                     viewModel.updateTime(getTime(it?.rest.toString()))
                 }
             }

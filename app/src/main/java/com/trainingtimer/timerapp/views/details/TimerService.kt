@@ -41,11 +41,13 @@ class TimerService : Service() {
                 if (secRemain >= 0) {
                     secRemain--
                     progr -= step
+                    isCounting = true
                     updateNotification()
                     intentLocal.putExtra("TimeRemaining", secRemain)
                     intentLocal.putExtra("Progress", progr)
                 } else {
                     timer.cancel()
+                    isCounting = false
                     notificationManager.cancelAll()
                 }
                 sendBroadcast(intentLocal)
@@ -95,5 +97,6 @@ class TimerService : Service() {
 
     companion object {
         const val CHANNEL_ID = "NotificationChannelID"
+        var isCounting = false
     }
 }

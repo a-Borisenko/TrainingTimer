@@ -1,6 +1,9 @@
 package com.trainingtimer.timerapp.views.details
 
 import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -93,9 +96,9 @@ class TrainingViewModel : ViewModel() {
 
     fun stopTimer() {
         //stop TimerService
-    }
+    }*/
 
-    fun registerReceiver() {
+    /*fun registerReceiver() {
         //receive counting down
         val intentFilter = IntentFilter()
         intentFilter.addAction("Counter")
@@ -108,13 +111,10 @@ class TrainingViewModel : ViewModel() {
                     updateTime(secIntent)
                 } else {
                     updateTime(0)
-//                    isClickable(true)
                 }
-//                updateCountdownUI()
-//                updateProgressBarUI()
             }
         }
-//        requireActivity().registerReceiver(timeReceiver, intentFilter)
+        requireActivity().registerReceiver(timeReceiver, intentFilter)
     }
 
     fun unregisterReceiver() {
