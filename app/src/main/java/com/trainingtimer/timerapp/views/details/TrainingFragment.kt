@@ -169,7 +169,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
 //            binding.viewTimer.text = savedInstanceState.getString("rest")
-//            updateTimer()
         }
     }
 

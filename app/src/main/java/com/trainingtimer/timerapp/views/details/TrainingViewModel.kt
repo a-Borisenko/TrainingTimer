@@ -1,9 +1,5 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,9 +22,9 @@ class TrainingViewModel : ViewModel() {
     private val editTrainingUseCase = EditTrainingUseCase(repository)
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
-    var isCounting = false
-    var progr = 100f
-    lateinit var timeReceiver: BroadcastReceiver
+//    var isCounting = false
+//    var progr = 100f
+//    lateinit var timeReceiver: BroadcastReceiver
     lateinit var trainingLD: LiveData<Training?>
     lateinit var trainNumber: LiveData<List<Training>>
 
@@ -80,6 +76,10 @@ class TrainingViewModel : ViewModel() {
 
     fun updateProgress(progr: Float) {
         _progress.value = progr
+    }
+
+    fun launchMode() {
+        // modes: add, edit & counting
     }
 
     /*fun getTime() {
@@ -194,16 +194,16 @@ class TrainingViewModel : ViewModel() {
         return res
     }
 
-    fun resetErrorInputTimes() {
-        _errorInputTimes.value = false
+    fun resetErrorInputSets() {
+        _errorInputSets.value = false
     }
 
     fun resetErrorInputTitle() {
         _errorInputTitle.value = false
     }
 
-    fun resetErrorInputSets() {
-        _errorInputSets.value = false
+    fun resetErrorInputTimes() {
+        _errorInputTimes.value = false
     }
 
     private fun finishWork() {
