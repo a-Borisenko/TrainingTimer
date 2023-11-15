@@ -60,6 +60,11 @@ class TrainingViewModel : ViewModel() {
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+
+    override fun onCleared() {
+        super.onCleared()
+    }
+
     fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
         trainingLD = item

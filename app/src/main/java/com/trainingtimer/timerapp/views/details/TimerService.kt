@@ -9,6 +9,8 @@ import android.graphics.Color
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
 import java.util.Timer
 import java.util.TimerTask
@@ -22,6 +24,10 @@ class TimerService : Service() {
 
 //    private lateinit var updateTimer: CountDownTimer
 //    private lateinit var countdownTimer: CountDownTimer
+
+    private val _secRemainLD = MutableLiveData<Long>()
+    val secRemainLD: LiveData<Long>
+        get() = _secRemainLD
 
     private lateinit var notificationManager: NotificationManager
 
@@ -43,6 +49,7 @@ class TimerService : Service() {
                     progr -= step
                     isCounting = true
                     updateNotification()
+                    _secRemainLD.value = secRemain
                     intentLocal.putExtra("TimeRemaining", secRemain)
                     intentLocal.putExtra("Progress", progr)
                 } else {
