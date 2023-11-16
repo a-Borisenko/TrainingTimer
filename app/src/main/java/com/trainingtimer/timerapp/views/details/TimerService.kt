@@ -25,9 +25,7 @@ class TimerService : Service() {
 //    private lateinit var updateTimer: CountDownTimer
 //    private lateinit var countdownTimer: CountDownTimer
 
-    private val _secRemainLD = MutableLiveData<Long>()
-    val secRemainLD: LiveData<Long>
-        get() = _secRemainLD
+
 
     private lateinit var notificationManager: NotificationManager
 
@@ -44,12 +42,12 @@ class TimerService : Service() {
             override fun run() {
                 val intentLocal = Intent()
                 intentLocal.action = "Counter"
-                if (secRemain >= 0) {
+                if (secRemain > 0) {
                     secRemain--
                     progr -= step
                     isCounting = true
                     updateNotification()
-                    _secRemainLD.value = secRemain
+                    _secRemainLD.postValue(secRemain)
                     intentLocal.putExtra("TimeRemaining", secRemain)
                     intentLocal.putExtra("Progress", progr)
                 } else {
@@ -105,5 +103,9 @@ class TimerService : Service() {
     companion object {
         const val CHANNEL_ID = "NotificationChannelID"
         var isCounting = false
+
+        private val _secRemainLD = MutableLiveData<Long>()
+        val secRemainLD: LiveData<Long>
+            get() = _secRemainLD
     }
 }

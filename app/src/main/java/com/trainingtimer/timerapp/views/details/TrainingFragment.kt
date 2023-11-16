@@ -45,6 +45,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
+        viewModel.start()
         trainingId = requireArguments().getInt("id")
 
         setMenu()

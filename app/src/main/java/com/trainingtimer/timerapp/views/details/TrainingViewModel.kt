@@ -3,6 +3,7 @@ package com.trainingtimer.timerapp.views.details
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.foundation.data.TrainingRepositoryImpl
@@ -23,8 +24,6 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
 //    var isCounting = false
-//    var progr = 100f
-//    lateinit var timeReceiver: BroadcastReceiver
     lateinit var trainingLD: LiveData<Training?>
     lateinit var trainNumber: LiveData<List<Training>>
 
@@ -61,8 +60,41 @@ class TrainingViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
 
+    private val serviceTime = Observer<Long> {
+        _secRemain.value = it
+    }
+
+    /*private val trainingTime = Observer<Training?> {
+        it?.let {
+            val min = (it.rest.split(":"))[0].toLong()
+            val sec = (it.rest.split(":"))[1].toLong()
+            _secRemain.value = min * 60 + sec
+        }
+    }*/
+
+
+    fun start() {
+        if (TimerService.isCounting) {
+            TimerService.secRemainLD.observeForever(serviceTime)
+            Log.d("viewModel", "set TimeService Observer")
+        } /*else {
+            trainingLD.observeForever(trainingTime)
+        }*/
+    }
+
     override fun onCleared() {
         super.onCleared()
+        try {
+            TimerService.secRemainLD.removeObserver(serviceTime)
+            Log.d("viewModel", "delete TimeService Observer")
+        } catch (e: Exception) {
+            Log.d("viewModel", "no Counting Observer")
+        }
+        /*try {
+            trainingLD.removeObserver(trainingTime)
+        } catch (e: Exception) {
+            Log.d("viewModel", "no Training Observer")
+        }*/
     }
 
     fun getTraining(trainingId: Int) {
