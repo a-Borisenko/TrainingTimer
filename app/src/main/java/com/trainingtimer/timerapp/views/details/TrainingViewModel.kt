@@ -64,6 +64,10 @@ class TrainingViewModel : ViewModel() {
         _secRemain.value = it
     }
 
+    private val serviceProgress = Observer<Float> {
+        _progress.value = it
+    }
+
     /*private val trainingTime = Observer<Training?> {
         it?.let {
             val min = (it.rest.split(":"))[0].toLong()
@@ -76,6 +80,7 @@ class TrainingViewModel : ViewModel() {
     fun start() {
         if (TimerService.isCounting) {
             TimerService.secRemainLD.observeForever(serviceTime)
+            TimerService.progressLD.observeForever(serviceProgress)
             Log.d("viewModel", "set TimeService Observer")
         } /*else {
             trainingLD.observeForever(trainingTime)
@@ -86,6 +91,7 @@ class TrainingViewModel : ViewModel() {
         super.onCleared()
         try {
             TimerService.secRemainLD.removeObserver(serviceTime)
+            TimerService.progressLD.removeObserver(serviceProgress)
             Log.d("viewModel", "delete TimeService Observer")
         } catch (e: Exception) {
             Log.d("viewModel", "no Counting Observer")

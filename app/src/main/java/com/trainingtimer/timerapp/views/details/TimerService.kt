@@ -48,8 +48,9 @@ class TimerService : Service() {
                     isCounting = true
                     updateNotification()
                     _secRemainLD.postValue(secRemain)
-                    intentLocal.putExtra("TimeRemaining", secRemain)
-                    intentLocal.putExtra("Progress", progr)
+                    _progressLD.postValue(progr)
+//                    intentLocal.putExtra("TimeRemaining", secRemain)
+//                    intentLocal.putExtra("Progress", progr)
                 } else {
                     timer.cancel()
                     isCounting = false
@@ -107,5 +108,9 @@ class TimerService : Service() {
         private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD
+
+        private val _progressLD = MutableLiveData<Float>()
+        val progressLD: LiveData<Float>
+            get() = _progressLD
     }
 }

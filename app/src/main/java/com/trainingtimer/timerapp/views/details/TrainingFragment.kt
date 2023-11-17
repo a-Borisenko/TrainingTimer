@@ -31,11 +31,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
-    private var progr = 100f
+//    private var progr = 100f
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
-    private lateinit var timeReceiver: BroadcastReceiver
+//    private lateinit var timeReceiver: BroadcastReceiver
 
     //bug: back to list while countdown running & return show start time before updating
 
@@ -53,7 +53,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setDialogFragmentListener()
         savedInstance(savedInstanceState)
         launchMode()
-        registerReceiver()
+//        registerReceiver()
         addTextChangeListeners()
         inputErrorsObserve()
         getNumberOfTrainings()
@@ -62,7 +62,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireActivity().unregisterReceiver(timeReceiver)
+//        requireActivity().unregisterReceiver(timeReceiver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -73,20 +73,20 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun timeObservers() {
-        var timing = 0L
+//        var timing = 0L
         viewModel.secRemain.observe(viewLifecycleOwner) {
             val min = it / 60
             val sec = it % 60
             binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
-            timing = it
+//            timing = it
         }
         viewModel.progress.observe(viewLifecycleOwner) {
 //            var time = getTime(binding.viewTimer.text.toString()).toInt()
-            if (timing > 0) {
+//            if (timing > 0) {
                 binding.countdownBar.progress = it.toInt()
-            } else {
-                binding.countdownBar.progress = 0
-            }
+//            } else {
+//                binding.countdownBar.progress = 0
+//            }
         }
     }
 
@@ -259,14 +259,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-        isClickable(false)
+//        isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
         intentService.putExtra("TimeValue", getTime(binding.viewTimer.text.toString()))
         requireActivity().startService(intentService)
     }
 
-    private fun registerReceiver() {
+    /*private fun registerReceiver() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("Counter")
 
@@ -285,13 +285,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }
         requireActivity().registerReceiver(timeReceiver, intentFilter)
-    }
+    }*/
 
     private fun isClickable(status: Boolean) {
-        with(binding) {
-            trainingBtn.isClickable = status
-            viewTimer.isClickable = status
-        }
+        binding.trainingBtn.isClickable = status
+        binding.viewTimer.isClickable = status
     }
 
     companion object {
