@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Intent
 import android.graphics.Color
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -18,14 +19,12 @@ import java.util.TimerTask
 class TimerService : Service() {
 
     private var secRemain: Long = 0
-    private var progr = 100f
+//    private var progr = 100f
     private var step = 0f
 //    private var isTimerRunning = false
 
 //    private lateinit var updateTimer: CountDownTimer
 //    private lateinit var countdownTimer: CountDownTimer
-
-
 
     private lateinit var notificationManager: NotificationManager
 
@@ -35,6 +34,7 @@ class TimerService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         secRemain  = intent.getLongExtra("TimeValue", 0)
+        var progr = 100f
         step = progr / (secRemain.toFloat())
         val timer = Timer()
         getNotificationManager()

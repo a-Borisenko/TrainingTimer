@@ -78,24 +78,19 @@ class TrainingViewModel : ViewModel() {
 
 
     fun start() {
-        if (TimerService.isCounting) {
+//        if (TimerService.isCounting) {
             TimerService.secRemainLD.observeForever(serviceTime)
             TimerService.progressLD.observeForever(serviceProgress)
-            Log.d("viewModel", "set TimeService Observer")
-        } /*else {
+            resetProgress()
+        /*} else {
             trainingLD.observeForever(trainingTime)
         }*/
     }
 
     override fun onCleared() {
         super.onCleared()
-        try {
             TimerService.secRemainLD.removeObserver(serviceTime)
             TimerService.progressLD.removeObserver(serviceProgress)
-            Log.d("viewModel", "delete TimeService Observer")
-        } catch (e: Exception) {
-            Log.d("viewModel", "no Counting Observer")
-        }
         /*try {
             trainingLD.removeObserver(trainingTime)
         } catch (e: Exception) {
@@ -117,8 +112,8 @@ class TrainingViewModel : ViewModel() {
         Log.d("viewModel", "sec remain = $sec")
     }
 
-    fun updateProgress(progr: Float) {
-        _progress.value = progr
+    fun resetProgress() {
+        _progress.value = 100f
     }
 
     fun launchMode() {

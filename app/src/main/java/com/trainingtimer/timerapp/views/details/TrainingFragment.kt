@@ -31,15 +31,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
     private var trainNumber = 0
-//    private var progr = 100f
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
 //    private lateinit var timeReceiver: BroadcastReceiver
 
     //bug: back to list while countdown running & return show start time before updating
-
-    //need refactor (move to viewModel) + liveData for trainingFragment ui
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,6 +62,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //        requireActivity().unregisterReceiver(timeReceiver)
     }
 
+    //TODO #1: move to ViewModel saving
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("sets", binding.etSets.text.toString())
@@ -73,24 +71,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun timeObservers() {
-//        var timing = 0L
         viewModel.secRemain.observe(viewLifecycleOwner) {
             val min = it / 60
             val sec = it % 60
             binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
-//            timing = it
         }
         viewModel.progress.observe(viewLifecycleOwner) {
-//            var time = getTime(binding.viewTimer.text.toString()).toInt()
-//            if (timing > 0) {
-                binding.countdownBar.progress = it.toInt()
-//            } else {
-//                binding.countdownBar.progress = 0
-//            }
+            binding.countdownBar.progress = it.toInt()
         }
     }
 
-    private fun getNumberOfTrainings() {
+    //TODO #2: move to ViewModel & change to LiveData in DB for ListViewModel & this ViewModel
+    private fun getNumberOfTrainings() {//
         viewModel.getTrainingNumber()
         viewModel.trainNumber.observe(viewLifecycleOwner) {
             trainNumber = it.last().id + 1
@@ -102,6 +94,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             viewModel.updateTime(bundle.getLong("time"))
+            viewModel.resetProgress()
         }
     }
 
@@ -164,6 +157,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
+    //TODO #3: move to ViewModel saving
     private fun savedInstance(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             binding.etSets.setText(savedInstanceState.getString("sets"))
@@ -174,6 +168,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
+    //TODO #4: move all to ViewModel all fields; here only LiveData observers
     private fun launchMode() {
         if (trainingId != Training.UNDEFINED_ID) {
             viewModel.getTraining(trainingId)
@@ -191,6 +186,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
+    //TODO #5: add from ViewModel
     private fun addTraining() {
         trainingId = trainNumber
         hideView()
@@ -203,6 +199,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
+    //TODO #6: edit from ViewModel
     private fun editTraining() {
         hideView()
         viewModel.editTraining(
@@ -214,6 +211,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
+    //TODO #7: move to List (start mode)
     private fun hideView() {
         viewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
@@ -231,6 +229,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
+    //TODO #8: no need, suspending move to List
     private fun Context.hideKeyboard(view: View) {
         val inputMethodManager
                 = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -252,7 +251,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
     }
 
-    private fun getTime(time: String): Long {
+    //TODO #9: move to ViewModel
+    private fun getTime(time: String): Long {//
         val min = (time.split(":"))[0].toLong()
         val sec = (time.split(":"))[1].toLong()
         return (min * 60 + sec)
