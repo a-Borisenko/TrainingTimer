@@ -23,8 +23,9 @@ class TrainingViewModel : ViewModel() {
     private val editTrainingUseCase = EditTrainingUseCase(repository)
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
+    private var saveState = false
 //    var isCounting = false
-    lateinit var trainingLD: LiveData<Training?>
+//    lateinit var trainingLD: LiveData<Training?>
     lateinit var trainNumber: LiveData<List<Training>>
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
@@ -39,9 +40,9 @@ class TrainingViewModel : ViewModel() {
     val errorInputSets: LiveData<Boolean>
         get() = _errorInputSets
 
-    private val _training = MutableLiveData<Training>()
+    /*private val _training = MutableLiveData<Training>()
     val training: LiveData<Training>
-        get() = _training
+        get() = _training*/
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -59,6 +60,28 @@ class TrainingViewModel : ViewModel() {
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+    private val _sets = MutableLiveData<Int>()
+    val sets: LiveData<Int>
+        get() = _sets
+
+    private val _title = MutableLiveData<String>()
+    val title: LiveData<String>
+        get() = _title
+
+    private val _times = MutableLiveData<String>()
+    val times: LiveData<String>
+        get() = _times
+
+
+
+    private val trainingData = Observer<Training?> {
+        if (!saveState) {
+            _sets.value = it.sets
+            _title.value = it.title
+            _times.value = it.times
+            _secRemain.value = TrainingUtils.timeStringToLong(it.rest)
+        }
+    }
 
     private val serviceTime = Observer<Long> {
         _secRemain.value = it
@@ -68,40 +91,33 @@ class TrainingViewModel : ViewModel() {
         _progress.value = it
     }
 
-    /*private val trainingTime = Observer<Training?> {
-        it?.let {
-            val min = (it.rest.split(":"))[0].toLong()
-            val sec = (it.rest.split(":"))[1].toLong()
-            _secRemain.value = min * 60 + sec
-        }
-    }*/
 
 
-    fun start() {
-//        if (TimerService.isCounting) {
-            TimerService.secRemainLD.observeForever(serviceTime)
-            TimerService.progressLD.observeForever(serviceProgress)
-            resetProgress()
-        /*} else {
-            trainingLD.observeForever(trainingTime)
-        }*/
+    fun start(id: Int) {
+        TimerService.secRemainLD.observeForever(serviceTime)
+        TimerService.progressLD.observeForever(serviceProgress)
+        resetProgress()
+
+        launchMode(id)
     }
 
     override fun onCleared() {
         super.onCleared()
-            TimerService.secRemainLD.removeObserver(serviceTime)
-            TimerService.progressLD.removeObserver(serviceProgress)
-        /*try {
-            trainingLD.removeObserver(trainingTime)
-        } catch (e: Exception) {
-            Log.d("viewModel", "no Training Observer")
-        }*/
+        TimerService.secRemainLD.removeObserver(serviceTime)
+        TimerService.progressLD.removeObserver(serviceProgress)
     }
 
-    fun getTraining(trainingId: Int) {
+    fun saveState(sets: String, title: String, times: String) {
+        saveState = true
+        _sets.value = sets.toInt()
+        _title.value = title
+        _times.value = times
+    }
+
+    /*fun getTraining(trainingId: Int) {
         val item = getTrainingUseCase.getTraining(trainingId)
         trainingLD = item
-    }
+    }*/
 
     fun getTrainingNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
@@ -116,8 +132,10 @@ class TrainingViewModel : ViewModel() {
         _progress.value = 100f
     }
 
-    fun launchMode() {
-        // modes: add, edit & counting
+    private fun launchMode(id: Int) {
+        if (id != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(id).observeForever(trainingData)
+        }
     }
 
     /*fun getTime() {

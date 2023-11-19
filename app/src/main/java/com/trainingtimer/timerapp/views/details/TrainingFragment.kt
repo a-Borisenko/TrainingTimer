@@ -24,6 +24,8 @@ import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeLongToString
+import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeStringToLong
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 
 
@@ -42,14 +44,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
-        viewModel.start()
         trainingId = requireArguments().getInt("id")
+        viewModel.start(trainingId)
 
         setMenu()
         onClickListeners()
         setDialogFragmentListener()
-        savedInstance(savedInstanceState)
-        launchMode()
+//        savedInstance(savedInstanceState)
+//        launchMode()
 //        registerReceiver()
         addTextChangeListeners()
         inputErrorsObserve()
@@ -62,27 +64,40 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 //        requireActivity().unregisterReceiver(timeReceiver)
     }
 
-    //TODO #1: move to ViewModel saving
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("sets", binding.etSets.text.toString())
+        viewModel.saveState(
+            binding.etSets.text.toString(),
+            binding.etTitle.text.toString(),
+            binding.etTimes.text.toString()
+        )
+        /*outState.putString("sets", binding.etSets.text.toString())
         outState.putString("title", binding.etTitle.text.toString())
-        outState.putString("times", binding.etTimes.text.toString())
+        outState.putString("times", binding.etTimes.text.toString())*/
     }
 
     private fun timeObservers() {
-        viewModel.secRemain.observe(viewLifecycleOwner) {
-            val min = it / 60
-            val sec = it % 60
-            binding.viewTimer.text = "${"%02d".format(min)}:${"%02d".format(sec)}"
-        }
-        viewModel.progress.observe(viewLifecycleOwner) {
-            binding.countdownBar.progress = it.toInt()
+        with(viewModel) {
+            sets.observe(viewLifecycleOwner) {
+                binding.etSets.setText(it.toString())
+            }
+            title.observe(viewLifecycleOwner) {
+                binding.etTitle.setText(it)
+            }
+            times.observe(viewLifecycleOwner) {
+                binding.etTimes.setText(it)
+            }
+            secRemain.observe(viewLifecycleOwner) {
+                binding.viewTimer.text = timeLongToString(it)
+            }
+            progress.observe(viewLifecycleOwner) {
+                binding.countdownBar.progress = it.toInt()
+            }
         }
     }
 
-    //TODO #2: move to ViewModel & change to LiveData in DB for ListViewModel & this ViewModel
-    private fun getNumberOfTrainings() {//
+    //TODO #1: move to ViewModel & change to LiveData in DB for ListViewModel & this ViewModel
+    private fun getNumberOfTrainings() {
         viewModel.getTrainingNumber()
         viewModel.trainNumber.observe(viewLifecycleOwner) {
             trainNumber = it.last().id + 1
@@ -157,19 +172,17 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //TODO #3: move to ViewModel saving
-    private fun savedInstance(savedInstanceState: Bundle?) {
+    /*private fun savedInstance(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             binding.etSets.setText(savedInstanceState.getString("sets"))
             binding.etTitle.setText(savedInstanceState.getString("title"))
             binding.etTimes.setText(savedInstanceState.getString("times"))
 //            binding.viewTimer.text = savedInstanceState.getString("rest")
         }
-    }
+    }*/
 
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
-    //TODO #4: move all to ViewModel all fields; here only LiveData observers
-    private fun launchMode() {
+    /*private fun launchMode() {
         if (trainingId != Training.UNDEFINED_ID) {
             viewModel.getTraining(trainingId)
             viewModel.trainingLD.observe(viewLifecycleOwner) {
@@ -178,15 +191,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTimes.setText(it?.times)
 //                binding.viewTimer.text = it?.rest
                 if (!TimerService.isCounting) {
-                    viewModel.updateTime(getTime(it?.rest.toString()))
+                    viewModel.updateTime(timeStringToLong(it?.rest.toString()))
                 } else {
                     viewModel.updateTime(secIntent)
                 }
             }
         }
-    }
+    }*/
 
-    //TODO #5: add from ViewModel
+    //TODO #2: add from ViewModel
     private fun addTraining() {
         trainingId = trainNumber
         hideView()
@@ -199,7 +212,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    //TODO #6: edit from ViewModel
+    //TODO #3: edit from ViewModel
     private fun editTraining() {
         hideView()
         viewModel.editTraining(
@@ -211,7 +224,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    //TODO #7: move to List (start mode)
+    //TODO #4: move to List (start mode)
     private fun hideView() {
         viewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
@@ -229,7 +242,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //TODO #8: no need, suspending move to List
+    //TODO #5: no need, suspending move to List
     private fun Context.hideKeyboard(view: View) {
         val inputMethodManager
                 = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -251,18 +264,17 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
     }
 
-    //TODO #9: move to ViewModel
-    private fun getTime(time: String): Long {//
+    /*private fun getTime(time: String): Long {
         val min = (time.split(":"))[0].toLong()
         val sec = (time.split(":"))[1].toLong()
         return (min * 60 + sec)
-    }
+    }*/
 
     private fun startTimer() {
 //        isClickable(false)
 
         val intentService = Intent(context, TimerService::class.java)
-        intentService.putExtra("TimeValue", getTime(binding.viewTimer.text.toString()))
+        intentService.putExtra("TimeValue", timeStringToLong(binding.viewTimer.text.toString()))
         requireActivity().startService(intentService)
     }
 
@@ -292,7 +304,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.viewTimer.isClickable = status
     }
 
-    companion object {
+    /*companion object {
         private var secIntent = 0L
-    }
+    }*/
 }
