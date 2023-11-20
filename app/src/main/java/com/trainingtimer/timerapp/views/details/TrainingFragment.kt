@@ -36,7 +36,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
-//    private lateinit var timeReceiver: BroadcastReceiver
 
     //bug: back to list while countdown running & return show start time before updating
 
@@ -50,18 +49,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setMenu()
         onClickListeners()
         setDialogFragmentListener()
-//        savedInstance(savedInstanceState)
-//        launchMode()
-//        registerReceiver()
         addTextChangeListeners()
         inputErrorsObserve()
         getNumberOfTrainings()
         timeObservers()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-//        requireActivity().unregisterReceiver(timeReceiver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,9 +62,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTitle.text.toString(),
             binding.etTimes.text.toString()
         )
-        /*outState.putString("sets", binding.etSets.text.toString())
-        outState.putString("title", binding.etTitle.text.toString())
-        outState.putString("times", binding.etTimes.text.toString())*/
     }
 
     private fun timeObservers() {
@@ -172,32 +160,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    /*private fun savedInstance(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            binding.etSets.setText(savedInstanceState.getString("sets"))
-            binding.etTitle.setText(savedInstanceState.getString("title"))
-            binding.etTimes.setText(savedInstanceState.getString("times"))
-//            binding.viewTimer.text = savedInstanceState.getString("rest")
-        }
-    }*/
-
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
-    /*private fun launchMode() {
-        if (trainingId != Training.UNDEFINED_ID) {
-            viewModel.getTraining(trainingId)
-            viewModel.trainingLD.observe(viewLifecycleOwner) {
-                binding.etSets.setText(it?.sets.toString())
-                binding.etTitle.setText(it?.title)
-                binding.etTimes.setText(it?.times)
-//                binding.viewTimer.text = it?.rest
-                if (!TimerService.isCounting) {
-                    viewModel.updateTime(timeStringToLong(it?.rest.toString()))
-                } else {
-                    viewModel.updateTime(secIntent)
-                }
-            }
-        }
-    }*/
 
     //TODO #2: add from ViewModel
     private fun addTraining() {
@@ -264,12 +227,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
     }
 
-    /*private fun getTime(time: String): Long {
-        val min = (time.split(":"))[0].toLong()
-        val sec = (time.split(":"))[1].toLong()
-        return (min * 60 + sec)
-    }*/
-
     private fun startTimer() {
 //        isClickable(false)
 
@@ -278,33 +235,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         requireActivity().startService(intentService)
     }
 
-    /*private fun registerReceiver() {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("Counter")
-
-        timeReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                secIntent = intent.getLongExtra("TimeRemaining", 0)
-                progr = intent.getFloatExtra("Progress", 100f)
-                if (secIntent > 0) {
-                    viewModel.updateTime(secIntent)
-                    viewModel.updateProgress(progr)
-                } else {
-                    viewModel.updateTime(0)
-                    viewModel.updateProgress(0f)
-                    isClickable(true)
-                }
-            }
-        }
-        requireActivity().registerReceiver(timeReceiver, intentFilter)
-    }*/
-
     private fun isClickable(status: Boolean) {
         binding.trainingBtn.isClickable = status
         binding.viewTimer.isClickable = status
     }
-
-    /*companion object {
-        private var secIntent = 0L
-    }*/
 }
