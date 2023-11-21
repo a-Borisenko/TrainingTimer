@@ -24,8 +24,6 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     private var saveState = false
-//    var isCounting = false
-//    lateinit var trainingLD: LiveData<Training?>
     lateinit var trainNumber: LiveData<List<Training>>
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
@@ -39,10 +37,6 @@ class TrainingViewModel : ViewModel() {
     private val _errorInputSets = MutableLiveData<Boolean>()
     val errorInputSets: LiveData<Boolean>
         get() = _errorInputSets
-
-    /*private val _training = MutableLiveData<Training>()
-    val training: LiveData<Training>
-        get() = _training*/
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
@@ -114,11 +108,6 @@ class TrainingViewModel : ViewModel() {
         _times.value = times
     }
 
-    /*fun getTraining(trainingId: Int) {
-        val item = getTrainingUseCase.getTraining(trainingId)
-        trainingLD = item
-    }*/
-
     fun getTrainingNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
     }
@@ -152,29 +141,6 @@ class TrainingViewModel : ViewModel() {
 
     fun stopTimer() {
         //stop TimerService
-    }*/
-
-    /*fun registerReceiver() {
-        //receive counting down
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("Counter")
-
-        timeReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                val secIntent = intent.getLongExtra("TimeRemaining", 0)
-                progr = intent.getFloatExtra("Progress", 100f)
-                if (secIntent > 0) {
-                    updateTime(secIntent)
-                } else {
-                    updateTime(0)
-                }
-            }
-        }
-        requireActivity().registerReceiver(timeReceiver, intentFilter)
-    }
-
-    fun unregisterReceiver() {
-        //stop receiving countdown
     }*/
 
     fun addTraining(
