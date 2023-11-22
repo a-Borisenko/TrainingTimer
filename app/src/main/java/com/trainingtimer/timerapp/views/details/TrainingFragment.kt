@@ -32,7 +32,7 @@ import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
-    private var trainNumber = 0
+//    private var trainNumber = 0
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
@@ -51,7 +51,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setDialogFragmentListener()
         addTextChangeListeners()
         inputErrorsObserve()
-        getNumberOfTrainings()
+//        getNumberOfTrainings()
         timeObservers()
     }
 
@@ -85,12 +85,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     //TODO #1: move to ViewModel & change to LiveData in DB for ListViewModel & this ViewModel
-    private fun getNumberOfTrainings() {
+    /*private fun getNumberOfTrainings() {
         viewModel.getTrainingNumber()
         viewModel.trainNumber.observe(viewLifecycleOwner) {
             trainNumber = it.last().id + 1
         }
-    }
+    }*/
 
     private fun setDialogFragmentListener() {
         childFragmentManager.setFragmentResultListener(
@@ -164,14 +164,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #2: add from ViewModel
     private fun addTraining() {
-        trainingId = trainNumber
+//        trainingId = trainNumber
         hideView()
         viewModel.addTraining(
             binding.etSets.text?.toString(),
             binding.etTitle.text?.toString(),
             binding.etTimes.text?.toString(),
-            binding.viewTimer.text?.toString(),
-            trainingId = trainingId
+            binding.viewTimer.text?.toString()
         )
     }
 

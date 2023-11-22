@@ -24,7 +24,8 @@ class TrainingViewModel : ViewModel() {
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     private var saveState = false
-    lateinit var trainNumber: LiveData<List<Training>>
+    private var newId = 0
+//    lateinit var trainNumber: LiveData<List<Training>>
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
@@ -85,11 +86,16 @@ class TrainingViewModel : ViewModel() {
         _progress.value = it
     }
 
+    private val trainingsNumber = Observer<List<Training>> {
+        newId = it.last().id + 1
+    }
+
 
 
     fun start(id: Int) {
         TimerService.secRemainLD.observeForever(serviceTime)
         TimerService.progressLD.observeForever(serviceProgress)
+        getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
         resetProgress()
 
         launchMode(id)
@@ -108,9 +114,9 @@ class TrainingViewModel : ViewModel() {
         _times.value = times
     }
 
-    fun getTrainingNumber() {
+    /*fun getTrainingNumber() {
         trainNumber = getTrainingListUseCase.getTrainingList()
-    }
+    }*/
 
     fun updateTime(sec: Long) {
         _secRemain.value = sec
@@ -147,8 +153,7 @@ class TrainingViewModel : ViewModel() {
         inputSets: String?,
         inputTitle: String?,
         inputTimes: String?,
-        inputRest: String?,
-        trainingId: Int
+        inputRest: String?
     ) {
         val sets = parseSets(inputSets)
         val title = parseTitle(inputTitle)
@@ -160,7 +165,7 @@ class TrainingViewModel : ViewModel() {
                 startLoad()
                 delay(3000)
                 finishLoad()
-                val training = Training(sets.toInt(), title, times, rest, trainingId)
+                val training = Training(sets.toInt(), title, times, rest, newId)
                 addTrainingUseCase.addTraining(training)
                 finishWork()
             }
