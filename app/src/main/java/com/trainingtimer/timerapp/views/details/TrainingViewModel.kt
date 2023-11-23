@@ -149,7 +149,7 @@ class TrainingViewModel : ViewModel() {
         //stop TimerService
     }*/
 
-    fun addTraining(
+    /*fun addTraining(
         inputSets: String?,
         inputTitle: String?,
         inputTimes: String?,
@@ -170,9 +170,9 @@ class TrainingViewModel : ViewModel() {
                 finishWork()
             }
         }
-    }
+    }*/
 
-    fun editTraining(
+    fun trainingClickData(
         inputSets: String?,
         inputTitle: String?,
         inputTimes: String?,
@@ -189,8 +189,13 @@ class TrainingViewModel : ViewModel() {
                 startLoad()
                 delay(3000)
                 finishLoad()
-                val item = Training(sets.toInt(), title, times, rest, trainingId)
-                editTrainingUseCase.editTraining(item)
+                if (trainingId == Training.UNDEFINED_ID) {
+                    val item = Training(sets.toInt(), title, times, rest, newId)
+                    addTrainingUseCase.addTraining(item)
+                } else {
+                    val item = Training(sets.toInt(), title, times, rest, trainingId)
+                    editTrainingUseCase.editTraining(item)
+                }
                 finishWork()
             }
         }

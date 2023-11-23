@@ -1,10 +1,8 @@
 package com.trainingtimer.timerapp.views.details
 
 import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -111,10 +109,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.save_btn -> {
-                        when (trainingId) {
-                            Training.UNDEFINED_ID -> addTraining()
-                            else -> editTraining()
-                        }
+                        trainingClickData()
                         true
                     }
 
@@ -163,7 +158,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
 
     //TODO #2: add from ViewModel
-    private fun addTraining() {
+    /*private fun addTraining() {
 //        trainingId = trainNumber
         hideView()
         viewModel.addTraining(
@@ -172,12 +167,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             binding.etTimes.text?.toString(),
             binding.viewTimer.text?.toString()
         )
-    }
+    }*/
 
     //TODO #3: edit from ViewModel
-    private fun editTraining() {
+    private fun trainingClickData() {
         hideView()
-        viewModel.editTraining(
+        viewModel.trainingClickData(
             binding.etSets.text?.toString(),
             binding.etTitle.text?.toString(),
             binding.etTimes.text?.toString(),
