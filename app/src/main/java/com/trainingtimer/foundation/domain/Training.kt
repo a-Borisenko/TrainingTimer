@@ -14,10 +14,5 @@ data class Training(
     companion object {
 
         const val UNDEFINED_ID = -1
-        const val X_TIMES = "x"
-
-        //TODO: move to ui
-        /*val TIMES: String
-            get() = times + X_TIMES*/
     }
 }

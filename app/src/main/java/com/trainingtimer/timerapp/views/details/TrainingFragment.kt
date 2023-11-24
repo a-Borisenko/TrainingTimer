@@ -30,12 +30,9 @@ import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
-//    private var trainNumber = 0
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
-
-    //bug: back to list while countdown running & return show start time before updating
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +46,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setDialogFragmentListener()
         addTextChangeListeners()
         inputErrorsObserve()
-//        getNumberOfTrainings()
         timeObservers()
     }
 
@@ -82,14 +78,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //TODO #1: move to ViewModel & change to LiveData in DB for ListViewModel & this ViewModel
-    /*private fun getNumberOfTrainings() {
-        viewModel.getTrainingNumber()
-        viewModel.trainNumber.observe(viewLifecycleOwner) {
-            trainNumber = it.last().id + 1
-        }
-    }*/
-
     private fun setDialogFragmentListener() {
         childFragmentManager.setFragmentResultListener(
             "key", this
@@ -112,7 +100,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                         trainingClickData()
                         true
                     }
-
                     else -> false
                 }
             }
@@ -157,19 +144,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
 
-    //TODO #2: add from ViewModel
-    /*private fun addTraining() {
-//        trainingId = trainNumber
-        hideView()
-        viewModel.addTraining(
-            binding.etSets.text?.toString(),
-            binding.etTitle.text?.toString(),
-            binding.etTimes.text?.toString(),
-            binding.viewTimer.text?.toString()
-        )
-    }*/
-
-    //TODO #3: edit from ViewModel
     private fun trainingClickData() {
         hideView()
         viewModel.trainingClickData(
@@ -181,7 +155,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    //TODO #4: move to List (start mode)
+    //TODO #1: move to List (start mode)
     private fun hideView() {
         viewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
@@ -199,7 +173,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //TODO #5: no need, suspending move to List
+    //TODO #2: no need, suspending move to List
     private fun Context.hideKeyboard(view: View) {
         val inputMethodManager
                 = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

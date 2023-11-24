@@ -25,7 +25,6 @@ class TrainingViewModel : ViewModel() {
 
     private var saveState = false
     private var newId = 0
-//    lateinit var trainNumber: LiveData<List<Training>>
 
     private val _errorInputTimes = MutableLiveData<Boolean>()
     val errorInputTimes: LiveData<Boolean>
@@ -114,10 +113,6 @@ class TrainingViewModel : ViewModel() {
         _times.value = times
     }
 
-    /*fun getTrainingNumber() {
-        trainNumber = getTrainingListUseCase.getTrainingList()
-    }*/
-
     fun updateTime(sec: Long) {
         _secRemain.value = sec
         Log.d("viewModel", "sec remain = $sec")
@@ -149,40 +144,17 @@ class TrainingViewModel : ViewModel() {
         //stop TimerService
     }*/
 
-    /*fun addTraining(
-        inputSets: String?,
-        inputTitle: String?,
-        inputTimes: String?,
-        inputRest: String?
-    ) {
-        val sets = parseSets(inputSets)
-        val title = parseTitle(inputTitle)
-        val times = parseTimes(inputTimes)
-        val rest = parseRest(inputRest)
-        val fieldValid = validateInput(sets, title, times)
-        if (fieldValid) {
-            viewModelScope.launch {
-                startLoad()
-                delay(3000)
-                finishLoad()
-                val training = Training(sets.toInt(), title, times, rest, newId)
-                addTrainingUseCase.addTraining(training)
-                finishWork()
-            }
-        }
-    }*/
-
     fun trainingClickData(
         inputSets: String?,
         inputTitle: String?,
-        inputTimes: String?,
-        inputRest: String?,
+        inputReps: String?,
+        inputTime: String?,
         trainingId: Int
     ) {
         val sets = parseSets(inputSets)
         val title = parseTitle(inputTitle)
-        val times = parseTimes(inputTimes)
-        val rest = parseRest(inputRest)
+        val times = "x" + parseTimes(inputReps)
+        val time = parseRest(inputTime)
         val fieldValid = validateInput(sets, title, times)
         if (fieldValid) {
             viewModelScope.launch {
@@ -190,10 +162,10 @@ class TrainingViewModel : ViewModel() {
                 delay(3000)
                 finishLoad()
                 if (trainingId == Training.UNDEFINED_ID) {
-                    val item = Training(sets.toInt(), title, times, rest, newId)
+                    val item = Training(sets.toInt(), title, times, time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, times, rest, trainingId)
+                    val item = Training(sets.toInt(), title, times, time, trainingId)
                     editTrainingUseCase.editTraining(item)
                 }
                 finishWork()
