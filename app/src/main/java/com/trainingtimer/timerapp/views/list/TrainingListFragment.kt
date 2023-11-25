@@ -72,21 +72,11 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun setupClickListener() {
         listAdapter.onTrainingClickListener = {
-            findNavController().navigate(
-                R.id.action_trainingListFragment_to_trainingFragment,
-                bundleOf("id" to it.id),
-                navOptions {
-                    anim {
-                        enter = anim.abc_popup_enter
-                        exit = anim.abc_popup_enter
-                        popEnter = anim.abc_popup_enter
-                        popExit = anim.abc_popup_enter
-                    }
-                }
-            )
+            navigate(it.id)
         }
         binding.newTraining.setOnClickListener {
-            findNavController().navigate(
+            navigate(UNDEFINED_ID)
+            /*findNavController().navigate(
                 R.id.action_trainingListFragment_to_trainingFragment,
                 bundleOf("id" to UNDEFINED_ID),
                 navOptions {
@@ -97,7 +87,22 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
                         popExit = anim.abc_popup_enter
                     }
                 }
-            )
+            )*/
         }
+    }
+
+    private fun navigate(id: Int) {
+        findNavController().navigate(
+            R.id.action_trainingListFragment_to_trainingFragment,
+            bundleOf("id" to id),
+            navOptions {
+                anim {
+                    enter = anim.abc_popup_enter
+                    exit = anim.abc_popup_enter
+                    popEnter = anim.abc_popup_enter
+                    popExit = anim.abc_popup_enter
+                }
+            }
+        )
     }
 }

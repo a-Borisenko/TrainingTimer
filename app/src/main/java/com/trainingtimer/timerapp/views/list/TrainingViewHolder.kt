@@ -1,15 +1,13 @@
 package com.trainingtimer.timerapp.views.list
 
-import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.trainingtimer.R
+import com.trainingtimer.databinding.ListItemTrainingBinding
 
-class TrainingViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+class TrainingViewHolder(val binding: ListItemTrainingBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    val listTitle = view.findViewById<TextView>(R.id.training_title)
-    val listSets = view.findViewById<TextView>(R.id.training_sets)
-    val listTimes = view.findViewById<TextView>(R.id.training_times)
-    val listRest = view.findViewById<TextView>(R.id.training_rest)
+    val listTitle = binding.trainingTitle
+    val listSets = binding.trainingSets
+    val listTimes = binding.trainingTimes
+    val listRest = binding.trainingRest
 
 }

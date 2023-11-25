@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.R
+import com.trainingtimer.databinding.ListItemTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 
 class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCallback()) {
@@ -11,15 +12,17 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
     var onTrainingLongClickListener: ((Training) -> Unit)? = null
     var onTrainingClickListener: ((Training) -> Unit)? = null
 
-    val MAX_POOL_SIZE = 10
+//    val MAX_POOL_SIZE = 10
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ListItemTrainingBinding.inflate(inflater, parent, false)
+            /*LayoutInflater.from(parent.context).inflate(
             R.layout.list_item_training,
             parent,
             false
-        )
-        return TrainingViewHolder(view)
+        )*/
+        return TrainingViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: TrainingViewHolder, position: Int) {
@@ -30,10 +33,10 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
             listTimes.text = training.times
             listRest.text = training.rest
         }
-        holder.view.setOnClickListener {
+        holder.binding.root.setOnClickListener {
             onTrainingClickListener?.invoke(training)
         }
-        holder.view.setOnLongClickListener {
+        holder.binding.root.setOnLongClickListener {
             onTrainingLongClickListener?.invoke(training)
             true
         }
