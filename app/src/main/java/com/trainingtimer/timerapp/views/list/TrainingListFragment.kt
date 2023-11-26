@@ -62,7 +62,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = listAdapter.currentList[viewHolder.adapterPosition]
+                val item = listAdapter.currentList[viewHolder.bindingAdapterPosition/*.adapterPosition*/]
                 viewModel.deleteTraining(item)
             }
         }
@@ -76,18 +76,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         }
         binding.newTraining.setOnClickListener {
             navigate(UNDEFINED_ID)
-            /*findNavController().navigate(
-                R.id.action_trainingListFragment_to_trainingFragment,
-                bundleOf("id" to UNDEFINED_ID),
-                navOptions {
-                    anim {
-                        enter = anim.abc_popup_enter
-                        exit = anim.abc_popup_enter
-                        popEnter = anim.abc_popup_enter
-                        popExit = anim.abc_popup_enter
-                    }
-                }
-            )*/
         }
     }
 

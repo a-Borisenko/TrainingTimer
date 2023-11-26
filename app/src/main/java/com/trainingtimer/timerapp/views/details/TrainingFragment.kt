@@ -196,8 +196,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun startTimer() {
-//        isClickable(false)
-
         val intentService = Intent(context, TimerService::class.java)
         intentService.putExtra("TimeValue", timeStringToLong(binding.viewTimer.text.toString()))
         requireActivity().startService(intentService)

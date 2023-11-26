@@ -19,12 +19,7 @@ import java.util.TimerTask
 class TimerService : Service() {
 
     private var secRemain: Long = 0
-//    private var progr = 100f
     private var step = 0f
-//    private var isTimerRunning = false
-
-//    private lateinit var updateTimer: CountDownTimer
-//    private lateinit var countdownTimer: CountDownTimer
 
     private lateinit var notificationManager: NotificationManager
 
@@ -40,8 +35,8 @@ class TimerService : Service() {
         getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                val intentLocal = Intent()
-                intentLocal.action = "Counter"
+//                val intentLocal = Intent()
+//                intentLocal.action = "Counter"
                 if (secRemain > 0) {
                     secRemain--
                     progr -= step
@@ -49,14 +44,12 @@ class TimerService : Service() {
                     updateNotification()
                     _secRemainLD.postValue(secRemain)
                     _progressLD.postValue(progr)
-//                    intentLocal.putExtra("TimeRemaining", secRemain)
-//                    intentLocal.putExtra("Progress", progr)
                 } else {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
                 }
-                sendBroadcast(intentLocal)
+//                sendBroadcast(intentLocal)
             }
         }, 0, 1000)
         return super.onStartCommand(intent, flags, startId)

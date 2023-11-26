@@ -3,7 +3,6 @@ package com.trainingtimer.timerapp.views.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.trainingtimer.R
 import com.trainingtimer.databinding.ListItemTrainingBinding
 import com.trainingtimer.foundation.domain.Training
 
@@ -17,11 +16,6 @@ class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCa
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemTrainingBinding.inflate(inflater, parent, false)
-            /*LayoutInflater.from(parent.context).inflate(
-            R.layout.list_item_training,
-            parent,
-            false
-        )*/
         return TrainingViewHolder(binding)
     }
 
