@@ -62,7 +62,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = listAdapter.currentList[viewHolder.bindingAdapterPosition/*.adapterPosition*/]
+                val item = listAdapter.currentList[viewHolder.bindingAdapterPosition]
                 viewModel.deleteTraining(item)
             }
         }

@@ -35,8 +35,6 @@ class TimerService : Service() {
         getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-//                val intentLocal = Intent()
-//                intentLocal.action = "Counter"
                 if (secRemain > 0) {
                     secRemain--
                     progr -= step
@@ -49,7 +47,6 @@ class TimerService : Service() {
                     isCounting = false
                     notificationManager.cancelAll()
                 }
-//                sendBroadcast(intentLocal)
             }
         }, 0, 1000)
         return super.onStartCommand(intent, flags, startId)
