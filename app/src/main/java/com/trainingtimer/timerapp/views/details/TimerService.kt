@@ -1,14 +1,18 @@
 package com.trainingtimer.timerapp.views.details
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,14 +36,26 @@ class TimerService : Service() {
         var progr = 100f
         step = progr / (secRemain.toFloat())
         val timer = Timer()
-        getNotificationManager()
+
+        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_clock)
+            .setContentTitle("Countdown is running!")
+            .setContentText(TrainingUtils.timeLongToString(secRemain))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        createNotificationChannel()
+        with(NotificationManagerCompat.from(this)) {
+            notify(1, builder.build())
+        }
+
+//        getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (secRemain > 0) {
                     secRemain--
                     progr -= step
                     isCounting = true
-                    updateNotification()
+//                    updateNotification()
                     _secRemainLD.postValue(secRemain)
                     _progressLD.postValue(progr)
                 } else {
@@ -52,15 +68,17 @@ class TimerService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun getNotificationManager() {
+    /*private fun getNotificationManager() {
+        Log.d("TimerService", "getNotificationManager")
         notificationManager = ContextCompat.getSystemService(
             this,
             NotificationManager::class.java
         ) as NotificationManager
-    }
+    }*/
 
     private fun buildNotification(): Notification {
-        val title = "Countdown is running!"
+        Log.d("TimerService", "buildNotification")
+        /*val title = "Countdown is running!"
 
         val minutes = secRemain.div(60)
         val seconds = secRemain.rem(60)
@@ -71,24 +89,41 @@ class TimerService : Service() {
             0,
             intent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-        )
+        )*/
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(title)
+            .setContentTitle("Countdown is running!")
             .setOngoing(true)
-            .setContentText("${"%02d".format(minutes)}:${"%02d".format(seconds)}")
-            .setColorized(true)
-            .setColor(Color.parseColor("#BEAEE2"))
+            .setContentText(TrainingUtils.timeLongToString(secRemain))
+//            .setContentText("${"%02d".format(minutes)}:${"%02d".format(seconds)}")
+//            .setColorized(true)
+//            .setColor(Color.parseColor("#BEAEE2"))
             .setSmallIcon(R.drawable.ic_clock)
-            .setOnlyAlertOnce(true)
-            .setContentIntent(pIntent)
+//            .setOnlyAlertOnce(true)
+//            .setContentIntent(pIntent)
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .build()
     }
 
-
-    private fun updateNotification() {
+    /*private fun updateNotification() {
+        Log.d("TimerService", "updateNotification")
         notificationManager.notify(1, buildNotification())
+    }*/
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     companion object {
