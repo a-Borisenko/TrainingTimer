@@ -32,30 +32,20 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        secRemain  = intent.getLongExtra("TimeValue", 0)
+        secRemain = intent.getLongExtra("TimeValue", 0)
         var progr = 100f
         step = progr / (secRemain.toFloat())
         val timer = Timer()
 
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_clock)
-            .setContentTitle("Countdown is running!")
-            .setContentText(TrainingUtils.timeLongToString(secRemain))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
         createNotificationChannel()
-        with(NotificationManagerCompat.from(this)) {
-            notify(1, builder.build())
-        }
-
-//        getNotificationManager()
+        getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (secRemain > 0) {
                     secRemain--
                     progr -= step
                     isCounting = true
-//                    updateNotification()
+                    updateNotification()
                     _secRemainLD.postValue(secRemain)
                     _progressLD.postValue(progr)
                 } else {
@@ -68,36 +58,18 @@ class TimerService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    /*private fun getNotificationManager() {
-        Log.d("TimerService", "getNotificationManager")
+    private fun getNotificationManager() {
         notificationManager = ContextCompat.getSystemService(
             this,
             NotificationManager::class.java
         ) as NotificationManager
-    }*/
+    }
 
     private fun buildNotification(): Notification {
-        Log.d("TimerService", "buildNotification")
-        /*val title = "Countdown is running!"
-
-        val minutes = secRemain.div(60)
-        val seconds = secRemain.rem(60)
-
-        val intent = Intent(this, TrainingFragment::class.java)
-        val pIntent = PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
-        )*/
-
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
             .setOngoing(true)
             .setContentText(TrainingUtils.timeLongToString(secRemain))
-//            .setContentText("${"%02d".format(minutes)}:${"%02d".format(seconds)}")
-//            .setColorized(true)
-//            .setColor(Color.parseColor("#BEAEE2"))
             .setSmallIcon(R.drawable.ic_clock)
 //            .setOnlyAlertOnce(true)
 //            .setContentIntent(pIntent)
@@ -106,10 +78,9 @@ class TimerService : Service() {
             .build()
     }
 
-    /*private fun updateNotification() {
-        Log.d("TimerService", "updateNotification")
+    private fun updateNotification() {
         notificationManager.notify(1, buildNotification())
-    }*/
+    }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -120,10 +91,25 @@ class TimerService : Service() {
                 description = descriptionText
             }
             // Register the channel with the system.
-            val notificationManager: NotificationManager =
+            notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    override fun onDestroy() {
+        notificationManager.cancel(1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_ID,
+                    getString(R.string.channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+            )
+        }
+        notificationManager.cancelAll()
+        super.onDestroy()
     }
 
     companion object {
