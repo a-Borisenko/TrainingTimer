@@ -3,16 +3,12 @@ package com.trainingtimer.timerapp.views.details
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,6 +20,7 @@ class TimerService : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
+    val timer = Timer()
 
     private lateinit var notificationManager: NotificationManager
 
@@ -35,10 +32,10 @@ class TimerService : Service() {
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progr = 100f
         step = progr / (secRemain.toFloat())
-        val timer = Timer()
+//        val timer = Timer()
 
         createNotificationChannel()
-        getNotificationManager()
+//        getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (secRemain > 0) {
@@ -58,12 +55,12 @@ class TimerService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun getNotificationManager() {
+    /*private fun getNotificationManager() {
         notificationManager = ContextCompat.getSystemService(
             this,
             NotificationManager::class.java
         ) as NotificationManager
-    }
+    }*/
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
@@ -73,7 +70,7 @@ class TimerService : Service() {
             .setSmallIcon(R.drawable.ic_clock)
 //            .setOnlyAlertOnce(true)
 //            .setContentIntent(pIntent)
-            .setAutoCancel(true)
+//            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .build()
     }
@@ -98,8 +95,8 @@ class TimerService : Service() {
     }
 
     override fun onDestroy() {
-        notificationManager.cancel(1)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        notificationManager.cancel(1)
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(
                 NotificationChannel(
                     CHANNEL_ID,
@@ -107,7 +104,7 @@ class TimerService : Service() {
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
             )
-        }
+        }*/
         notificationManager.cancelAll()
         super.onDestroy()
     }
