@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
@@ -32,7 +31,6 @@ class TimerService : Service() {
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progr = 100f
         step = progr / (secRemain.toFloat())
-//        val timer = Timer()
 
         createNotificationChannel()
 //        getNotificationManager()
