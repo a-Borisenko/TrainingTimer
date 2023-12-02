@@ -93,6 +93,7 @@ class TimerService : Service() {
     }
 
     override fun onDestroy() {
+        stopForeground(true)
 //        notificationManager.cancel(1)
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel(
@@ -103,7 +104,7 @@ class TimerService : Service() {
                 )
             )
         }*/
-        notificationManager.cancelAll()
+//        notificationManager.cancelAll()
         super.onDestroy()
     }
 
