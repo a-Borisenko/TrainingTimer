@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -77,6 +76,11 @@ class TimerService : Service() {
 
     private fun updateNotification() {
         notificationManager.notify(1, buildNotification())
+    }
+
+    private fun destroyNotification() {
+        notificationManager.cancelAll()
+        context.getSystemService(NOTIFICATION_SERVICE).cancelAll()
     }
 
     private fun createNotificationChannel() {
