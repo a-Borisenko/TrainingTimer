@@ -48,6 +48,7 @@ class TimerService : Service() {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
+//                    context.getSystemService(NOTIFICATION_SERVICE).cancelAll()
                 }
             }
         }, 0, 1000)
@@ -77,11 +78,6 @@ class TimerService : Service() {
     private fun updateNotification() {
         notificationManager.notify(1, buildNotification())
     }
-
-    /*private fun destroyNotification() {
-        notificationManager.cancelAll()
-        context.getSystemService(NOTIFICATION_SERVICE).cancelAll()
-    }*/
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
