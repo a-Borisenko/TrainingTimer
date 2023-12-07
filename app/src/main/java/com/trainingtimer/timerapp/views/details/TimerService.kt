@@ -70,8 +70,9 @@ class TimerService : Service() {
             .setSmallIcon(R.drawable.ic_clock)
 //            .setOnlyAlertOnce(true)
 //            .setContentIntent(pIntent)
-//            .setAutoCancel(true)
+            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
+//            .setTimeoutAfter(1)
             .build()
     }
 
