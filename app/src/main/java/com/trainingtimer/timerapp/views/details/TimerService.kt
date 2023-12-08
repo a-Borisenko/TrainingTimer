@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +37,7 @@ class TimerService : Service() {
         createNotificationChannel()
 //        getNotificationManager()
         timer.scheduleAtFixedRate(object : TimerTask() {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
                 if (secRemain > 0) {
                     secRemain--
@@ -48,6 +50,7 @@ class TimerService : Service() {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
+                    notificationManager.deleteNotificationChannel(CHANNEL_ID)
 //                    context.getSystemService(NOTIFICATION_SERVICE).cancelAll()
                 }
             }
@@ -70,9 +73,8 @@ class TimerService : Service() {
             .setSmallIcon(R.drawable.ic_clock)
 //            .setOnlyAlertOnce(true)
 //            .setContentIntent(pIntent)
-            .setAutoCancel(true)
+//            .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-//            .setTimeoutAfter(1)
             .build()
     }
 
