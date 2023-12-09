@@ -1,6 +1,5 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -115,7 +114,7 @@ class TrainingViewModel : ViewModel() {
 
     fun updateTime(sec: Long) {
         _secRemain.value = sec
-        Log.d("viewModel", "sec remain = $sec")
+//        Log.d("viewModel", "sec remain = $sec")
     }
 
     fun resetProgress() {

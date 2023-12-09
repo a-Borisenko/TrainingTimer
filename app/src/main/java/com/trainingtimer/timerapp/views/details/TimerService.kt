@@ -20,7 +20,8 @@ class TimerService : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
-    val timer = Timer()
+    private var count = 0
+//    private val timer = Timer()
 
     private lateinit var notificationManager: NotificationManager
 
@@ -29,64 +30,54 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        startForeground(1, buildNotification())
+        startForeground(++count, buildNotification())
         secRemain = intent.getLongExtra("TimeValue", 0)
-        var progr = 100f
-        step = progr / (secRemain.toFloat())
+        var progress = 100f
+        step = progress / (secRemain.toFloat())
 
         createNotificationChannel()
-//        getNotificationManager()
+        val timer = Timer()
         timer.scheduleAtFixedRate(object : TimerTask() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
                 if (secRemain > 0) {
                     secRemain--
-                    progr -= step
+                    progress -= step
                     isCounting = true
                     updateNotification()
                     _secRemainLD.postValue(secRemain)
-                    _progressLD.postValue(progr)
+                    _progressLD.postValue(progress)
                 } else {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
                     notificationManager.deleteNotificationChannel(CHANNEL_ID)
-//                    context.getSystemService(NOTIFICATION_SERVICE).cancelAll()
                 }
             }
         }, 0, 1000)
         return super.onStartCommand(intent, flags, startId)
     }
 
-    /*private fun getNotificationManager() {
-        notificationManager = ContextCompat.getSystemService(
-            this,
-            NotificationManager::class.java
-        ) as NotificationManager
-    }*/
-
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
-            .setOngoing(true)
+//            .setOngoing(true)
             .setContentText(TrainingUtils.timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
-//            .setOnlyAlertOnce(true)
-//            .setContentIntent(pIntent)
-//            .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
     }
 
     private fun updateNotification() {
-        notificationManager.notify(1, buildNotification())
+        notificationManager.notify(count, buildNotification())
     }
 
     private fun createNotificationChannel() {
+//        val chan1 = NotificationChannel("default", "default", NotificationManager.IMPORTANCE_LOW)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
             }
@@ -99,17 +90,6 @@ class TimerService : Service() {
 
     override fun onDestroy() {
         stopForeground(true)
-//        notificationManager.cancel(1)
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    getString(R.string.channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-            )
-        }*/
-//        notificationManager.cancelAll()
         super.onDestroy()
     }
 
