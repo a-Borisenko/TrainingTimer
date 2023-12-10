@@ -21,7 +21,6 @@ class TimerService : Service() {
     private var secRemain: Long = 0
     private var step = 0f
     private var count = 0
-//    private val timer = Timer()
 
     private lateinit var notificationManager: NotificationManager
 
@@ -61,9 +60,9 @@ class TimerService : Service() {
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
-//            .setOngoing(true)
             .setContentText(TrainingUtils.timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
+//            .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
     }
@@ -73,6 +72,11 @@ class TimerService : Service() {
     }
 
     private fun createNotificationChannel() {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val nc =
+                NotificationChannel("Channel Player", "Player", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(nc)
+        }*/
 //        val chan1 = NotificationChannel("default", "default", NotificationManager.IMPORTANCE_LOW)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
