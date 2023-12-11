@@ -20,7 +20,7 @@ class TimerService : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
-    private var count = 0
+//    private var count = 0
 
     private lateinit var notificationManager: NotificationManager
 
@@ -29,7 +29,7 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        startForeground(++count, buildNotification())
+        startForeground(1, buildNotification())
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progress = 100f
         step = progress / (secRemain.toFloat())
@@ -60,15 +60,16 @@ class TimerService : Service() {
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
+            .setOngoing(true)
             .setContentText(TrainingUtils.timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
-//            .setChannelId(CHANNEL_ID)
+            .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
     }
 
     private fun updateNotification() {
-        notificationManager.notify(count, buildNotification())
+        notificationManager.notify(1, buildNotification())
     }
 
     private fun createNotificationChannel() {
