@@ -20,7 +20,6 @@ class TimerService : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
-//    private var count = 0
 
     private lateinit var notificationManager: NotificationManager
 
