@@ -114,7 +114,6 @@ class TrainingViewModel : ViewModel() {
 
     fun updateTime(sec: Long) {
         _secRemain.value = sec
-//        Log.d("viewModel", "sec remain = $sec")
     }
 
     fun resetProgress() {
