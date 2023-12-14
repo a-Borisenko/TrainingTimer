@@ -50,6 +50,7 @@ class TimerService : Service() {
                     isCounting = false
                     notificationManager.cancelAll()
                     notificationManager.deleteNotificationChannel(CHANNEL_ID)
+                    onDestroy()
                 }
             }
         }, 0, 1000)
