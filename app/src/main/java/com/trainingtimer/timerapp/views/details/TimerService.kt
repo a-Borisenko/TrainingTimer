@@ -28,12 +28,12 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        createNotificationChannel()
         startForeground(1, buildNotification())
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progress = 100f
         step = progress / (secRemain.toFloat())
 
-        createNotificationChannel()
         val timer = Timer()
         timer.scheduleAtFixedRate(object : TimerTask() {
             @RequiresApi(Build.VERSION_CODES.O)
