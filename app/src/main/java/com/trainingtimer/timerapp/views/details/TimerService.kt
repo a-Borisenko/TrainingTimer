@@ -49,7 +49,7 @@ class TimerService : Service() {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
-                    notificationManager.deleteNotificationChannel(CHANNEL_ID)
+//                    notificationManager.deleteNotificationChannel(CHANNEL_ID)
                     onDestroy()
                 }
             }
@@ -81,11 +81,11 @@ class TimerService : Service() {
 //        val chan1 = NotificationChannel("default", "default", NotificationManager.IMPORTANCE_LOW)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+//            val descriptionText = getString(R.string.channel_description)
+//            val importance = NotificationManager.IMPORTANCE_LOW
+            val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)/*.apply {
                 description = descriptionText
-            }
+            }*/
             // Register the channel with the system.
             notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
