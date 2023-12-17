@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.CountDownTimer
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
@@ -34,7 +35,26 @@ class TimerService : Service() {
         var progress = 100f
         step = progress / (secRemain.toFloat())
 
-        val timer = Timer()
+        val timer = object : CountDownTimer(secRemain * 1000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                secRemain--
+                progress -= step
+                isCounting = true
+                updateNotification()
+                _secRemainLD.postValue(secRemain)
+                _progressLD.postValue(progress)
+            }
+
+            override fun onFinish() {
+//                timer.cancel()
+                isCounting = false
+                notificationManager.cancelAll()
+                onDestroy()
+            }
+        }.start()
+
+        /*val timer = Timer()
         timer.scheduleAtFixedRate(object : TimerTask() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
@@ -49,11 +69,10 @@ class TimerService : Service() {
                     timer.cancel()
                     isCounting = false
                     notificationManager.cancelAll()
-//                    notificationManager.deleteNotificationChannel(CHANNEL_ID)
                     onDestroy()
                 }
             }
-        }, 0, 1000)
+        }, 0, 1000)*/
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -73,19 +92,9 @@ class TimerService : Service() {
     }
 
     private fun createNotificationChannel() {
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val nc =
-                NotificationChannel("Channel Player", "Player", NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(nc)
-        }*/
-//        val chan1 = NotificationChannel("default", "default", NotificationManager.IMPORTANCE_LOW)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
-//            val descriptionText = getString(R.string.channel_description)
-//            val importance = NotificationManager.IMPORTANCE_LOW
-            val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)/*.apply {
-                description = descriptionText
-            }*/
+            val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
             // Register the channel with the system.
             notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
