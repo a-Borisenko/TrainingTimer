@@ -9,13 +9,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
-import java.util.Timer
-import java.util.TimerTask
 
 class TimerService : Service() {
 
@@ -35,8 +32,7 @@ class TimerService : Service() {
         var progress = 100f
         step = progress / (secRemain.toFloat())
 
-        val timer = object : CountDownTimer(secRemain * 1000, 1000) {
-
+        object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 secRemain--
                 progress -= step
@@ -45,34 +41,12 @@ class TimerService : Service() {
                 _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
             }
-
             override fun onFinish() {
-//                timer.cancel()
                 isCounting = false
                 notificationManager.cancelAll()
                 onDestroy()
             }
         }.start()
-
-        /*val timer = Timer()
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun run() {
-                if (secRemain > 0) {
-                    secRemain--
-                    progress -= step
-                    isCounting = true
-                    updateNotification()
-                    _secRemainLD.postValue(secRemain)
-                    _progressLD.postValue(progress)
-                } else {
-                    timer.cancel()
-                    isCounting = false
-                    notificationManager.cancelAll()
-                    onDestroy()
-                }
-            }
-        }, 0, 1000)*/
         return super.onStartCommand(intent, flags, startId)
     }
 
