@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
+    android:theme="@style/Theme.TrainingTimer"
     android:orientation="vertical">
 
     <ProgressBar
@@ -110,5 +111,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    <!--        android:textColor="@color/yellow"-->
+
+    <!--        android:shadowColor="@color/yellow"-->
+    <!--        android:textColorHighlight="@color/yellow"-->
+    <!--        android:textColorHint="@color/yellow"-->
+    <!--        android:textColorLink="@color/yellow"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
