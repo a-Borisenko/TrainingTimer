@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/design_default_color_primary_dark" >
+    android:background="@color/black" >
 
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/appName"
@@ -32,6 +33,6 @@
         android:layout_height="wrap_content"
         android:minHeight="20dp"
         android:layout_alignParentBottom="true"
-        android:progressTint="#FFEB3B"
+        android:progressTint="@color/gold"
         android:layout_margin="20dp" />
 </RelativeLayout>

@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/Theme.TrainingTimer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,6 +20,7 @@
         android:id="@+id/training_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/list_item_training" />
 
@@ -32,11 +32,11 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:focusable="true"
+        android:visibility="gone"
         style="@style/Theme.TrainingTimer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add"
-        android:textColor="@color/white"
         android:importantForAccessibility="no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
