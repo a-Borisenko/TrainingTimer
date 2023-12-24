@@ -92,6 +92,7 @@ class TrainingViewModel : ViewModel() {
 
     fun start(id: Int) {
         TimerService.secRemainLD.observeForever(serviceTime)
+        if (id == Training.UNDEFINED_ID) _progress.value = 0f
         TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
         resetProgress()
