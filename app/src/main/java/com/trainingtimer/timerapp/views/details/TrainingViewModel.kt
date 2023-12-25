@@ -53,8 +53,8 @@ class TrainingViewModel : ViewModel() {
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    private val _sets = MutableLiveData<Int>()
-    val sets: LiveData<Int>
+    private val _sets = MutableLiveData<String>()
+    val sets: LiveData<String>
         get() = _sets
 
     private val _title = MutableLiveData<String>()
@@ -69,7 +69,7 @@ class TrainingViewModel : ViewModel() {
 
     private val trainingData = Observer<Training?> {
         if (!saveState) {
-            _sets.value = it.sets
+            _sets.value = it.sets.toString()
             _title.value = it.title
             _times.value = it.times.drop(1)
             _secRemain.value = TrainingUtils.timeStringToLong(it.rest)
@@ -92,8 +92,11 @@ class TrainingViewModel : ViewModel() {
 
     fun start(id: Int) {
         TimerService.secRemainLD.observeForever(serviceTime)
-        if (id == Training.UNDEFINED_ID) _progress.value = 0f
-        TimerService.progressLD.observeForever(serviceProgress)
+        if (id == Training.UNDEFINED_ID) {
+            _progress.value = 0f
+        } else {
+            TimerService.progressLD.observeForever(serviceProgress)
+        }
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
         resetProgress()
 
@@ -108,7 +111,7 @@ class TrainingViewModel : ViewModel() {
 
     fun saveState(sets: String, title: String, times: String) {
         saveState = true
-        _sets.value = sets.toInt()
+        _sets.value = sets
         _title.value = title
         _times.value = times
     }
