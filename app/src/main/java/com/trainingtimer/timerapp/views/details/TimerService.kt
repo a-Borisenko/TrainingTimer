@@ -69,7 +69,6 @@ class TimerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = getString(R.string.channel_name)
             val channel = NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW)
-            // Register the channel with the system.
             notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
