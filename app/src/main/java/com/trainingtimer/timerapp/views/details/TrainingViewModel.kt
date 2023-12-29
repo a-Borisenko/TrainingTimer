@@ -109,6 +109,9 @@ class TrainingViewModel : ViewModel() {
         super.onCleared()
         TimerService.secRemainLD.removeObserver(serviceTime)
         TimerService.progressLD.removeObserver(serviceProgress)
+        secRemain.removeObserver {
+            _progress.value = 0f
+        }
     }
 
     fun saveState(sets: String, title: String, times: String) {
