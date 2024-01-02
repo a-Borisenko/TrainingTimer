@@ -135,22 +135,6 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
-    /*fun getTime() {
-        //get time from DataBase
-    }
-
-    fun getDialogTime() {
-        //get time from dialogFragment
-    }
-
-    fun startTimer() {
-        //start TimerService
-    }
-
-    fun stopTimer() {
-        //stop TimerService
-    }*/
-
     fun trainingClickData(
         inputSets: String?,
         inputTitle: String?,

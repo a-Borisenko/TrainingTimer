@@ -201,8 +201,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         requireActivity().startService(intentService)
     }
 
-    private fun isClickable(status: Boolean) {
+    /*private fun isClickable(status: Boolean) {
         binding.trainingBtn.isClickable = status
         binding.viewTimer.isClickable = status
-    }
+    }*/
 }
