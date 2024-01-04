@@ -12,6 +12,9 @@ import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class TrainingViewModel : ViewModel() {
@@ -45,9 +48,12 @@ class TrainingViewModel : ViewModel() {
     val secRemain: LiveData<Long>
         get() = _secRemain
 
-    private val _progress = MutableLiveData<Float>()
+    /*private val _progress = MutableLiveData<Float>()
     val progress: LiveData<Float>
-        get() = _progress
+        get() = _progress*/
+
+    private val _progress = MutableStateFlow(0F)
+    val progress: StateFlow<Float> = _progress.asStateFlow()
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>

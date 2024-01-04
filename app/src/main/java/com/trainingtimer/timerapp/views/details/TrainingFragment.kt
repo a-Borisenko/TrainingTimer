@@ -18,13 +18,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.launchWhenStarted
 import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeLongToString
 import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeStringToLong
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
+import kotlinx.coroutines.flow.onEach
 
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
@@ -72,10 +75,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             secRemain.observe(viewLifecycleOwner) {
                 binding.viewTimer.text = timeLongToString(it)
             }
-            progress.observe(viewLifecycleOwner) {
+            /*progress.observe(viewLifecycleOwner) {
                 binding.countdownBar.progress = it.toInt()
-            }
+            }*/
         }
+        /*lifecycleScope.launchWhenStarted {
+            viewModel.progress
+                .collect { binding.countdownBar.progress = it.toInt() }
+        }*/
+        viewModel.progress
+            .onEach {
+                binding.countdownBar.progress = it.toInt()
+            }.launchWhenStarted(lifecycleScope)
     }
 
     private fun setDialogFragmentListener() {
@@ -175,8 +186,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #2: no need, suspending move to List
     private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager
-                = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
