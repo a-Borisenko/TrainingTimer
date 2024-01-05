@@ -72,9 +72,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             times.observe(viewLifecycleOwner) {
                 binding.etTimes.setText(it)
             }
-            secRemain.observe(viewLifecycleOwner) {
+            /*secRemain.observe(viewLifecycleOwner) {
                 binding.viewTimer.text = timeLongToString(it)
-            }
+            }*/
             /*progress.observe(viewLifecycleOwner) {
                 binding.countdownBar.progress = it.toInt()
             }*/
@@ -83,6 +83,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             viewModel.progress
                 .collect { binding.countdownBar.progress = it.toInt() }
         }*/
+        viewModel.secRemain
+            .onEach {
+                binding.viewTimer.text = timeLongToString(it)
+            }.launchWhenStarted(lifecycleScope)
         viewModel.progress
             .onEach {
                 binding.countdownBar.progress = it.toInt()

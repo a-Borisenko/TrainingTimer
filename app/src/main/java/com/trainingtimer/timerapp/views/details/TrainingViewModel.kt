@@ -44,9 +44,12 @@ class TrainingViewModel : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
-    private val _secRemain = MutableLiveData<Long>()
+    /*private val _secRemain = MutableLiveData<Long>()
     val secRemain: LiveData<Long>
-        get() = _secRemain
+        get() = _secRemain*/
+
+    private val _secRemain = MutableStateFlow(0L)
+    val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
 
     /*private val _progress = MutableLiveData<Float>()
     val progress: LiveData<Float>
@@ -100,13 +103,18 @@ class TrainingViewModel : ViewModel() {
         TimerService.secRemainLD.observeForever(serviceTime)
         TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
-        secRemain.observeForever{
+        if (_secRemain.value == 0L) {
+            _progress.value = 0f
+        } else {
+            resetProgress()
+        }
+        /*secRemain.observeForever{
             if (it == 0L) {
                 _progress.value = 0f
             } else {
                 resetProgress()
             }
-        }
+        }*/
 
         launchMode(id)
     }
@@ -115,9 +123,9 @@ class TrainingViewModel : ViewModel() {
         super.onCleared()
         TimerService.secRemainLD.removeObserver(serviceTime)
         TimerService.progressLD.removeObserver(serviceProgress)
-        secRemain.removeObserver {
+        /*secRemain.removeObserver {
             _progress.value = 0f
-        }
+        }*/
     }
 
     fun saveState(sets: String, title: String, times: String) {
