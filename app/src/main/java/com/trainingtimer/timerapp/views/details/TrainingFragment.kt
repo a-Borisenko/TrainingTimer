@@ -72,17 +72,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             times.observe(viewLifecycleOwner) {
                 binding.etTimes.setText(it)
             }
-            /*secRemain.observe(viewLifecycleOwner) {
-                binding.viewTimer.text = timeLongToString(it)
-            }*/
-            /*progress.observe(viewLifecycleOwner) {
-                binding.countdownBar.progress = it.toInt()
-            }*/
         }
-        /*lifecycleScope.launchWhenStarted {
-            viewModel.progress
-                .collect { binding.countdownBar.progress = it.toInt() }
-        }*/
         viewModel.secRemain
             .onEach {
                 binding.viewTimer.text = timeLongToString(it)
