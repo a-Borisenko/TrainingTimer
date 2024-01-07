@@ -63,7 +63,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun timeObservers() {
         with(viewModel) {
-            sets.observe(viewLifecycleOwner) {
+            /*sets.observe(viewLifecycleOwner) {
                 binding.etSets.setText(it.toString())
             }
             title.observe(viewLifecycleOwner) {
@@ -71,16 +71,33 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
             times.observe(viewLifecycleOwner) {
                 binding.etTimes.setText(it)
-            }
+            }*/
+
+            sets
+                .onEach {
+                    binding.etSets.setText(it)
+                }.launchWhenStarted(lifecycleScope)
+            title
+                .onEach {
+                    binding.etTitle.setText(it)
+                }.launchWhenStarted(lifecycleScope)
+            times
+                .onEach {
+                    binding.etTimes.setText(it)
+                }.launchWhenStarted(lifecycleScope)
+            secRemain
+                .onEach {
+                    binding.viewTimer.text = timeLongToString(it)
+                }.launchWhenStarted(lifecycleScope)
+            progress
+                .onEach {
+                    binding.countdownBar.progress = it.toInt()
+                }.launchWhenStarted(lifecycleScope)
         }
-        viewModel.secRemain
-            .onEach {
-                binding.viewTimer.text = timeLongToString(it)
-            }.launchWhenStarted(lifecycleScope)
-        viewModel.progress
-            .onEach {
-                binding.countdownBar.progress = it.toInt()
-            }.launchWhenStarted(lifecycleScope)
+        /*val time = getString(binding.countdownBar.progress).toInt()
+        if (time != 0) {
+            viewModel.resetProgress()
+        }*/
     }
 
     private fun setDialogFragmentListener() {
@@ -112,27 +129,51 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun inputErrorsObserve() {
-        viewModel.errorInputSets.observe(viewLifecycleOwner) {
+        /*viewModel.errorInputSets.observe(viewLifecycleOwner) {
             binding.tilSets.error = if (it) {
                 getString(R.string.error_input_sets)
             } else {
                 null
             }
-        }
-        viewModel.errorInputTitle.observe(viewLifecycleOwner) {
+        }*/
+        viewModel.errorInputSets
+            .onEach {
+                binding.tilSets.error = if (it) {
+                    getString(R.string.error_input_sets)
+                } else {
+                    null
+                }
+            }.launchWhenStarted(lifecycleScope)
+        /*viewModel.errorInputTitle.observe(viewLifecycleOwner) {
             binding.tilTitle.error = if (it) {
                 getString(R.string.error_input_title)
             } else {
                 null
             }
-        }
-        viewModel.errorInputTimes.observe(viewLifecycleOwner) {
+        }*/
+        viewModel.errorInputTitle
+            .onEach {
+                binding.tilTitle.error = if (it) {
+                    getString(R.string.error_input_title)
+                } else {
+                    null
+                }
+            }.launchWhenStarted(lifecycleScope)
+        /*viewModel.errorInputTimes.observe(viewLifecycleOwner) {
             binding.tilTimes.error = if (it) {
                 getString(R.string.error_input_times)
             } else {
                 null
             }
-        }
+        }*/
+        viewModel.errorInputTimes
+            .onEach {
+                binding.tilTimes.error = if (it) {
+                    getString(R.string.error_input_times)
+                } else {
+                    null
+                }
+            }.launchWhenStarted(lifecycleScope)
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
         }

@@ -28,21 +28,34 @@ class TrainingViewModel : ViewModel() {
     private var saveState = false
     private var newId = 0
 
-    private val _errorInputTimes = MutableLiveData<Boolean>()
-    val errorInputTimes: LiveData<Boolean>
-        get() = _errorInputTimes
-
-    private val _errorInputTitle = MutableLiveData<Boolean>()
-    val errorInputTitle: LiveData<Boolean>
-        get() = _errorInputTitle
-
-    private val _errorInputSets = MutableLiveData<Boolean>()
+    /*private val _errorInputSets = MutableLiveData<Boolean>()
     val errorInputSets: LiveData<Boolean>
-        get() = _errorInputSets
+        get() = _errorInputSets*/
+
+    private val _errorInputSets = MutableStateFlow(false)
+    val errorInputSets: StateFlow<Boolean> = _errorInputSets.asStateFlow()
+
+    /*private val _errorInputTitle = MutableLiveData<Boolean>()
+    val errorInputTitle: LiveData<Boolean>
+        get() = _errorInputTitle*/
+
+    private val _errorInputTitle = MutableStateFlow(false)
+    val errorInputTitle: StateFlow<Boolean> = _errorInputTitle.asStateFlow()
+
+    /*private val _errorInputTimes = MutableLiveData<Boolean>()
+    val errorInputTimes: LiveData<Boolean>
+        get() = _errorInputTimes*/
+
+    private val _errorInputTimes = MutableStateFlow(false)
+    val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean>
         get() = _loading
+
+    private val _shouldCloseScreen = MutableLiveData<Unit>()
+    val shouldCloseScreen: LiveData<Unit>
+        get() = _shouldCloseScreen
 
     private val _secRemain = MutableStateFlow(0L)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
@@ -50,21 +63,26 @@ class TrainingViewModel : ViewModel() {
     private val _progress = MutableStateFlow(0F)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
-    private val _shouldCloseScreen = MutableLiveData<Unit>()
-    val shouldCloseScreen: LiveData<Unit>
-        get() = _shouldCloseScreen
-
-    private val _sets = MutableLiveData<String>()
+    /*private val _sets = MutableLiveData<String>()
     val sets: LiveData<String>
-        get() = _sets
+        get() = _sets*/
 
-    private val _title = MutableLiveData<String>()
+    private val _sets = MutableStateFlow("")
+    val sets: StateFlow<String> = _sets.asStateFlow()
+
+    /*private val _title = MutableLiveData<String>()
     val title: LiveData<String>
-        get() = _title
+        get() = _title*/
 
-    private val _times = MutableLiveData<String>()
+    private val _title = MutableStateFlow("")
+    val title: StateFlow<String> = _title.asStateFlow()
+
+    /*private val _times = MutableLiveData<String>()
     val times: LiveData<String>
-        get() = _times
+        get() = _times*/
+
+    private val _times = MutableStateFlow("")
+    val times: StateFlow<String> = _times.asStateFlow()
 
 
 
