@@ -28,23 +28,11 @@ class TrainingViewModel : ViewModel() {
     private var saveState = false
     private var newId = 0
 
-    /*private val _errorInputSets = MutableLiveData<Boolean>()
-    val errorInputSets: LiveData<Boolean>
-        get() = _errorInputSets*/
-
     private val _errorInputSets = MutableStateFlow(false)
     val errorInputSets: StateFlow<Boolean> = _errorInputSets.asStateFlow()
 
-    /*private val _errorInputTitle = MutableLiveData<Boolean>()
-    val errorInputTitle: LiveData<Boolean>
-        get() = _errorInputTitle*/
-
     private val _errorInputTitle = MutableStateFlow(false)
     val errorInputTitle: StateFlow<Boolean> = _errorInputTitle.asStateFlow()
-
-    /*private val _errorInputTimes = MutableLiveData<Boolean>()
-    val errorInputTimes: LiveData<Boolean>
-        get() = _errorInputTimes*/
 
     private val _errorInputTimes = MutableStateFlow(false)
     val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
@@ -63,23 +51,11 @@ class TrainingViewModel : ViewModel() {
     private val _progress = MutableStateFlow(0F)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
-    /*private val _sets = MutableLiveData<String>()
-    val sets: LiveData<String>
-        get() = _sets*/
-
     private val _sets = MutableStateFlow("")
     val sets: StateFlow<String> = _sets.asStateFlow()
 
-    /*private val _title = MutableLiveData<String>()
-    val title: LiveData<String>
-        get() = _title*/
-
     private val _title = MutableStateFlow("")
     val title: StateFlow<String> = _title.asStateFlow()
-
-    /*private val _times = MutableLiveData<String>()
-    val times: LiveData<String>
-        get() = _times*/
 
     private val _times = MutableStateFlow("")
     val times: StateFlow<String> = _times.asStateFlow()
@@ -174,19 +150,19 @@ class TrainingViewModel : ViewModel() {
     ) {
         val sets = parseSets(inputSets)
         val title = parseTitle(inputTitle)
-        val times = "x" + parseTimes(inputReps)
+        val reps = parseTimes(inputReps)
         val time = parseRest(inputTime)
-        val fieldValid = validateInput(sets, title, times)
+        val fieldValid = validateInput(sets, title, reps)
         if (fieldValid) {
             viewModelScope.launch {
                 startLoad()
                 delay(3000)
                 finishLoad()
                 if (trainingId == Training.UNDEFINED_ID) {
-                    val item = Training(sets.toInt(), title, times, time, newId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, times, time, trainingId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, trainingId)
                     editTrainingUseCase.editTraining(item)
                 }
                 finishWork()

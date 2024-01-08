@@ -63,16 +63,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun timeObservers() {
         with(viewModel) {
-            /*sets.observe(viewLifecycleOwner) {
-                binding.etSets.setText(it.toString())
-            }
-            title.observe(viewLifecycleOwner) {
-                binding.etTitle.setText(it)
-            }
-            times.observe(viewLifecycleOwner) {
-                binding.etTimes.setText(it)
-            }*/
-
             sets
                 .onEach {
                     binding.etSets.setText(it)
@@ -129,53 +119,34 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun inputErrorsObserve() {
-        /*viewModel.errorInputSets.observe(viewLifecycleOwner) {
-            binding.tilSets.error = if (it) {
-                getString(R.string.error_input_sets)
-            } else {
-                null
+        with(viewModel) {
+            errorInputSets
+                .onEach {
+                    binding.tilSets.error = if (it) {
+                        getString(R.string.error_input_sets)
+                    } else {
+                        null
+                    }
+                }.launchWhenStarted(lifecycleScope)
+            errorInputTitle
+                .onEach {
+                    binding.tilTitle.error = if (it) {
+                        getString(R.string.error_input_title)
+                    } else {
+                        null
+                    }
+                }.launchWhenStarted(lifecycleScope)
+            errorInputTimes
+                .onEach {
+                    binding.tilTimes.error = if (it) {
+                        getString(R.string.error_input_times)
+                    } else {
+                        null
+                    }
+                }.launchWhenStarted(lifecycleScope)
+            shouldCloseScreen.observe(viewLifecycleOwner) {
+                findNavController().popBackStack()
             }
-        }*/
-        viewModel.errorInputSets
-            .onEach {
-                binding.tilSets.error = if (it) {
-                    getString(R.string.error_input_sets)
-                } else {
-                    null
-                }
-            }.launchWhenStarted(lifecycleScope)
-        /*viewModel.errorInputTitle.observe(viewLifecycleOwner) {
-            binding.tilTitle.error = if (it) {
-                getString(R.string.error_input_title)
-            } else {
-                null
-            }
-        }*/
-        viewModel.errorInputTitle
-            .onEach {
-                binding.tilTitle.error = if (it) {
-                    getString(R.string.error_input_title)
-                } else {
-                    null
-                }
-            }.launchWhenStarted(lifecycleScope)
-        /*viewModel.errorInputTimes.observe(viewLifecycleOwner) {
-            binding.tilTimes.error = if (it) {
-                getString(R.string.error_input_times)
-            } else {
-                null
-            }
-        }*/
-        viewModel.errorInputTimes
-            .onEach {
-                binding.tilTimes.error = if (it) {
-                    getString(R.string.error_input_times)
-                } else {
-                    null
-                }
-            }.launchWhenStarted(lifecycleScope)
-        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            findNavController().popBackStack()
         }
     }
 
@@ -230,15 +201,45 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         val editText = EditText(context)
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {resFun}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                resFun
+            }
             override fun afterTextChanged(p0: Editable?) {}
         })
     }
 
     private fun addTextChangeListeners() {
-        binding.etSets.textChangedListener(viewModel.resetErrorInputSets())
+        /*binding.etSets.textChangedListener(viewModel.resetErrorInputSets())
         binding.etTitle.textChangedListener(viewModel.resetErrorInputTitle())
-        binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())
+        binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())*/
+
+        binding.etSets.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputSets()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+        binding.etTitle.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTitle()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+        binding.etTimes.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTimes()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
     }
 
     private fun startTimer() {
