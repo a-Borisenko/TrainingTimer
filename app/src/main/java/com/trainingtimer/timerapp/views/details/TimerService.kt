@@ -54,7 +54,7 @@ class TimerService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
             .setOngoing(true)
-            .setContentText(TrainingUtils.timeLongToString(secRemain))
+            .setContentText(timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
             .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

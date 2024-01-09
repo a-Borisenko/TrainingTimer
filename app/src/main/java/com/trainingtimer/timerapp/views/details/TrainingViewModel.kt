@@ -67,7 +67,7 @@ class TrainingViewModel : ViewModel() {
             _sets.value = it.sets.toString()
             _title.value = it.title
             _times.value = it.times.drop(1)
-            _secRemain.value = TrainingUtils.timeStringToLong(it.rest)
+            _secRemain.value = timeStringToLong(it.rest)
         }
     }
 

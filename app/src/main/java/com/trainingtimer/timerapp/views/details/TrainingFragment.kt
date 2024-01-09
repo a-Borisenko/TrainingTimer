@@ -1,20 +1,13 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -23,9 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.foundation.domain.Training
-import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.launchWhenStarted
-import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeLongToString
-import com.trainingtimer.timerapp.views.details.TrainingUtils.Companion.timeStringToLong
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 import kotlinx.coroutines.flow.onEach
 
@@ -177,27 +167,20 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         viewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
                 with(binding) {
-                    tilSets.isVisible = false
-                    tilTitle.isVisible = false
-                    tilTimes.isVisible = false
-                    viewTimer.isVisible = false
-                    trainingBtn.isVisible = false
-                    countdownBar.isVisible = false
-                    progressBar.isVisible = true
+                    tilSets.hide()
+                    tilTitle.hide()
+                    tilTimes.hide()
+                    viewTimer.hide()
+                    trainingBtn.hide()
+                    countdownBar.hide()
+                    progressBar.show()
                 }
                 requireActivity().hideKeyboard(requireView())
             }
         }
     }
 
-    //TODO #2: no need, suspending move to List
-    private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager =
-            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    private fun EditText.textChangedListener(resFun: Unit) {
+    /*private fun EditText.textChangedListener(resFun: Unit) {
         val editText = EditText(context)
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -206,14 +189,24 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
             override fun afterTextChanged(p0: Editable?) {}
         })
-    }
+    }*/
 
     private fun addTextChangeListeners() {
         /*binding.etSets.textChangedListener(viewModel.resetErrorInputSets())
         binding.etTitle.textChangedListener(viewModel.resetErrorInputTitle())
         binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())*/
 
-        binding.etSets.addTextChangedListener(object : TextWatcher{
+        binding.etSets.onChange {
+            viewModel.resetErrorInputSets()
+        }
+        binding.etTitle.onChange {
+            viewModel.resetErrorInputTitle()
+        }
+        binding.etTimes.onChange {
+            viewModel.resetErrorInputTimes()
+        }
+
+        /*binding.etSets.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -239,7 +232,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
 
             override fun afterTextChanged(p0: Editable?) {}
-        })
+        })*/
     }
 
     private fun startTimer() {
