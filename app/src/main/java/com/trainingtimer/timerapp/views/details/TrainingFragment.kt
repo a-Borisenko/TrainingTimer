@@ -180,22 +180,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    /*private fun EditText.textChangedListener(resFun: Unit) {
-        val editText = EditText(context)
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                resFun
-            }
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-    }*/
-
     private fun addTextChangeListeners() {
-        /*binding.etSets.textChangedListener(viewModel.resetErrorInputSets())
-        binding.etTitle.textChangedListener(viewModel.resetErrorInputTitle())
-        binding.etTimes.textChangedListener(viewModel.resetErrorInputTimes())*/
-
         binding.etSets.onChange {
             viewModel.resetErrorInputSets()
         }
@@ -205,34 +190,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.etTimes.onChange {
             viewModel.resetErrorInputTimes()
         }
-
-        /*binding.etSets.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputSets()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etTitle.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputTitle()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-        binding.etTimes.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputTimes()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })*/
     }
 
     private fun startTimer() {
