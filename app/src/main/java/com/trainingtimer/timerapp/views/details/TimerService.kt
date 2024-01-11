@@ -13,6 +13,9 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class TimerService : Service() {
 
@@ -39,6 +42,7 @@ class TimerService : Service() {
                 isCounting = true
                 updateNotification()
                 _secRemainLD.postValue(secRemain)
+                _secRem.value = secRemain
                 _progressLD.postValue(progress)
             }
             override fun onFinish() {
@@ -87,6 +91,9 @@ class TimerService : Service() {
         private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD
+
+        private val _secRem = MutableStateFlow(0L)
+        val secRem: StateFlow<Long> = _secRem.asStateFlow()
 
         private val _progressLD = MutableLiveData<Float>()
         val progressLD: LiveData<Float>
