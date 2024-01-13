@@ -26,6 +26,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private lateinit var binding: FragmentTrainingBinding
     private lateinit var viewModel: TrainingViewModel
+//    override val viewModel by screenViewModel<TrainingViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

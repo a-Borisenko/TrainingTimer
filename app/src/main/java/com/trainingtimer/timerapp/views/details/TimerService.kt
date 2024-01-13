@@ -13,14 +13,19 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
-class TimerService : Service() {
+class TimerService : Service(), TimeService {
 
     private var secRemain: Long = 0
     private var step = 0f
+    private val secRemainFlow = MutableSharedFlow<Long>(
+        replay = 0, // do not send events to new subscribers which have been emitted before subscription
+        extraBufferCapacity = 1, // min. buffer capacity for using DROP_OLDEST overflow policy
+        onBufferOverflow = BufferOverflow.DROP_OLDEST // newest item will replace oldest item in case of buffer overflow
+    )
 
     private lateinit var notificationManager: NotificationManager
 
@@ -42,7 +47,6 @@ class TimerService : Service() {
                 isCounting = true
                 updateNotification()
                 _secRemainLD.postValue(secRemain)
-                _secRem.value = secRemain
                 _progressLD.postValue(progress)
             }
             override fun onFinish() {
@@ -53,6 +57,8 @@ class TimerService : Service() {
         }.start()
         return super.onStartCommand(intent, flags, startId)
     }
+
+    override fun listenCurrentTime(): Flow<Long> = secRemainFlow
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
@@ -91,9 +97,6 @@ class TimerService : Service() {
         private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD
-
-        private val _secRem = MutableStateFlow(0L)
-        val secRem: StateFlow<Long> = _secRem.asStateFlow()
 
         private val _progressLD = MutableLiveData<Float>()
         val progressLD: LiveData<Float>

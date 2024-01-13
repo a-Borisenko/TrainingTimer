@@ -1,5 +1,6 @@
 package com.trainingtimer.timerapp.views.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -12,18 +13,14 @@ import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
-import kotlinx.coroutines.flow.SharingStarted.Companion.Lazily
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TrainingViewModel : ViewModel() {
+class TrainingViewModel(
+    private val timeService: TimeService
+) : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
@@ -77,9 +74,9 @@ class TrainingViewModel : ViewModel() {
         }
     }
 
-    private val serviceTime = Observer<Long> {
+    /*private val serviceTime = Observer<Long> {
         _secRemain.value = it
-    }
+    }*/
 
     private val serviceProgress = Observer<Float> {
         _progress.value = it
@@ -90,29 +87,21 @@ class TrainingViewModel : ViewModel() {
     }
 
 
+    init {
+        viewModelScope.launch {
+            timeService.listenCurrentTime().collect {
+                Log.d("TrainingViewModel", "received $it")
+                Log.d("TrainingViewModel", "flow sec = ${_secRemain.value}")
+//                _secRemain.value = it
+            }
+        }
+    }
 
     fun start(id: Int) {
 //        TimerService.secRemainLD.observeForever(serviceTime)
         TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
-        val time: Flow<Long?> =
-            TimerService.secRem.map { _secRemain.value }
-
-        /*val result: StateFlow<Result> = time.flatMapLatest { newUserId ->
-            repository.observeItem(newUserId)
-        }.stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000L),
-            initialValue = Result.Loading
-        )*/
-
-//        val flow = MutableStateFlow(STATUS_DATA)
-
-//        var time = flow
-
-        var time2 = TimerService.secRem
-            .stateIn(viewModelScope, started = Eagerly, 0L).map { _secRemain.value = it }
 
         if (_secRemain.value == 0L) {
             _progress.value = 0f
