@@ -1,6 +1,5 @@
 package com.trainingtimer.timerapp.views.details
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -13,9 +12,14 @@ import com.trainingtimer.foundation.domain.GetTrainingListUseCase
 import com.trainingtimer.foundation.domain.GetTrainingUseCase
 import com.trainingtimer.foundation.domain.Training
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class TrainingViewModel(
@@ -50,6 +54,10 @@ class TrainingViewModel(
 
     private val _secRemain = MutableStateFlow(0L)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
+
+    /*val secRem: SharedFlow<Long> = flow {
+        emit(100L)
+    }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)*/
 
     private val _progress = MutableStateFlow(0F)
     val progress: StateFlow<Float> = _progress.asStateFlow()
@@ -90,9 +98,7 @@ class TrainingViewModel(
     init {
         viewModelScope.launch {
             timeService.listenCurrentTime().collect {
-                Log.d("TrainingViewModel", "received $it")
-                Log.d("TrainingViewModel", "flow sec = ${_secRemain.value}")
-//                _secRemain.value = it
+                _secRemain.value = it
             }
         }
     }
