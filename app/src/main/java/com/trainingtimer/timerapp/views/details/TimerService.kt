@@ -46,7 +46,7 @@ class TimerService : Service(), TimeService {
                 progress -= step
                 isCounting = true
                 updateNotification()
-                _secRemainLD.postValue(secRemain)
+//                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
             }
             override fun onFinish() {
@@ -94,9 +94,9 @@ class TimerService : Service(), TimeService {
         const val CHANNEL_ID = "NotificationChannelID"
         var isCounting = false
 
-        private val _secRemainLD = MutableLiveData<Long>()
+        /*private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
-            get() = _secRemainLD
+            get() = _secRemainLD*/
 
         private val _progressLD = MutableLiveData<Float>()
         val progressLD: LiveData<Float>
