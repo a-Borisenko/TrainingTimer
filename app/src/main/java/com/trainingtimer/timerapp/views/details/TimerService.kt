@@ -22,9 +22,9 @@ class TimerService : Service(), TimeService {
     private var secRemain: Long = 0
     private var step = 0f
     private val secRemainFlow = MutableSharedFlow<Long>(
-        replay = 0, // do not send events to new subscribers which have been emitted before subscription
-        extraBufferCapacity = 1, // min. buffer capacity for using DROP_OLDEST overflow policy
-        onBufferOverflow = BufferOverflow.DROP_OLDEST // newest item will replace oldest item in case of buffer overflow
+        replay = 0, //do not send events to new subscribers which have been emitted before subscription
+        extraBufferCapacity = 1, //min. buffer capacity for using DROP_OLDEST overflow policy
+        onBufferOverflow = BufferOverflow.DROP_OLDEST //newest item will replace oldest item in case of buffer overflow
     )
 
     private lateinit var notificationManager: NotificationManager
