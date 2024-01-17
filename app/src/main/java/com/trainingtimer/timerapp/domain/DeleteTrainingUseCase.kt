@@ -1,4 +1,4 @@
-package com.trainingtimer.foundation.domain
+package com.trainingtimer.timerapp.domain
 
 class DeleteTrainingUseCase(private val trainingRepository: TrainingRepository) {
 

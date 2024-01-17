@@ -1,7 +1,7 @@
 package com.trainingtimer.timerapp
 
 import android.app.Application
-import com.trainingtimer.foundation.data.TrainingRepositoryImpl
+import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
 
 class App : Application() {
 

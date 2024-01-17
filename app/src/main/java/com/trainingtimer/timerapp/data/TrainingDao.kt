@@ -1,4 +1,4 @@
-package com.trainingtimer.foundation.data
+package com.trainingtimer.timerapp.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -6,7 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.domain.Training
 
 @Dao
 interface TrainingDao {

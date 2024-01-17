@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
-import com.trainingtimer.foundation.domain.Training.Companion.UNDEFINED_ID
+import com.trainingtimer.timerapp.domain.Training.Companion.UNDEFINED_ID
 
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 

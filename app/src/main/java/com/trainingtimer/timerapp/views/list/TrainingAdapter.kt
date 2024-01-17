@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.ListItemTrainingBinding
-import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.domain.Training
 
 class TrainingAdapter : ListAdapter<Training, TrainingViewHolder>(TrainingDiffCallback()) {
 
