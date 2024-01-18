@@ -9,13 +9,13 @@ import android.view.View
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.foundation.views.screenViewModel
+import com.trainingtimer.timerapp.domain.Training
 import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
 import kotlinx.coroutines.flow.onEach
 
@@ -23,11 +23,11 @@ import kotlinx.coroutines.flow.onEach
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
-    private val viewModel by viewModels<TrainingViewModel>()
+//    private val viewModel by viewModels<TrainingViewModel>()
+    private val viewModel by screenViewModel<TrainingViewModel>()
 
     private lateinit var binding: FragmentTrainingBinding
 //    private lateinit var viewModel: TrainingViewModel
-//    override val viewModel by screenViewModel<TrainingViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
