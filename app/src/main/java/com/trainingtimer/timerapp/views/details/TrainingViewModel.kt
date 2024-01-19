@@ -5,24 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trainingtimer.foundation.data.TrainingRepositoryImpl
-import com.trainingtimer.foundation.domain.AddTrainingUseCase
-import com.trainingtimer.foundation.domain.EditTrainingUseCase
-import com.trainingtimer.foundation.domain.GetTrainingListUseCase
-import com.trainingtimer.foundation.domain.GetTrainingUseCase
-import com.trainingtimer.foundation.domain.Training
+import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
+import com.trainingtimer.timerapp.domain.AddTrainingUseCase
+import com.trainingtimer.timerapp.domain.EditTrainingUseCase
+import com.trainingtimer.timerapp.domain.GetTrainingListUseCase
+import com.trainingtimer.timerapp.domain.GetTrainingUseCase
+import com.trainingtimer.timerapp.domain.Training
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TrainingViewModel(
+@HiltViewModel
+class TrainingViewModel @Inject constructor(
     private val timeService: TimeService
 ) : ViewModel() {
 
