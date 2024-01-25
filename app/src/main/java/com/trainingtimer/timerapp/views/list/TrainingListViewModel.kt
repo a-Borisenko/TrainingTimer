@@ -5,7 +5,9 @@ import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
 import com.trainingtimer.timerapp.domain.DeleteTrainingUseCase
 import com.trainingtimer.timerapp.domain.GetTrainingListUseCase
 import com.trainingtimer.timerapp.domain.Training
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+@HiltViewModel
 class TrainingListViewModel : ViewModel() {
 
     //import data.TrainingListRepositoryImpl
