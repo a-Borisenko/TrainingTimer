@@ -24,14 +24,14 @@ import kotlinx.coroutines.flow.onEach
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
-    /*private val viewModel: TrainingViewModel by viewModels {
+    private val viewModel: TrainingViewModel by viewModels() /*{
         factory.create(trainingId)
     }*/
-    private val viewModel: TrainingViewModel by lazy {
+    /*private val viewModel: TrainingViewModel by lazy {
         val viewModel: TrainingViewModel by viewModels()
 //        viewModel.trainingId = trainingId
         viewModel
-    }
+    }*/
 //    private val viewModel by screenViewModel<TrainingViewModel>()
 
 //    @Inject
