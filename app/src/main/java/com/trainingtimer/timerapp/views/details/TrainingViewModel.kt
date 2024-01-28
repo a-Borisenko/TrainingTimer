@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val timeService: TimeService
+    private val timerService: TimerService
 ) : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
@@ -95,7 +95,7 @@ class TrainingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            timeService.listenCurrentTime().collect {
+            timerService.listenCurrentTime().collect {
                 _secRemain.value = it
             }
         }

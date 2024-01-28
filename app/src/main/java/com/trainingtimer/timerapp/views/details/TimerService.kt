@@ -13,11 +13,17 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import javax.inject.Inject
 
-class TimerService : Service(), TimeService {
+@DisableInstallInCheck
+@Module
+class TimerService @Inject constructor() : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
@@ -58,7 +64,8 @@ class TimerService : Service(), TimeService {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun listenCurrentTime(): Flow<Long> = secRemainFlow
+    @Provides
+    fun listenCurrentTime(): Flow<Long> = secRemainFlow
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)

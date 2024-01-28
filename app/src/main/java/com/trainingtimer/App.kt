@@ -1,4 +1,4 @@
-package com.trainingtimer.timerapp
+package com.trainingtimer
 
 import android.app.Application
 import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
