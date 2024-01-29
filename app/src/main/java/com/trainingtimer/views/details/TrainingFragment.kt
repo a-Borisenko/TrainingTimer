@@ -1,4 +1,4 @@
-package com.trainingtimer.timerapp.views.details
+package com.trainingtimer.views.details
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,8 +15,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.timerapp.domain.Training
-import com.trainingtimer.timerapp.views.timepicker.TimePickerFragment
+import com.trainingtimer.domain.Training
+import com.trainingtimer.views.timepicker.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -24,26 +24,13 @@ import kotlinx.coroutines.flow.onEach
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private var trainingId = Training.UNDEFINED_ID
-    private val viewModel: TrainingViewModel by viewModels() /*{
-        factory.create(trainingId)
-    }*/
-    /*private val viewModel: TrainingViewModel by lazy {
-        val viewModel: TrainingViewModel by viewModels()
-//        viewModel.trainingId = trainingId
-        viewModel
-    }*/
-//    private val viewModel by screenViewModel<TrainingViewModel>()
-
-//    @Inject
-//    lateinit var factory: ViewModelFactory.Factory
+    private val viewModel: TrainingViewModel by viewModels()
 
     private lateinit var binding: FragmentTrainingBinding
-//    private lateinit var viewModel: TrainingViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-//        viewModel = ViewModelProvider(this)[TrainingViewModel::class.java]
         trainingId = requireArguments().getInt("id")
         viewModel.start(trainingId)
 

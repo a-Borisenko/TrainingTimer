@@ -1,10 +1,10 @@
-package com.trainingtimer.timerapp.views.list
+package com.trainingtimer.views.list
 
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
-import com.trainingtimer.timerapp.domain.DeleteTrainingUseCase
-import com.trainingtimer.timerapp.domain.GetTrainingListUseCase
-import com.trainingtimer.timerapp.domain.Training
+import com.trainingtimer.data.TrainingRepositoryImpl
+import com.trainingtimer.domain.DeleteTrainingUseCase
+import com.trainingtimer.domain.GetTrainingListUseCase
+import com.trainingtimer.domain.Training
 
 class TrainingListViewModel : ViewModel() {
 

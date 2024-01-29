@@ -1,4 +1,4 @@
-package com.trainingtimer.timerapp.views.list
+package com.trainingtimer.views.list
 
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.databinding.ListItemTrainingBinding

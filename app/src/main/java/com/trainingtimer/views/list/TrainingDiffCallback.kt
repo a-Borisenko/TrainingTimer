@@ -1,7 +1,7 @@
-package com.trainingtimer.timerapp.views.list
+package com.trainingtimer.views.list
 
 import androidx.recyclerview.widget.DiffUtil
-import com.trainingtimer.timerapp.domain.Training
+import com.trainingtimer.domain.Training
 
 class TrainingDiffCallback: DiffUtil.ItemCallback<Training>() {
 

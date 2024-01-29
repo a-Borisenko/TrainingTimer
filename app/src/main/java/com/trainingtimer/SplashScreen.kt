@@ -1,9 +1,9 @@
-package com.trainingtimer.timerapp
+package com.trainingtimer
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import com.trainingtimer.databinding.SplashScreenBinding
 
 class SplashScreen : AppCompatActivity() {

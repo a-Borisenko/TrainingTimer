@@ -1,7 +1,7 @@
 package com.trainingtimer
 
 import android.app.Application
-import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
+import com.trainingtimer.data.TrainingRepositoryImpl
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

@@ -11,7 +11,7 @@
         android:theme="@style/Theme.TrainingTimer">
 
         <activity
-            android:name=".timerapp.SplashScreen"
+            android:name=".SplashScreen"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -21,10 +21,10 @@
         </activity>
 
         <activity
-            android:name=".timerapp.MainActivity">
+            android:name=".MainActivity">
         </activity>
 
-        <service android:name=".timerapp.views.details.TimerService"/>
+        <service android:name=".views.details.TimerService"/>
     </application>
 
 </manifest>

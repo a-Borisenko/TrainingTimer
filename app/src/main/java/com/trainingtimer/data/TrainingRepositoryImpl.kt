@@ -1,10 +1,10 @@
-package com.trainingtimer.timerapp.data
+package com.trainingtimer.data
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
-import com.trainingtimer.timerapp.domain.Training
-import com.trainingtimer.timerapp.domain.TrainingRepository
+import com.trainingtimer.domain.Training
+import com.trainingtimer.domain.TrainingRepository
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "training-database"

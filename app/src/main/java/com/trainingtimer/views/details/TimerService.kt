@@ -1,4 +1,4 @@
-package com.trainingtimer.timerapp.views.details
+package com.trainingtimer.views.details
 
 import android.app.Notification
 import android.app.NotificationChannel

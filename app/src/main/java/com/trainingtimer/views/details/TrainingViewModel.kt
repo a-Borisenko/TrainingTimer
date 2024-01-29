@@ -1,16 +1,16 @@
-package com.trainingtimer.timerapp.views.details
+package com.trainingtimer.views.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trainingtimer.timerapp.data.TrainingRepositoryImpl
-import com.trainingtimer.timerapp.domain.AddTrainingUseCase
-import com.trainingtimer.timerapp.domain.EditTrainingUseCase
-import com.trainingtimer.timerapp.domain.GetTrainingListUseCase
-import com.trainingtimer.timerapp.domain.GetTrainingUseCase
-import com.trainingtimer.timerapp.domain.Training
+import com.trainingtimer.data.TrainingRepositoryImpl
+import com.trainingtimer.domain.AddTrainingUseCase
+import com.trainingtimer.domain.EditTrainingUseCase
+import com.trainingtimer.domain.GetTrainingListUseCase
+import com.trainingtimer.domain.GetTrainingUseCase
+import com.trainingtimer.domain.Training
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
