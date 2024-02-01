@@ -149,7 +149,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
-    //dataFlow 1:11:42; launchController 1:25:48
+    //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
 
     private fun trainingClickData() {
         hideView()
