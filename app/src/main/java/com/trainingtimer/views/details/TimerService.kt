@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,6 +20,7 @@ import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @DisableInstallInCheck
@@ -52,6 +54,9 @@ class TimerService @Inject constructor() : Service() {
                 progress -= step
                 isCounting = true
                 updateNotification()
+                flow<Long> {
+                    secRemainFlow.emit(secRemain)
+                }
 //                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
             }
@@ -65,7 +70,10 @@ class TimerService @Inject constructor() : Service() {
     }
 
     @Provides
-    fun listenCurrentTime(): Flow<Long> = secRemainFlow
+    fun listenCurrentTime(): Flow<Long> {
+        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
+        return secRemainFlow
+    }
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
