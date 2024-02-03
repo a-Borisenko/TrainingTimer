@@ -94,9 +94,11 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
+        /*flow<Long> {
+            timerService.listenCurrentTime()
+        }*/
         viewModelScope.launch {
             timerService.listenCurrentTime().collect {
-//                emit(it)
                 _secRemain.value = it
             }
         }
