@@ -59,6 +59,7 @@ class TimerService @Inject constructor() : Service() {
                 }
 //                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
+                Log.d("TimerService", "secRemainFlow = $secRemainFlow")
             }
             override fun onFinish() {
                 isCounting = false
@@ -71,7 +72,7 @@ class TimerService @Inject constructor() : Service() {
 
     @Provides
     fun listenCurrentTime(): Flow<Long> {
-        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
+//        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
         return secRemainFlow
     }
 
