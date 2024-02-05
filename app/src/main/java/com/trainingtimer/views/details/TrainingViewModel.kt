@@ -1,5 +1,6 @@
 package com.trainingtimer.views.details
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -98,9 +99,13 @@ class TrainingViewModel @Inject constructor(
             timerService.listenCurrentTime()
         }*/
         viewModelScope.launch {
-            timerService.listenCurrentTime().collect {
+            secRemain.collect {
                 _secRemain.value = it
+                Log.d("ViewModel", "secRemain = ${_secRemain.value}")
             }
+            /*timerService.listenCurrentTime().collect {
+                _secRemain.value = it
+            }*/
         }
     }
 
