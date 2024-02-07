@@ -20,20 +20,21 @@ import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-@DisableInstallInCheck
-@Module
-class TimerService @Inject constructor() : Service() {
+//@DisableInstallInCheck
+//@Module
+class TimerService /*@Inject constructor()*/ : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
-    private val secRemainFlow = MutableSharedFlow<Long>(
+    /*private val secRemainFlow = MutableSharedFlow<Long>(
         replay = 0, //do not send events to new subscribers which have been emitted before subscription
         extraBufferCapacity = 1, //min. buffer capacity for using DROP_OLDEST overflow policy
         onBufferOverflow = BufferOverflow.DROP_OLDEST //newest item will replace oldest item in case of buffer overflow
-    )
+    )*/
 
     private lateinit var notificationManager: NotificationManager
 
@@ -54,12 +55,10 @@ class TimerService @Inject constructor() : Service() {
                 progress -= step
                 isCounting = true
                 updateNotification()
-                flow<Long> {
-                    secRemainFlow.emit(secRemain)
-                    Log.d("TimerService", "secRemainFlow = ${secRemainFlow.emit(secRemain)}")
-                }
+                timeFlow(secRemain)
 //                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
+                Log.d("onTick", "secRemain = $secRemain")
             }
             override fun onFinish() {
                 isCounting = false
@@ -70,11 +69,16 @@ class TimerService @Inject constructor() : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    @Provides
-    fun listenCurrentTime(): Flow<Long> {
-//        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
-        return secRemainFlow
+    fun timeFlow(sec: Long) = flow {
+        emit(sec)
+        Log.d("timeFlow", "emit ${emit(sec)}")
     }
+
+    /*@Provides
+    fun listenCurrentTime(): Flow<Long> {
+        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
+        return secRemainFlow
+    }*/
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)

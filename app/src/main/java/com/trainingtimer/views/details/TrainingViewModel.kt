@@ -20,10 +20,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class TrainingViewModel @Inject constructor(
+//@HiltViewModel
+class TrainingViewModel/* @Inject constructor(
     private val timerService: TimerService
-) : ViewModel() {
+)*/ : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
