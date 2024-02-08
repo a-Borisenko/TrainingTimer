@@ -17,11 +17,15 @@ import com.trainingtimer.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 
 //@DisableInstallInCheck
@@ -73,6 +77,7 @@ class TimerService /*@Inject constructor()*/ : Service() {
         emit(sec)
         Log.d("timeFlow", "emit ${emit(sec)}")
     }
+        .launchIn(CoroutineScope(Dispatchers.Default))
 
     /*@Provides
     fun listenCurrentTime(): Flow<Long> {
