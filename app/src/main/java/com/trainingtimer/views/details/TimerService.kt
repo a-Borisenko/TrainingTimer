@@ -20,6 +20,7 @@ import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -52,6 +53,7 @@ class TimerService /*@Inject constructor()*/ : Service() {
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progress = 100f
         step = progress / (secRemain.toFloat())
+        timeFlow(secRemain)
 
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -59,7 +61,7 @@ class TimerService /*@Inject constructor()*/ : Service() {
                 progress -= step
                 isCounting = true
                 updateNotification()
-                timeFlow(secRemain)
+
 //                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
                 Log.d("onTick", "secRemain = $secRemain")
@@ -74,8 +76,13 @@ class TimerService /*@Inject constructor()*/ : Service() {
     }
 
     fun timeFlow(sec: Long) = flow {
-        emit(sec)
-        Log.d("timeFlow", "emit ${emit(sec)}")
+        delay(1000)
+        for (time in sec..0) {
+            emit(time)
+            delay(1000)
+            Log.d("timeFlow", "emit ${emit(time)}")
+        }
+//        emit(sec)
     }
         .launchIn(CoroutineScope(Dispatchers.Default))
 
