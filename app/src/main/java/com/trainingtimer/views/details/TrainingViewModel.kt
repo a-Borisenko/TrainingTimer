@@ -13,17 +13,20 @@ import com.trainingtimer.domain.GetTrainingListUseCase
 import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@HiltViewModel
-class TrainingViewModel/* @Inject constructor(
+@HiltViewModel
+class TrainingViewModel @Inject constructor(
     private val timerService: TimerService
-)*/ : ViewModel() {
+) : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
     private val getTrainingUseCase = GetTrainingUseCase(repository)
@@ -95,17 +98,24 @@ class TrainingViewModel/* @Inject constructor(
 
 
     init {
-        /*flow<Long> {
-            timerService.listenCurrentTime()
-        }*/
-        viewModelScope.launch {
-            secRemain.collect {
+        CoroutineScope(Dispatchers.Default).launch {
+            timerService.secRemainFlow
+                .filter { it != 0L }
+                .collect {
                 _secRemain.value = it
-                Log.d("ViewModel", "secRemain = ${_secRemain.value}")
+                Log.d("ViewModel", "secRemain = $it")
             }
-            /*timerService.listenCurrentTime().collect {
-                _secRemain.value = it
-            }*/
+            /*flow<Long> {
+
+            }
+                .collect {
+                    _secRemain.value = it
+                    Log.d("ViewModel", "secRemain = $it")
+                }*/
+                /*.onEach {
+
+                }
+                .collect()*/
         }
     }
 

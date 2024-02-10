@@ -19,22 +19,26 @@ import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 
-//@DisableInstallInCheck
-//@Module
-class TimerService /*@Inject constructor()*/ : Service() {
+@DisableInstallInCheck
+@Module
+class TimerService @Inject constructor() : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
+
+    var secRemainFlow: Flow<Long> = flow {
+        for (time in secRemain..0) {
+            delay(1000)
+            emit(time)
+            Log.d("secRemainFlow", "emit ${emit(time)}")
+        }
+    }
     /*private val secRemainFlow = MutableSharedFlow<Long>(
         replay = 0, //do not send events to new subscribers which have been emitted before subscription
         extraBufferCapacity = 1, //min. buffer capacity for using DROP_OLDEST overflow policy
@@ -53,8 +57,14 @@ class TimerService /*@Inject constructor()*/ : Service() {
         secRemain = intent.getLongExtra("TimeValue", 0)
         var progress = 100f
         step = progress / (secRemain.toFloat())
-        timeFlow(secRemain)
-
+//        timeFlow(secRemain)
+        secRemainFlow = flow {
+            for (time in secRemain..0) {
+                delay(1000)
+                emit(time)
+                Log.d("secRemainFlow", "emit ${emit(time)}")
+            }
+        }
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 secRemain--
@@ -75,18 +85,16 @@ class TimerService /*@Inject constructor()*/ : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    @Provides
     fun timeFlow(sec: Long) = flow {
-        delay(1000)
         for (time in sec..0) {
-            emit(time)
             delay(1000)
+            emit(time)
             Log.d("timeFlow", "emit ${emit(time)}")
         }
-//        emit(sec)
-    }
-        .launchIn(CoroutineScope(Dispatchers.Default))
+    }.launchIn(CoroutineScope(Dispatchers.Default))
 
-    /*@Provides
+    /*
     fun listenCurrentTime(): Flow<Long> {
         Log.d("TimerService", "secRemainFlow = $secRemainFlow")
         return secRemainFlow
