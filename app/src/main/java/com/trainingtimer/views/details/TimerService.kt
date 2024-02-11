@@ -94,12 +94,6 @@ class TimerService @Inject constructor() : Service() {
         }
     }.launchIn(CoroutineScope(Dispatchers.Default))
 
-    /*
-    fun listenCurrentTime(): Flow<Long> {
-        Log.d("TimerService", "secRemainFlow = $secRemainFlow")
-        return secRemainFlow
-    }*/
-
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")

@@ -105,17 +105,6 @@ class TrainingViewModel @Inject constructor(
                 _secRemain.value = it
                 Log.d("ViewModel", "secRemain = $it")
             }
-            /*flow<Long> {
-
-            }
-                .collect {
-                    _secRemain.value = it
-                    Log.d("ViewModel", "secRemain = $it")
-                }*/
-                /*.onEach {
-
-                }
-                .collect()*/
         }
     }
 
