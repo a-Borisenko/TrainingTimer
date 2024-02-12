@@ -21,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
@@ -32,13 +34,17 @@ class TimerService @Inject constructor() : Service() {
     private var secRemain: Long = 0
     private var step = 0f
 
-    var secRemainFlow: Flow<Long> = flow {
+    private val _secRemainFlow = MutableSharedFlow<Long>(replay = 0)
+    val secRemainFlow: SharedFlow<Long> = _secRemainFlow
+
+//    lateinit var secRemainFlow: Flow<Long>
+    /*val secRemainFlow: Flow<Long> = flow {
         for (time in secRemain..0) {
             delay(1000)
             emit(time)
             Log.d("secRemainFlow", "emit ${emit(time)}")
         }
-    }
+    }*/
     /*private val secRemainFlow = MutableSharedFlow<Long>(
         replay = 0, //do not send events to new subscribers which have been emitted before subscription
         extraBufferCapacity = 1, //min. buffer capacity for using DROP_OLDEST overflow policy
@@ -58,13 +64,20 @@ class TimerService @Inject constructor() : Service() {
         var progress = 100f
         step = progress / (secRemain.toFloat())
 //        timeFlow(secRemain)
-        secRemainFlow = flow {
+        _secRemainFlow = flow {
             for (time in secRemain..0) {
                 delay(1000)
                 emit(time)
                 Log.d("secRemainFlow", "emit ${emit(time)}")
             }
         }
+        /*secRemainFlow.onEach {
+            for (time in secRemain..0) {
+                delay(1000)
+                emit(time)
+                Log.d("secRemainFlow", "emit $time")
+            }
+        }*/
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 secRemain--
