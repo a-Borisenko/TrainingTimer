@@ -31,7 +31,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-        trainingId = requireArguments().getInt("id")
+        trainingId = requireArguments().getInt("id")    // move to ViewModel
         viewModel.start(trainingId)
 
         setMenu()
@@ -39,9 +39,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setDialogFragmentListener()
         addTextChangeListeners()
         inputErrorsObserve()
-        timeObservers()
+        dataObservers()
     }
 
+    // change to ViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.saveState(
@@ -51,7 +52,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    private fun timeObservers() {
+    private fun dataObservers() {
         with(viewModel) {
             sets
                 .onEach {
@@ -192,10 +193,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         }
     }
 
+    // move to ViewModel
     private fun startTimer() {
         val intentService = Intent(context, TimerService::class.java)
         intentService.putExtra("TimeValue", timeStringToLong(binding.viewTimer.text.toString()))
         requireActivity().startService(intentService)
+        viewModel.timerStart()
     }
 
     /*private fun isClickable(status: Boolean) {

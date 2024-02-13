@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @DisableInstallInCheck
@@ -64,13 +65,13 @@ class TimerService @Inject constructor() : Service() {
         var progress = 100f
         step = progress / (secRemain.toFloat())
 //        timeFlow(secRemain)
-        _secRemainFlow = flow {
-            for (time in secRemain..0) {
-                delay(1000)
+        _secRemainFlow.onStart {
+            for (time in (secRemain - 1) downTo 0L) {
                 emit(time)
-                Log.d("secRemainFlow", "emit ${emit(time)}")
+                Log.d("secRemainFlow", "emit $time")
+                delay(1000)
             }
-        }
+        }.launchIn(CoroutineScope(Dispatchers.Default))
         /*secRemainFlow.onEach {
             for (time in secRemain..0) {
                 delay(1000)

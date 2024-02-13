@@ -16,10 +16,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -97,15 +103,37 @@ class TrainingViewModel @Inject constructor(
     }
 
 
-    init {
+    /*init {
         CoroutineScope(Dispatchers.Default).launch {
-            timerService.secRemainFlow
+            timerService._secRemainFlow
                 .filter { it != 0L }
                 .collect {
                 _secRemain.value = it
                 Log.d("ViewModel", "secRemain = $it")
             }
         }
+    }*/
+
+    fun timerStart() {
+        Log.d("ViewModel", "fun started")
+        viewModelScope.launch {
+            Log.d("ViewModel", "flow collector started")
+            timerService.secRemainFlow
+                .collect {
+                    Log.d("ViewModel", "secRemain = $it")
+                    _secRemain.value = it
+                }
+        }
+        /*_secRemain.onEach {
+            Log.d("ViewModel", "flow collector started")
+            timerService._secRemainFlow
+//                .filter { it != 0L }
+                .collect {
+                    Log.d("ViewModel", "secRemain = $it")
+//                    emit(it)
+                    _secRemain.value = it
+                }
+        }.launchIn(CoroutineScope(Dispatchers.Default))*/
     }
 
     fun start(id: Int) {
