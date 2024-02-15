@@ -19,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -34,7 +35,11 @@ class TimerService @Inject constructor() : Service() {
     private var secRemain: Long = 0
     private var step = 0f
 
-    private val _secRemainFlow = MutableSharedFlow<Long>(replay = 0)
+    private val _secRemainFlow = MutableSharedFlow<Long>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val secRemainFlow: SharedFlow<Long> = _secRemainFlow
 
 //    lateinit var secRemainFlow: Flow<Long>

@@ -15,11 +15,8 @@ import com.trainingtimer.domain.Training
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -108,13 +105,13 @@ class TrainingViewModel @Inject constructor(
         }
     }*/
 
-    val result: StateFlow<Any> = flow {
+    /*val result: StateFlow<Any> = flow {
         emit(timerService.timeFlow())
     }.stateIn(
         scope = viewModelScope,
         started = WhileSubscribed(5000),
         initialValue = 0L
-    )
+    )*/
 
     fun timerStart() {
         Log.d("ViewModel", "fun started")
