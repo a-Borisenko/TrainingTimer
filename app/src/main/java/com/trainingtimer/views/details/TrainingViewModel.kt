@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -94,16 +95,24 @@ class TrainingViewModel @Inject constructor(
     }
 
 
-    /*init {
-        CoroutineScope(Dispatchers.Default).launch {
+    init {
+        viewModelScope.launch {
+            Log.d("ViewModel - init", "flow collector started")
+            timerService.timeFlow()
+                .collect {
+                    Log.d("ViewModel - init", "secRemain = $it")
+                    _secRemain.value = it
+                }
+        }
+        /*CoroutineScope(Dispatchers.Default).launch {
             timerService._secRemainFlow
                 .filter { it != 0L }
                 .collect {
                 _secRemain.value = it
                 Log.d("ViewModel", "secRemain = $it")
             }
-        }
-    }*/
+        }*/
+    }
 
     /*val result: StateFlow<Any> = flow {
         emit(timerService.timeFlow())
@@ -114,12 +123,17 @@ class TrainingViewModel @Inject constructor(
     )*/
 
     fun timerStart() {
-        Log.d("ViewModel", "fun started")
+        Log.d("ViewModel - timerStart", "fun started")
         viewModelScope.launch {
-            Log.d("ViewModel", "flow collector started")
-            timerService.secRemainFlow
+            Log.d("ViewModel - timerStart", "flow collector started")
+            /*timerService.timeFlow()
                 .collect {
-                    Log.d("ViewModel", "secRemain = $it")
+                    Log.d("ViewModel - timerStart", "secRemain = $it")
+                    _secRemain.value = it
+                }*/
+            TimerService.secRemainF
+                .collect {
+                    Log.d("ViewModel - timerStart", "secRemain = $it")
                     _secRemain.value = it
                 }
         }
@@ -137,6 +151,13 @@ class TrainingViewModel @Inject constructor(
 
     fun start(id: Int) {
 //        TimerService.secRemainLD.observeForever(serviceTime)
+        viewModelScope.launch {
+            TimerService.secRemainF
+                .onEach {
+                    Log.d("ViewModel - F", "secRemain = $it")
+                    _secRemain.value = it
+                }
+        }
         TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 

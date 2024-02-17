@@ -19,11 +19,12 @@ import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
@@ -35,12 +36,8 @@ class TimerService @Inject constructor() : Service() {
     private var secRemain: Long = 0
     private var step = 0f
 
-    private val _secRemainFlow = MutableSharedFlow<Long>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-    val secRemainFlow: SharedFlow<Long> = _secRemainFlow
+    private val _secRemainFlow = MutableStateFlow(0L)
+    val secRemainFlow: StateFlow<Long> = _secRemainFlow
 
 //    lateinit var secRemainFlow: Flow<Long>
     /*val secRemainFlow: Flow<Long> = flow {
@@ -69,13 +66,14 @@ class TimerService @Inject constructor() : Service() {
         var progress = 100f
         step = progress / (secRemain.toFloat())
 //        timeFlow()
-        _secRemainFlow.onStart {
-            for (time in (secRemain - 1) downTo 0L) {
-                emit(time)
-                Log.d("secRemainFlow", "emit $time")
+        _secRemainF.onStart {
+            while (secRemain > 0L) {
+                secRemain--
                 delay(1000)
+                emit(secRemain)
+                Log.d("secRemainFlow", "emit $secRemain")
             }
-        }.launchIn(CoroutineScope(Dispatchers.Default))
+        }.launchIn(CoroutineScope(Dispatchers.IO))
 
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -98,12 +96,12 @@ class TimerService @Inject constructor() : Service() {
 
     @Provides
     fun timeFlow() = flow {
-        for (time in (secRemain - 1) downTo 0L) {
+        while (secRemain > 0L) {
             delay(1000)
-            emit(time)
-            Log.d("timeFlow", "emit $time")
+            emit(secRemain)
+            Log.d("timeFlow", "emit $secRemain")
         }
-    }.launchIn(CoroutineScope(Dispatchers.Default))
+    }.flowOn(Dispatchers.IO)
 
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
@@ -138,6 +136,9 @@ class TimerService @Inject constructor() : Service() {
     companion object {
         const val CHANNEL_ID = "NotificationChannelID"
         var isCounting = false
+
+        private val _secRemainF = MutableStateFlow(0L)
+        val secRemainF: StateFlow<Long> = _secRemainF.asStateFlow()
 
         /*private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
