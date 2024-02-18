@@ -68,8 +68,8 @@ class TimerService @Inject constructor() : Service() {
 //        timeFlow()
         _secRemainF.onStart {
             while (secRemain > 0L) {
-                secRemain--
                 delay(1000)
+                _secRemainFlow.value = secRemain--
                 emit(secRemain)
                 Log.d("secRemainFlow", "emit $secRemain")
             }
@@ -77,7 +77,7 @@ class TimerService @Inject constructor() : Service() {
 
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                secRemain--
+//                secRemain--
                 progress -= step
                 isCounting = true
                 updateNotification()
