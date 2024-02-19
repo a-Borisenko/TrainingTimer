@@ -36,22 +36,9 @@ class TimerService @Inject constructor() : Service() {
     private var secRemain: Long = 0
     private var step = 0f
 
-    private val _secRemainFlow = MutableStateFlow(0L)
-    val secRemainFlow: StateFlow<Long> = _secRemainFlow
+//    private val _secRemainFlow = MutableStateFlow(0L)
+//    val secRemainFlow: StateFlow<Long> = _secRemainFlow
 
-//    lateinit var secRemainFlow: Flow<Long>
-    /*val secRemainFlow: Flow<Long> = flow {
-        for (time in secRemain..0) {
-            delay(1000)
-            emit(time)
-            Log.d("secRemainFlow", "emit ${emit(time)}")
-        }
-    }*/
-    /*private val secRemainFlow = MutableSharedFlow<Long>(
-        replay = 0, //do not send events to new subscribers which have been emitted before subscription
-        extraBufferCapacity = 1, //min. buffer capacity for using DROP_OLDEST overflow policy
-        onBufferOverflow = BufferOverflow.DROP_OLDEST //newest item will replace oldest item in case of buffer overflow
-    )*/
 
     private lateinit var notificationManager: NotificationManager
 
@@ -63,13 +50,14 @@ class TimerService @Inject constructor() : Service() {
         createNotificationChannel()
         startForeground(1, buildNotification())
         secRemain = intent.getLongExtra("TimeValue", 0)
+        timerInitValue = secRemain
         var progress = 100f
         step = progress / (secRemain.toFloat())
-//        timeFlow()
-        _secRemainF.onStart {
+
+        _secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)
-                _secRemainFlow.value = secRemain--
+                _secRemainFlow.value = --secRemain
                 emit(secRemain)
                 Log.d("secRemainFlow", "emit $secRemain")
             }
@@ -77,13 +65,11 @@ class TimerService @Inject constructor() : Service() {
 
         object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-//                secRemain--
                 progress -= step
                 isCounting = true
                 updateNotification()
 //                _secRemainLD.postValue(secRemain)
                 _progressLD.postValue(progress)
-                Log.d("onTick", "secRemain = $secRemain")
             }
             override fun onFinish() {
                 isCounting = false
@@ -98,8 +84,8 @@ class TimerService @Inject constructor() : Service() {
     fun timeFlow() = flow {
         while (secRemain > 0L) {
             delay(1000)
+            Log.d("timeFlow", "emit $secRemain")    //don't work
             emit(secRemain)
-            Log.d("timeFlow", "emit $secRemain")
         }
     }.flowOn(Dispatchers.IO)
 
@@ -136,9 +122,10 @@ class TimerService @Inject constructor() : Service() {
     companion object {
         const val CHANNEL_ID = "NotificationChannelID"
         var isCounting = false
+        var timerInitValue = 0L
 
-        private val _secRemainF = MutableStateFlow(0L)
-        val secRemainF: StateFlow<Long> = _secRemainF.asStateFlow()
+        private val _secRemainFlow = MutableStateFlow(timerInitValue)
+        val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
 
         /*private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
