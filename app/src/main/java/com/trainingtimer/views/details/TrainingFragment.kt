@@ -86,7 +86,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             viewModel.updateTime(bundle.getLong("time"))
-            viewModel.resetProgress()
+            viewModel.resetProgress(trainingId)
         }
     }
 

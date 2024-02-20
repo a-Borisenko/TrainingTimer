@@ -7,12 +7,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.trainingtimer.R
 import dagger.Module
 import dagger.Provides
@@ -36,10 +33,6 @@ class TimerService @Inject constructor() : Service() {
     private var secRemain: Long = 0
     private var step = 0f
 
-//    private val _secRemainFlow = MutableStateFlow(0L)
-//    val secRemainFlow: StateFlow<Long> = _secRemainFlow
-
-
     private lateinit var notificationManager: NotificationManager
 
     override fun onBind(p0: Intent): IBinder? {
@@ -58,25 +51,33 @@ class TimerService @Inject constructor() : Service() {
             while (secRemain > 0L) {
                 delay(1000)
                 _secRemainFlow.value = --secRemain
+                progress -= step
+                isCounting = true
+                updateNotification()
+                _progressFlow.value = progress
+                Log.d("TimerService", "sec = $secRemain; progr = $progress")
                 emit(secRemain)
-                Log.d("secRemainFlow", "emit $secRemain")
             }
+            isCounting = false
+            progress = 0f
+            notificationManager.cancelAll()
+            onDestroy()
         }.launchIn(CoroutineScope(Dispatchers.IO))
 
-        object : CountDownTimer(secRemain * 1000, 1000) {
+        /*object : CountDownTimer(secRemain * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 progress -= step
                 isCounting = true
                 updateNotification()
 //                _secRemainLD.postValue(secRemain)
-                _progressLD.postValue(progress)
+//                _progressLD.postValue(progress)
             }
             override fun onFinish() {
                 isCounting = false
                 notificationManager.cancelAll()
                 onDestroy()
             }
-        }.start()
+        }.start()*/
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -127,12 +128,15 @@ class TimerService @Inject constructor() : Service() {
         private val _secRemainFlow = MutableStateFlow(timerInitValue)
         val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
 
+        private val _progressFlow = MutableStateFlow(100f)
+        val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
+
         /*private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD*/
 
-        private val _progressLD = MutableLiveData<Float>()
+        /*private val _progressLD = MutableLiveData<Float>()
         val progressLD: LiveData<Float>
-            get() = _progressLD
+            get() = _progressLD*/
     }
 }

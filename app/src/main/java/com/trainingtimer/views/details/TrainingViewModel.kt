@@ -32,6 +32,7 @@ class TrainingViewModel @Inject constructor(
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     private var saveState = false
+    private var startProgress = 0F
     private var newId = 0
 
     private val _errorInputSets = MutableStateFlow(false)
@@ -51,14 +52,14 @@ class TrainingViewModel @Inject constructor(
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    private val _secRemain = MutableStateFlow(0L)
+    private val _secRemain = MutableStateFlow(TimerService.timerInitValue)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
 
     /*val secRem: SharedFlow<Long> = flow {
         emit(100L)
     }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)*/
 
-    private val _progress = MutableStateFlow(0F)
+    private val _progress = MutableStateFlow(startProgress)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
     private val _sets = MutableStateFlow("")
@@ -77,7 +78,9 @@ class TrainingViewModel @Inject constructor(
             _sets.value = it.sets.toString()
             _title.value = it.title
             _times.value = it.times.drop(1)
-            _secRemain.value = timeStringToLong(it.rest)
+            if (!TimerService.isCounting) {
+                _secRemain.value = timeStringToLong(it.rest)
+            }
         }
     }
 
@@ -85,9 +88,9 @@ class TrainingViewModel @Inject constructor(
         _secRemain.value = it
     }*/
 
-    private val serviceProgress = Observer<Float> {
+    /*private val serviceProgress = Observer<Float> {
         _progress.value = it
-    }
+    }*/
 
     private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
@@ -98,23 +101,28 @@ class TrainingViewModel @Inject constructor(
         viewModelScope.launch {
             TimerService.secRemainFlow
                 .collect {
-                    Log.d("ViewModel", "secRemain = $it")
                     _secRemain.value = it
+                }
+        }
+        viewModelScope.launch {
+            TimerService.progressFlow
+                .collect {
+                    _progress.value = it
                 }
         }
     }
 
     fun start(id: Int) {
 //        TimerService.secRemainLD.observeForever(serviceTime)
-        TimerService.progressLD.observeForever(serviceProgress)
+//        TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
 
         if (_secRemain.value == 0L) {
             _progress.value = 0f
-        } else {
+        } /*else {
             resetProgress()
-        }
+        }*/
 
         launchMode(id)
     }
@@ -122,7 +130,7 @@ class TrainingViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
 //        TimerService.secRemainLD.removeObserver(serviceTime)
-        TimerService.progressLD.removeObserver(serviceProgress)
+//        TimerService.progressLD.removeObserver(serviceProgress)
     }
 
     fun saveState(sets: String, title: String, times: String) {
@@ -136,11 +144,19 @@ class TrainingViewModel @Inject constructor(
         _secRemain.value = sec
     }
 
-    fun resetProgress() {
-        _progress.value = 100f
+    fun resetProgress(id: Int) {
+        if (id != Training.UNDEFINED_ID) {
+            _progress.value = 100f
+        } else {
+            _progress.value = 0f
+        }
+        Log.d("viewModel", "progress ${_progress.value}")
     }
 
     private fun launchMode(id: Int) {
+        if (!TimerService.isCounting) {
+            resetProgress(id)
+        }
         if (id != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(id).observeForever(trainingData)
         }
