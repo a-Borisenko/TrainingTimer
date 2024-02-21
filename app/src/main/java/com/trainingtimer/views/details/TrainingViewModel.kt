@@ -88,10 +88,6 @@ class TrainingViewModel @Inject constructor(
         _secRemain.value = it
     }*/
 
-    /*private val serviceProgress = Observer<Float> {
-        _progress.value = it
-    }*/
-
     private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
     }
@@ -114,23 +110,13 @@ class TrainingViewModel @Inject constructor(
 
     fun start(id: Int) {
 //        TimerService.secRemainLD.observeForever(serviceTime)
-//        TimerService.progressLD.observeForever(serviceProgress)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
-
 
         if (_secRemain.value == 0L) {
             _progress.value = 0f
-        } /*else {
-            resetProgress()
-        }*/
+        }
 
         launchMode(id)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-//        TimerService.secRemainLD.removeObserver(serviceTime)
-//        TimerService.progressLD.removeObserver(serviceProgress)
     }
 
     fun saveState(sets: String, title: String, times: String) {
