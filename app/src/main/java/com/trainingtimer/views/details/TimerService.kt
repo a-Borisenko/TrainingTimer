@@ -40,12 +40,20 @@ class TimerService @Inject constructor() : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        Log.d("TimerService", "Service started")
         createNotificationChannel()
         startForeground(1, buildNotification())
-        secRemain = intent.getLongExtra("TimeValue", 0)
+        secRemain = intent.getLongExtra(TIME_VALUE, 0)
+        val action = intent.getStringExtra(CURRENT_STATE)
         timerInitValue = secRemain
         var progress = 100f
         step = progress / (secRemain.toFloat())
+
+        /*when (action){
+            READY -> readyToCountdown()
+            COUNTING -> startCountdown()
+            FINISHED -> finishedCountdown()
+        }*/
 
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
@@ -64,22 +72,35 @@ class TimerService @Inject constructor() : Service() {
             onDestroy()
         }.launchIn(CoroutineScope(Dispatchers.IO))
 
-        /*object : CountDownTimer(secRemain * 1000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    /*private fun readyToCountdown() {
+        //
+    }
+
+    private fun finishedCountdown() {
+        isCounting = false
+        progress = 0f
+        notificationManager.cancelAll()
+        onDestroy()
+    }
+
+    private fun startCountdown() {
+        _secRemainFlow.onStart {
+            while (secRemain > 0L) {
+                delay(1000)
+                _secRemainFlow.value = --secRemain
                 progress -= step
                 isCounting = true
                 updateNotification()
-//                _secRemainLD.postValue(secRemain)
-//                _progressLD.postValue(progress)
+                _progressFlow.value = progress
+                Log.d("TimerService", "sec = $secRemain; progr = $progress")
+                emit(secRemain)
             }
-            override fun onFinish() {
-                isCounting = false
-                notificationManager.cancelAll()
-                onDestroy()
-            }
-        }.start()*/
-        return super.onStartCommand(intent, flags, startId)
-    }
+            finishedCountdown()
+        }.launchIn(CoroutineScope(Dispatchers.IO))
+    }*/
 
     @Provides
     fun timeFlow() = flow {
@@ -116,12 +137,12 @@ class TimerService @Inject constructor() : Service() {
     }
 
     override fun onDestroy() {
+        Log.d("TimerService", "Service Stopped")
         stopForeground(true)
         super.onDestroy()
     }
 
     companion object {
-        const val CHANNEL_ID = "NotificationChannelID"
         var isCounting = false
         var timerInitValue = 0L
 
@@ -134,9 +155,5 @@ class TimerService @Inject constructor() : Service() {
         /*private val _secRemainLD = MutableLiveData<Long>()
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD*/
-
-        /*private val _progressLD = MutableLiveData<Float>()
-        val progressLD: LiveData<Float>
-            get() = _progressLD*/
     }
 }
