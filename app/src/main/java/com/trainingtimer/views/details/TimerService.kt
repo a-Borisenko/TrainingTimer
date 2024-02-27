@@ -75,6 +75,33 @@ class TimerService @Inject constructor() : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    /*private fun readyToCountdown() {
+        //
+    }
+
+    private fun finishedCountdown() {
+        isCounting = false
+        progress = 0f
+        notificationManager.cancelAll()
+        onDestroy()
+    }
+
+    private fun startCountdown() {
+        _secRemainFlow.onStart {
+            while (secRemain > 0L) {
+                delay(1000)
+                _secRemainFlow.value = --secRemain
+                progress -= step
+                isCounting = true
+                updateNotification()
+                _progressFlow.value = progress
+                Log.d("TimerService", "sec = $secRemain; progr = $progress")
+                emit(secRemain)
+            }
+            finishedCountdown()
+        }.launchIn(CoroutineScope(Dispatchers.IO))
+    }*/
+
     @Provides
     fun timeFlow() = flow {
         while (secRemain > 0L) {
