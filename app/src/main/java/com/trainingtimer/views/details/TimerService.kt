@@ -26,12 +26,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
+@Suppress("DUPLICATE_LABEL_IN_WHEN")
 @DisableInstallInCheck
 @Module
 class TimerService @Inject constructor() : Service() {
 
     private var secRemain: Long = 0
     private var step = 0f
+    private var progress = 100f
 
     private lateinit var notificationManager: NotificationManager
 
@@ -46,16 +48,15 @@ class TimerService @Inject constructor() : Service() {
         secRemain = intent.getLongExtra(TIME_VALUE, 0)
         val action = intent.getStringExtra(CURRENT_STATE)
         timerInitValue = secRemain
-        var progress = 100f
         step = progress / (secRemain.toFloat())
 
-        /*when (action){
+        when (action){
             READY -> readyToCountdown()
             COUNTING -> startCountdown()
             FINISHED -> finishedCountdown()
-        }*/
+        }
 
-        _secRemainFlow.onStart {
+        /*_secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)
                 _secRemainFlow.value = --secRemain
@@ -72,11 +73,13 @@ class TimerService @Inject constructor() : Service() {
             onDestroy()
         }.launchIn(CoroutineScope(Dispatchers.IO))
 
-        return super.onStartCommand(intent, flags, startId)
+        return super.onStartCommand(intent, flags, startId)*/
+
+        return START_STICKY
     }
 
-    /*private fun readyToCountdown() {
-        //
+    private fun readyToCountdown() {
+        progress = 100f
     }
 
     private fun finishedCountdown() {
@@ -100,7 +103,7 @@ class TimerService @Inject constructor() : Service() {
             }
             finishedCountdown()
         }.launchIn(CoroutineScope(Dispatchers.IO))
-    }*/
+    }
 
     @Provides
     fun timeFlow() = flow {
