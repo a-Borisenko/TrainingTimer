@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
-@Suppress("DUPLICATE_LABEL_IN_WHEN")
 @DisableInstallInCheck
 @Module
 class TimerService @Inject constructor() : Service() {
