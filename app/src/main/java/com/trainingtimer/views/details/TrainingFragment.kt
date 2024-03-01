@@ -75,10 +75,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                     binding.countdownBar.progress = it.toInt()
                 }.launchWhenStarted(lifecycleScope)
         }
-        /*val time = getString(binding.countdownBar.progress).toInt()
-        if (time != 0) {
-            viewModel.resetProgress()
-        }*/
     }
 
     private fun setDialogFragmentListener() {
