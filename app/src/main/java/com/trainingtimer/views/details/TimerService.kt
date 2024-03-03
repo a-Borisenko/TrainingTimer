@@ -46,12 +46,12 @@ class TimerService @Inject constructor() : Service() {
         startForeground(1, buildNotification())
         secRemain = intent.getLongExtra(TIME_VALUE, 0)
         val action = intent.getStringExtra(CURRENT_STATE)
-        timerInitValue = secRemain
+        secInit = secRemain
         step = progress / (secRemain.toFloat())
 
         when (action){
             READY -> readyToCountdown()
-            COUNTING -> startCountdown()
+            START -> startCountdown()
             FINISHED -> finishedCountdown()
         }
 
@@ -77,18 +77,26 @@ class TimerService @Inject constructor() : Service() {
         return START_STICKY
     }
 
-    private fun readyToCountdown() {
-        progress = 100f
+    fun readyToCountdown() {
+        Log.d("service State", "READY")
+        _progressFlow.value = 100f
     }
 
-    private fun finishedCountdown() {
-        isCounting = false
+    fun zeroCountdown() {
         progress = 0f
+        _progressFlow.value = 0f
+    }
+
+    fun finishedCountdown() {
+        Log.d("service State", "FINISHED")
+        isCounting = false
+        zeroCountdown()
         notificationManager.cancelAll()
         onDestroy()
     }
 
-    private fun startCountdown() {
+    fun startCountdown() {
+        Log.d("service State", "START")
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)
@@ -146,12 +154,13 @@ class TimerService @Inject constructor() : Service() {
 
     companion object {
         var isCounting = false
-        var timerInitValue = 0L
+        var secInit = 0L
+        var progressInit = 0f
 
-        private val _secRemainFlow = MutableStateFlow(timerInitValue)
+        private val _secRemainFlow = MutableStateFlow(secInit)
         val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
 
-        private val _progressFlow = MutableStateFlow(100f)
+        private val _progressFlow = MutableStateFlow(progressInit)
         val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
 
         /*private val _secRemainLD = MutableLiveData<Long>()

@@ -52,7 +52,7 @@ class TrainingViewModel @Inject constructor(
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    private val _secRemain = MutableStateFlow(TimerService.timerInitValue)
+    private val _secRemain = MutableStateFlow(TimerService.secInit)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
 
     /*val secRem: SharedFlow<Long> = flow {
@@ -104,6 +104,15 @@ class TrainingViewModel @Inject constructor(
             TimerService.progressFlow
                 .collect {
                     _progress.value = it
+                    /*if (TimerService.isCounting) {
+                        _progress.value = it
+                    } else {
+                        if (_secRemain.value != 0L) {
+                            _progress.value = 100f
+                        } else {
+                            _progress.value = 0f
+                        }
+                    }*/
                 }
         }
     }
@@ -132,9 +141,13 @@ class TrainingViewModel @Inject constructor(
 
     fun resetProgress(id: Int) {
         if (id != Training.UNDEFINED_ID) {
-            _progress.value = 100f
+            TimerService.progressInit = 100f
+            timerService.readyToCountdown()
+//            _progress.value = 100f
         } else {
-            _progress.value = 0f
+            TimerService.progressInit = 0f
+            timerService.zeroCountdown()
+//            _progress.value = 0f
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }

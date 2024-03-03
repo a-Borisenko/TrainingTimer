@@ -11,9 +11,9 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-const val COUNTING = "START"
-const val READY = "START"
-const val FINISHED = "START"
+const val START = "START"
+const val READY = "READY"
+const val FINISHED = "FINISHED"
 
 const val TIME_VALUE = "TimeValue"
 const val CURRENT_STATE = "CurrentState"
