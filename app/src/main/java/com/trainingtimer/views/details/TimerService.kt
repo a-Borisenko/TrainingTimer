@@ -47,7 +47,6 @@ class TimerService @Inject constructor() : Service() {
         secRemain = intent.getLongExtra(TIME_VALUE, 0)
         val action = intent.getStringExtra(CURRENT_STATE)
         secInit = secRemain
-        step = progress / (secRemain.toFloat())
 
         when (action){
             READY -> readyToCountdown()
@@ -97,6 +96,7 @@ class TimerService @Inject constructor() : Service() {
 
     fun startCountdown() {
         Log.d("service State", "START")
+        step = progress / (secRemain.toFloat())
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)

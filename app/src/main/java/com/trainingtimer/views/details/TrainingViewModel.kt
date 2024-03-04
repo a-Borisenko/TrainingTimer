@@ -123,6 +123,8 @@ class TrainingViewModel @Inject constructor(
 
         if (_secRemain.value == 0L) {
             _progress.value = 0f
+        } else {
+            _progress.value = 100f
         }
 
         launchMode(id)
@@ -141,13 +143,13 @@ class TrainingViewModel @Inject constructor(
 
     fun resetProgress(id: Int) {
         if (id != Training.UNDEFINED_ID) {
-            TimerService.progressInit = 100f
+//            TimerService.progressInit = 100f
+            _progress.value = 100f
             timerService.readyToCountdown()
-//            _progress.value = 100f
         } else {
-            TimerService.progressInit = 0f
+//            TimerService.progressInit = 0f
+            _progress.value = 0f
             timerService.zeroCountdown()
-//            _progress.value = 0f
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }
