@@ -96,6 +96,7 @@ class TimerService @Inject constructor() : Service() {
 
     fun startCountdown() {
         Log.d("service State", "START")
+        progress = 100f
         step = progress / (secRemain.toFloat())
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
