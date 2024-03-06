@@ -32,7 +32,7 @@ class TrainingViewModel @Inject constructor(
     private val getTrainingListUseCase = GetTrainingListUseCase(repository)
 
     private var saveState = false
-    private var startProgress = 0F
+    private var startProgress = 0f
     private var newId = 0
 
     private val _errorInputSets = MutableStateFlow(false)
@@ -104,15 +104,6 @@ class TrainingViewModel @Inject constructor(
             TimerService.progressFlow
                 .collect {
                     _progress.value = it
-                    /*if (TimerService.isCounting) {
-                        _progress.value = it
-                    } else {
-                        if (_secRemain.value != 0L) {
-                            _progress.value = 100f
-                        } else {
-                            _progress.value = 0f
-                        }
-                    }*/
                 }
         }
     }
@@ -143,11 +134,9 @@ class TrainingViewModel @Inject constructor(
 
     fun resetProgress(id: Int) {
         if (id != Training.UNDEFINED_ID) {
-//            TimerService.progressInit = 100f
             _progress.value = 100f
             timerService.readyToCountdown()
         } else {
-//            TimerService.progressInit = 0f
             _progress.value = 0f
             timerService.zeroCountdown()
         }
@@ -172,7 +161,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun startTimer() {
-        //start TimerService
+        //start TimerService -> LiveData instead intent
     }
 
     fun stopTimer() {
@@ -209,11 +198,8 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun parseSets(inputSets: String?) = inputSets?.trim() ?: ""
-
     private fun parseTitle(inputTitle: String?) = inputTitle?.trim() ?: ""
-
     private fun parseTimes(inputTimes: String?) = inputTimes?.trim() ?: ""
-
     private fun parseRest(inputRest: String?) = inputRest?.trim() ?: ""
 
     private fun validateInput(sets: String, title: String, times: String): Boolean {
