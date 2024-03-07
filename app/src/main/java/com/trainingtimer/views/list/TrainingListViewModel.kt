@@ -5,14 +5,19 @@ import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.DeleteTrainingUseCase
 import com.trainingtimer.domain.GetTrainingListUseCase
 import com.trainingtimer.domain.Training
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TrainingListViewModel : ViewModel() {
+@HiltViewModel
+class TrainingListViewModel @Inject constructor(
+    private val rep: TrainingRepositoryImpl
+) : ViewModel() {
 
     //import data.TrainingListRepositoryImpl
 
     private val repository = TrainingRepositoryImpl
 
-    private val getTrainingListUseCase = GetTrainingListUseCase(repository.get())
+    private val getTrainingListUseCase = GetTrainingListUseCase(rep.getRep())
     private val deleteTrainingUseCase = DeleteTrainingUseCase(repository.get())
 
     val trainingList = getTrainingListUseCase.getTrainingList()
