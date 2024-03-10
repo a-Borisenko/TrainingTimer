@@ -22,14 +22,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val timerService: TimerService
+    private val timerService: TimerService,
+    private val rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
     private val repository = TrainingRepositoryImpl.get()
-    private val getTrainingUseCase = GetTrainingUseCase(repository)
-    private val addTrainingUseCase = AddTrainingUseCase(repository)
-    private val editTrainingUseCase = EditTrainingUseCase(repository)
-    private val getTrainingListUseCase = GetTrainingListUseCase(repository)
+    private val getTrainingUseCase = GetTrainingUseCase(rep.getRep())
+    private val addTrainingUseCase = AddTrainingUseCase(rep.getRep())
+    private val editTrainingUseCase = EditTrainingUseCase(rep.getRep())
+    private val getTrainingListUseCase = GetTrainingListUseCase(rep.getRep())
 
     private var saveState = false
     private var startProgress = 0f
