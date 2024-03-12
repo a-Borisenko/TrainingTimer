@@ -19,6 +19,8 @@ const val TIME_VALUE = "TimeValue"
 const val CURRENT_STATE = "CurrentState"
 const val CHANNEL_ID = "NotificationChannelID"
 
+const val DATABASE_NAME = "training-database"
+
 fun timeStringToLong(time: String): Long {
     val min = (time.split(":"))[0].toLong()
     val sec = (time.split(":"))[1].toLong()
