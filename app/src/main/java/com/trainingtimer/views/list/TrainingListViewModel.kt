@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingListViewModel @Inject constructor(
-    private val rep: TrainingRepositoryImpl
+    rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
     //import data.TrainingListRepositoryImpl
