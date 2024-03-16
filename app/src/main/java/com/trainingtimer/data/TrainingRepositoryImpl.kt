@@ -5,14 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
+import com.trainingtimer.views.details.DATABASE_NAME
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
-private const val DATABASE_NAME = "training-database"
-
-class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
+@DisableInstallInCheck
+@Module
+class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
 
     private val database: TrainingDatabase = Room.databaseBuilder(
-        context.applicationContext,
+        appContext.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
     )
@@ -53,18 +58,41 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         return trainingDao.getTrainings()
     }
 
-    companion object {
-        private var INSTANCE: TrainingRepositoryImpl? = null
+    @Provides
+    fun getRep(): TrainingRepositoryImpl {
+        return INSTANCE
+            ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
+    }
 
-        fun initialize(context: Context) {
-            if (INSTANCE == null) {
-                INSTANCE = TrainingRepositoryImpl(context)
+    companion object {
+        private lateinit var appContext: Context
+        private var INSTANCE: TrainingRepositoryImpl? = null
+        /*private var instance: TrainingDatabase? = null
+        private val LOCK = Any()
+
+        operator fun invoke(context: Context): TrainingDatabase {
+            return instance ?: synchronized(LOCK) {
+                instance ?: buildDatabase(context).also {
+                    instance = it
+                }
             }
         }
 
-        fun get(): TrainingRepositoryImpl {
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(context.applicationContext, TrainingDatabase::class.java, DATABASE_NAME)
+                .createFromAsset("initial_database.db")
+                .build()*/
+
+        fun initialize(context: Context) {
+            appContext = context
+            if (INSTANCE == null) {
+                INSTANCE = TrainingRepositoryImpl()
+            }
+        }
+
+        /*fun get(): TrainingRepositoryImpl {
             return INSTANCE
                 ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
-        }
+        }*/
     }
 }
