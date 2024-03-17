@@ -67,21 +67,6 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
     companion object {
         private lateinit var appContext: Context
         private var INSTANCE: TrainingRepositoryImpl? = null
-        /*private var instance: TrainingDatabase? = null
-        private val LOCK = Any()
-
-        operator fun invoke(context: Context): TrainingDatabase {
-            return instance ?: synchronized(LOCK) {
-                instance ?: buildDatabase(context).also {
-                    instance = it
-                }
-            }
-        }
-
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext, TrainingDatabase::class.java, DATABASE_NAME)
-                .createFromAsset("initial_database.db")
-                .build()*/
 
         fun initialize(context: Context) {
             appContext = context
@@ -89,10 +74,5 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
                 INSTANCE = TrainingRepositoryImpl()
             }
         }
-
-        /*fun get(): TrainingRepositoryImpl {
-            return INSTANCE
-                ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
-        }*/
     }
 }

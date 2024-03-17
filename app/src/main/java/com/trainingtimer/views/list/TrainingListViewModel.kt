@@ -13,10 +13,6 @@ class TrainingListViewModel @Inject constructor(
     rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
-    //import data.TrainingListRepositoryImpl
-
-//    private val repository = TrainingRepositoryImpl
-
     private val getTrainingListUseCase = GetTrainingListUseCase(rep.getRep())
     private val deleteTrainingUseCase = DeleteTrainingUseCase(rep.getRep())
 

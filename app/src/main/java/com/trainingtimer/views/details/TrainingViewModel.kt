@@ -26,7 +26,6 @@ class TrainingViewModel @Inject constructor(
     rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
-//    private val repository = TrainingRepositoryImpl.get()
     private val getTrainingUseCase = GetTrainingUseCase(rep.getRep())
     private val addTrainingUseCase = AddTrainingUseCase(rep.getRep())
     private val editTrainingUseCase = EditTrainingUseCase(rep.getRep())
