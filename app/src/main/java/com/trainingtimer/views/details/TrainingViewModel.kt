@@ -143,6 +143,10 @@ class TrainingViewModel @Inject constructor(
         Log.d("viewModel", "progress ${_progress.value}")
     }
 
+    /*fun cancelCountdown() {
+        timerService.cancelCountdown()
+    }*/
+
     private fun launchMode(id: Int) {
         if (!TimerService.isCounting) {
             resetProgress(id)

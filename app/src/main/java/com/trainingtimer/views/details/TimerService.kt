@@ -30,7 +30,8 @@ import javax.inject.Inject
 @Module
 class TimerService @Inject constructor() : Service() {
 
-    private var secRemain: Long = 0
+    private var secRemain = 0L
+    private var startTime = 0L
     private var step = 0f
     private var progress = 100f
 
@@ -44,9 +45,10 @@ class TimerService @Inject constructor() : Service() {
         Log.d("TimerService", "Service started")
         createNotificationChannel()
         startForeground(1, buildNotification())
-        secRemain = intent.getLongExtra(TIME_VALUE, 0)
+        startTime = intent.getLongExtra(TIME_VALUE, 0)
         val action = intent.getStringExtra(CURRENT_STATE)
-        secInit = secRemain
+        secRemain = startTime
+        secInit = startTime
 
         when (action){
             READY -> readyToCountdown()
@@ -94,6 +96,14 @@ class TimerService @Inject constructor() : Service() {
         }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
+    /*fun cancelCountdown() {
+        Log.d("Time Service", "cancel countdown")
+        secRemain = 0L
+        secInit = startTime
+        secRemain = startTime
+        readyToCountdown()
+    }*/
+
     @Provides
     fun timeFlow() = flow {
         while (secRemain > 0L) {
@@ -111,6 +121,7 @@ class TimerService @Inject constructor() : Service() {
             .setSmallIcon(R.drawable.ic_clock)
             .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
             .build()
     }
 
