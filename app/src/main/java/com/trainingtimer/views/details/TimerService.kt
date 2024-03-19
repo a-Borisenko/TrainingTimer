@@ -116,7 +116,7 @@ class TimerService @Inject constructor() : Service() {
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
-            .setOngoing(true)
+//            .setOngoing(true)
             .setContentText(timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
             .setChannelId(CHANNEL_ID)
