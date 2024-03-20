@@ -32,7 +32,7 @@ class TimerService @Inject constructor() : Service() {
 
     private var secRemain = 0L
     private var startTime = 0L
-    private var step = 0f
+//    private var step = 0f
     private var progress = 100f
 
     private lateinit var notificationManager: NotificationManager
@@ -80,12 +80,13 @@ class TimerService @Inject constructor() : Service() {
     fun startCountdown() {
         Log.d("service State", "START")
         progress = 100f
-        step = progress / (secRemain.toFloat())
+//        step = progress / (secRemain.toFloat())
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)
                 _secRemainFlow.value = --secRemain
-                progress -= step
+                progress = (secRemain.toFloat() / startTime.toFloat()) * 100f
+//                progress -= step
                 isCounting = true
                 updateNotification()
                 _progressFlow.value = progress
