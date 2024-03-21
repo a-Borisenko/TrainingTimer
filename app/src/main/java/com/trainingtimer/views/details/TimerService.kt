@@ -3,6 +3,7 @@ package com.trainingtimer.views.details
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -32,7 +33,6 @@ class TimerService @Inject constructor() : Service() {
 
     private var secRemain = 0L
     private var startTime = 0L
-//    private var step = 0f
     private var progress = 100f
 
     private lateinit var notificationManager: NotificationManager
@@ -54,6 +54,7 @@ class TimerService @Inject constructor() : Service() {
             READY -> readyToCountdown()
             START -> startCountdown()
             FINISHED -> finishedCountdown()
+            DESTROY -> stopSelf()
         }
 
         return START_STICKY
@@ -80,13 +81,11 @@ class TimerService @Inject constructor() : Service() {
     fun startCountdown() {
         Log.d("service State", "START")
         progress = 100f
-//        step = progress / (secRemain.toFloat())
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
                 delay(1000)
                 _secRemainFlow.value = --secRemain
-                progress = (secRemain.toFloat() / startTime.toFloat()) * 100f
-//                progress -= step
+                progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
                 isCounting = true
                 updateNotification()
                 _progressFlow.value = progress
@@ -114,15 +113,31 @@ class TimerService @Inject constructor() : Service() {
         }
     }.flowOn(Dispatchers.IO)
 
+    /*private var notificationIntent: Intent = Intent(this@MainActivity, SecondActivity::class.java)
+    private var pendingIntent = PendingIntent.getActivity(
+        this@MainActivity,
+        0, notificationIntent,
+        PendingIntent.FLAG_CANCEL_CURRENT
+    )*/
+
     private fun buildNotification(): Notification {
+        val deleteIntent = Intent(this, TimerService::class.java)
+        deleteIntent.putExtra(TIME_VALUE, DESTROY)
+        val deletePendingIntent = PendingIntent.getService(
+            this,
+            0,
+            deleteIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Countdown is running!")
-//            .setOngoing(true)
             .setContentText(timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
             .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
+            .setDeleteIntent(deletePendingIntent)
+//            .addAction(R.drawable.cancel_button_black, "Cancel", pendingIntent)
             .build()
     }
 
