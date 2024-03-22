@@ -54,7 +54,7 @@ class TimerService @Inject constructor() : Service() {
             READY -> readyToCountdown()
             START -> startCountdown()
             FINISHED -> finishedCountdown()
-            DESTROY -> stopSelf()
+            DESTROY -> cancelCountdown()
         }
 
         return START_STICKY
@@ -89,20 +89,23 @@ class TimerService @Inject constructor() : Service() {
                 isCounting = true
                 updateNotification()
                 _progressFlow.value = progress
-                Log.d("TimerService", "sec = $secRemain; progr = $progress")
+                Log.d("service timer", "sec = $secRemain; progr = $progress")
                 emit(secRemain)
             }
             finishedCountdown()
         }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
-    /*fun cancelCountdown() {
-        Log.d("Time Service", "cancel countdown")
-        secRemain = 0L
-        secInit = startTime
-        secRemain = startTime
-        readyToCountdown()
-    }*/
+    private fun cancelCountdown() {
+        Log.d("service timer", "cancel countdown")
+        finishedCountdown()
+//        secRemain = 0L
+//        secInit = startTime
+//        secRemain = startTime
+//        readyToCountdown()
+        this.stopForeground(false)
+        stopSelf()
+    }
 
     @Provides
     fun timeFlow() = flow {
@@ -121,8 +124,9 @@ class TimerService @Inject constructor() : Service() {
     )*/
 
     private fun buildNotification(): Notification {
+//        this.stopForeground(false)
         val deleteIntent = Intent(this, TimerService::class.java)
-        deleteIntent.putExtra(TIME_VALUE, DESTROY)
+        deleteIntent.putExtra(CURRENT_STATE, DESTROY)
         val deletePendingIntent = PendingIntent.getService(
             this,
             0,
@@ -137,7 +141,7 @@ class TimerService @Inject constructor() : Service() {
             .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setDeleteIntent(deletePendingIntent)
-//            .addAction(R.drawable.cancel_button_black, "Cancel", pendingIntent)
+            .addAction(R.drawable.cancel_button_black, "Cancel", deletePendingIntent)
             .build()
     }
 
