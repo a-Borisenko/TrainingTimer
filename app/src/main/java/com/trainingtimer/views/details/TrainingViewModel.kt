@@ -118,7 +118,12 @@ class TrainingViewModel @Inject constructor(
             _progress.value = 100f
         }
 
-        launchMode(id)
+        if (TimerService.isCounting) {
+            launchMode(TimerService.currentId)
+            Log.d("viewModel", "${TimerService.currentId}")
+        } else {
+            launchMode(id)
+        }
     }
 
     fun saveState(sets: String, title: String, times: String) {

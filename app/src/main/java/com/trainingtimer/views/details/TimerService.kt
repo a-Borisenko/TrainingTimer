@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.trainingtimer.R
+import com.trainingtimer.domain.Training
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
@@ -47,6 +48,7 @@ class TimerService @Inject constructor() : Service() {
         startForeground(1, buildNotification())
         startTime = intent.getLongExtra(TIME_VALUE, 0)
         val action = intent.getStringExtra(CURRENT_STATE)
+        currentId = intent.getIntExtra("id", Training.UNDEFINED_ID)
         secRemain = startTime
         secInit = startTime
 
@@ -98,13 +100,8 @@ class TimerService @Inject constructor() : Service() {
 
     private fun cancelCountdown() {
         Log.d("service timer", "cancel countdown")
-        finishedCountdown()
-//        secRemain = 0L
-//        secInit = startTime
-//        secRemain = startTime
-//        readyToCountdown()
         this.stopForeground(false)
-        stopSelf()
+        finishedCountdown()
     }
 
     @Provides
@@ -124,7 +121,6 @@ class TimerService @Inject constructor() : Service() {
     )*/
 
     private fun buildNotification(): Notification {
-//        this.stopForeground(false)
         val deleteIntent = Intent(this, TimerService::class.java)
         deleteIntent.putExtra(CURRENT_STATE, DESTROY)
         val deletePendingIntent = PendingIntent.getService(
@@ -169,6 +165,7 @@ class TimerService @Inject constructor() : Service() {
         var isCounting = false
         var secInit = 0L
         var progressInit = 0f
+        var currentId = Training.UNDEFINED_ID
 
         private val _secRemainFlow = MutableStateFlow(secInit)
         val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
