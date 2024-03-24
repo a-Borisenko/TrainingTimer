@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.trainingtimer.MainActivity
 import com.trainingtimer.R
 import com.trainingtimer.domain.Training
 import dagger.Module
@@ -113,14 +114,15 @@ class TimerService @Inject constructor() : Service() {
         }
     }.flowOn(Dispatchers.IO)
 
-    /*private var notificationIntent: Intent = Intent(this@MainActivity, SecondActivity::class.java)
-    private var pendingIntent = PendingIntent.getActivity(
-        this@MainActivity,
-        0, notificationIntent,
-        PendingIntent.FLAG_CANCEL_CURRENT
-    )*/
-
     private fun buildNotification(): Notification {
+        val notificationIntent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
         val deleteIntent = Intent(this, TimerService::class.java)
         deleteIntent.putExtra(CURRENT_STATE, DESTROY)
         val deletePendingIntent = PendingIntent.getService(
@@ -136,6 +138,7 @@ class TimerService @Inject constructor() : Service() {
             .setSmallIcon(R.drawable.ic_clock)
             .setChannelId(CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
             .setDeleteIntent(deletePendingIntent)
             .addAction(R.drawable.cancel_button_black, "Cancel", deletePendingIntent)
             .build()
