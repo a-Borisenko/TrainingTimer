@@ -192,10 +192,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #3: move to ViewModel
     private fun startTimer() {
-        val intentService = Intent(context, TimerService::class.java)
-        intentService.putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-        intentService.putExtra(CURRENT_STATE, START)
-        intentService.putExtra("id", trainingId)
+        val intentService = Intent(context, TimerService::class.java).apply {
+            putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
+            putExtra(CURRENT_STATE, START)
+            putExtra("id", trainingId)
+        }
         requireActivity().startService(intentService)
     }
 

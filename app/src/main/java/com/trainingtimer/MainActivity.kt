@@ -16,12 +16,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (TimerService.isCounting) {
+        fragment = if (TimerService.isCounting) {
             Log.d("main", "counting")
-            fragment = TrainingFragment()
+            TrainingFragment()
         } else {
             Log.d("main", "stopped")
-            fragment = TrainingListFragment()
+            TrainingListFragment()
         }
 
         val currentFragment =
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
+                .setReorderingAllowed(true)
                 .commit()
         }
     }
