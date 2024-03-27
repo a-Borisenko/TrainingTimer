@@ -1,9 +1,8 @@
 package com.trainingtimer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.trainingtimer.views.details.TimerService
 import com.trainingtimer.views.details.TrainingFragment
 import com.trainingtimer.views.list.TrainingListFragment
@@ -16,27 +15,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fragment = if (TimerService.isCounting) {
-            Log.d("main", "counting")
-            TrainingFragment()
-        } else {
-            Log.d("main", "stopped")
-            TrainingListFragment()
-        }
-
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
-//            val fragment = TrainingListFragment()
+            val fragment = TrainingListFragment()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
-                .setReorderingAllowed(true)
                 .commit()
         }
-    }
 
-    companion object {
-        private var fragment: Fragment = TrainingListFragment()
+        if (TimerService.isCounting) {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container, TrainingFragment())
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
+        }
     }
 }

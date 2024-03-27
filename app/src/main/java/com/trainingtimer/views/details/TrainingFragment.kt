@@ -32,8 +32,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         //TODO #2: move to ViewModel
-        trainingId = requireArguments().getInt("id")
-        viewModel.start(trainingId)
+        if (TimerService.isCounting) {
+            viewModel.start(TimerService.currentId)
+        } else {
+            trainingId = requireArguments().getInt("id")
+            viewModel.start(trainingId)
+        }
 
         setMenu()
         onClickListeners()
