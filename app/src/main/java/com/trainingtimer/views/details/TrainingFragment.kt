@@ -32,12 +32,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         //TODO #2: move to ViewModel
-        if (TimerService.isCounting) {
-            viewModel.start(TimerService.currentId)
+        trainingId = if (TimerService.isCounting) {
+            TimerService.currentId
         } else {
-            trainingId = requireArguments().getInt("id")
-            viewModel.start(trainingId)
+            requireArguments().getInt("id")
         }
+        viewModel.start(trainingId)
 
         setMenu()
         onClickListeners()
@@ -99,13 +99,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.save_btn -> {
-                        trainingClickData()
-                        true
+                return if (!TimerService.isCounting) {
+                    when (menuItem.itemId) {
+                        R.id.save_btn -> {
+                            trainingClickData()
+                            true
+                        }
+                        else -> false
                     }
-                    else -> false
-                }
+                } else false
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
@@ -144,10 +146,18 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            startTimer()
+            if (::TimerService.isOpen) {
+                if (!TimerService.isCounting) {
+                    startTimer()
+                }
+            } else {
+                startTimer()
+            }
         }
         binding.viewTimer.setOnClickListener {
-            TimePickerFragment().show(childFragmentManager, "timePicker")
+            if (!TimerService.isCounting) {
+                TimePickerFragment().show(childFragmentManager, "timePicker")
+            }
         }
     }
 
@@ -196,12 +206,14 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #3: move to ViewModel
     private fun startTimer() {
-        val intentService = Intent(context, TimerService::class.java).apply {
-            putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-            putExtra(CURRENT_STATE, START)
-            putExtra("id", trainingId)
+        if (binding.viewTimer.text.toString().toInt() > 0) {
+            val intentService = Intent(context, TimerService::class.java).apply {
+                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
+                putExtra(CURRENT_STATE, START)
+                putExtra("id", trainingId)
+            }
+            requireActivity().startService(intentService)
         }
-        requireActivity().startService(intentService)
     }
 
     /*private fun isClickable(status: Boolean) {
