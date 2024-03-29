@@ -2,6 +2,7 @@ package com.trainingtimer.views.details
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -146,11 +147,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            if (::TimerService.isOpen) {
+            if (TimerService != null) {
+                Log.d("trainingFragment", "TimerService exist")
                 if (!TimerService.isCounting) {
                     startTimer()
                 }
             } else {
+                Log.d("trainingFragment", "no TimerService")
                 startTimer()
             }
         }
@@ -206,7 +209,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     //TODO #3: move to ViewModel
     private fun startTimer() {
-        if (binding.viewTimer.text.toString().toInt() > 0) {
+        if (timeStringToLong(binding.viewTimer.text.toString()) > 0L) {
             val intentService = Intent(context, TimerService::class.java).apply {
                 putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
                 putExtra(CURRENT_STATE, START)
