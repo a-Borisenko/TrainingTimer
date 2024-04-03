@@ -50,7 +50,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         setupSwipeListener(rvTrainingList)
     }
 
-    private fun setupSwipeListener(rvShopList: RecyclerView) {
+    private fun setupSwipeListener(rvTrainingList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -69,7 +69,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(rvShopList)
+        itemTouchHelper.attachToRecyclerView(rvTrainingList)
     }
 
     private fun setupClickListener() {
