@@ -106,6 +106,13 @@ class TrainingViewModel @Inject constructor(
                     _progress.value = it
                 }
         }
+//        try {
+            TimerService.isLast = false
+//        } catch (e: ) {
+//            val serviceIntent = Intent(context, TimerService::class.java)
+//            ContextCompat.startForegroundService(context, serviceIntent)
+//            TimerService.isLast = false
+//        }
     }
 
     fun start(id: Int) {
@@ -159,6 +166,15 @@ class TrainingViewModel @Inject constructor(
         if (id != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(id).observeForever(trainingData)
         }
+    }
+
+    override fun onCleared() {
+        if (!TimerService.isCounting) {
+            timerService.finishedCountdown()
+        } else {
+            TimerService.isLast = true
+        }
+        super.onCleared()
     }
 
     /*fun getTime() {

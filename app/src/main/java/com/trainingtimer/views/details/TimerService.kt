@@ -77,12 +77,15 @@ class TimerService @Inject constructor() : Service() {
         Log.d("service State", "FINISHED")
         isCounting = false
         zeroCountdown()
-        notificationManager.cancelAll()
-        onDestroy()
+        if (isLast) {
+            notificationManager.cancelAll()
+            onDestroy()
+        }
     }
 
     fun startCountdown() {
         Log.d("service State", "START")
+        isLast = false
         progress = 100f
         _secRemainFlow.onStart {
             while (secRemain > 0L) {
@@ -99,7 +102,7 @@ class TimerService @Inject constructor() : Service() {
         }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
-    private fun cancelCountdown() {
+    fun cancelCountdown() {
         Log.d("service timer", "cancel countdown")
         this.stopForeground(false)
         finishedCountdown()
@@ -166,6 +169,7 @@ class TimerService @Inject constructor() : Service() {
 
     companion object {
         var isCounting = false
+        var isLast = true
         var secInit = 0L
         var progressInit = 0f
         var currentId = Training.UNDEFINED_ID
