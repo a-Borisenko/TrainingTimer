@@ -1,6 +1,9 @@
 package com.trainingtimer.views.details
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -115,9 +118,11 @@ class TrainingViewModel @Inject constructor(
 //        }
     }
 
-    fun start(id: Int) {
+    fun start(id: Int, context: Context) {
 //        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
+        val serviceIntent = Intent(context, TimerService::class.java)
+        ContextCompat.startForegroundService(context, serviceIntent)
 
         if (_secRemain.value == 0L) {
             _progress.value = 0f

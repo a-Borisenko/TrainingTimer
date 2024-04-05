@@ -38,7 +38,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         } else {
             requireArguments().getInt("id")
         }
-        viewModel.start(trainingId)
+        context?.let { viewModel.start(trainingId, it) }
 
         setMenu()
         onClickListeners()
