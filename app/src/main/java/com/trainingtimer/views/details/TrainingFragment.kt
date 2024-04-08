@@ -1,6 +1,5 @@
 package com.trainingtimer.views.details
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -38,7 +37,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         } else {
             requireArguments().getInt("id")
         }
-        context?.let { viewModel.start(trainingId, it) }
+        context?.let { viewModel.startViewModel(trainingId, it) }
 
         setMenu()
         onClickListeners()
@@ -210,12 +209,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     //TODO #3: move to ViewModel
     private fun startTimer() {
         if (timeStringToLong(binding.viewTimer.text.toString()) > 0L) {
-            val intentService = Intent(context, TimerService::class.java).apply {
+            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
+            /*val intentService = Intent(context, TimerService::class.java).apply {
                 putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
                 putExtra(CURRENT_STATE, START)
                 putExtra("id", trainingId)
             }
-            requireActivity().startService(intentService)
+            requireActivity().startService(intentService)*/
         }
     }
 }
