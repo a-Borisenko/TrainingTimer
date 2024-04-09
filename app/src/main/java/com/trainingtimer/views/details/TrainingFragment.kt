@@ -1,7 +1,6 @@
 package com.trainingtimer.views.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -146,15 +145,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            if (TimerService != null) {
+            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
+            /*if (TimerService != null) {    //no need if Service start first
                 Log.d("trainingFragment", "TimerService exist")
-                if (!TimerService.isCounting) {
+                if (!TimerService.isCounting) {    //move to ViewModel
                     startTimer()
                 }
             } else {
                 Log.d("trainingFragment", "no TimerService")
                 startTimer()
-            }
+            }*/
         }
         binding.viewTimer.setOnClickListener {
             if (!TimerService.isCounting) {
@@ -166,14 +166,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
 
     private fun trainingClickData() {
-        hideView()
-        viewModel.trainingClickData(
-            binding.etSets.text?.toString(),
-            binding.etTitle.text?.toString(),
-            binding.etTimes.text?.toString(),
-            binding.viewTimer.text?.toString(),
-            trainingId = trainingId
-        )
+        if (!TimerService.isCounting) {
+            hideView()
+            viewModel.trainingClickData(
+                binding.etSets.text?.toString(),
+                binding.etTitle.text?.toString(),
+                binding.etTimes.text?.toString(),
+                binding.viewTimer.text?.toString(),
+                trainingId = trainingId
+            )
+        }
     }
 
     //TODO #1: move to List (start mode)
@@ -207,15 +209,15 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     //TODO #3: move to ViewModel
-    private fun startTimer() {
-        if (timeStringToLong(binding.viewTimer.text.toString()) > 0L) {
-            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
-            /*val intentService = Intent(context, TimerService::class.java).apply {
-                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-                putExtra(CURRENT_STATE, START)
-                putExtra("id", trainingId)
-            }
-            requireActivity().startService(intentService)*/
+    /*private fun startTimer() {
+        if (timeStringToLong(binding.viewTimer.text.toString()) > 0L) {    //move to ViewModel
+            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))   //without fun
+//            val intentService = Intent(context, TimerService::class.java).apply {
+//                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
+//                putExtra(CURRENT_STATE, START)
+//                putExtra("id", trainingId)
+//            }
+//            requireActivity().startService(intentService)
         }
-    }
+    }*/
 }
