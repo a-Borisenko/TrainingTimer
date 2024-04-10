@@ -1,5 +1,6 @@
 package com.trainingtimer.views.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -14,6 +15,7 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
+import com.trainingtimer.views.details.TimerService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -82,6 +84,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun navigate(id: Int) {
+        val intentService = Intent(context, TimerService::class.java).apply {
+            putExtra("id", id)
+        }
+        requireActivity().startService(intentService)
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
             bundleOf("id" to id),
