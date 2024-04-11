@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    private var trainingId = Training.UNDEFINED_ID
+//    private var trainingId = Training.UNDEFINED_ID
     private val viewModel: TrainingViewModel by viewModels()
 
     private lateinit var binding: FragmentTrainingBinding
@@ -31,19 +31,19 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
         //TODO #2: move to ViewModel
-        trainingId = if (TimerService.isCounting) {
-            TimerService.currentId
-        } else {
-            requireArguments().getInt("id")
-        }
-        context?.let { viewModel.startViewModel(trainingId, it) }
+//        trainingId = TimerService.currentId   //if (TimerService.isCounting) {
+//            TimerService.currentId
+//        } else {
+//            requireArguments().getInt("id")
+//        }
+        viewModel.startViewModel()
 
         setMenu()
         onClickListeners()
         setDialogFragmentListener()
-        addTextChangeListeners()
-        inputErrorsObserve()
         dataObservers()
+        inputErrorsObserve()
+        addTextChangeListeners()
     }
 
     // change to ViewModel
@@ -86,7 +86,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             viewModel.updateTime(bundle.getLong("time"))
-            viewModel.resetProgress(trainingId)
+//            viewModel.resetProgress()
         }
     }
 
@@ -172,8 +172,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etSets.text?.toString(),
                 binding.etTitle.text?.toString(),
                 binding.etTimes.text?.toString(),
-                binding.viewTimer.text?.toString(),
-                trainingId = trainingId
+                binding.viewTimer.text?.toString()
+//                trainingId = trainingId
             )
         }
     }
