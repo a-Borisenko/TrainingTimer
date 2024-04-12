@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.domain.Training
 import com.trainingtimer.views.timepicker.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
@@ -22,20 +21,12 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-//    private var trainingId = Training.UNDEFINED_ID
     private val viewModel: TrainingViewModel by viewModels()
-
     private lateinit var binding: FragmentTrainingBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-        //TODO #2: move to ViewModel
-//        trainingId = TimerService.currentId   //if (TimerService.isCounting) {
-//            TimerService.currentId
-//        } else {
-//            requireArguments().getInt("id")
-//        }
         viewModel.startViewModel()
 
         setMenu()
@@ -86,7 +77,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             "key", this
         ) { _, bundle ->
             viewModel.updateTime(bundle.getLong("time"))
-//            viewModel.resetProgress()
         }
     }
 
@@ -173,7 +163,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 binding.etTitle.text?.toString(),
                 binding.etTimes.text?.toString(),
                 binding.viewTimer.text?.toString()
-//                trainingId = trainingId
             )
         }
     }
@@ -207,17 +196,4 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             viewModel.resetErrorInputTimes()
         }
     }
-
-    //TODO #3: move to ViewModel
-    /*private fun startTimer() {
-        if (timeStringToLong(binding.viewTimer.text.toString()) > 0L) {    //move to ViewModel
-            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))   //without fun
-//            val intentService = Intent(context, TimerService::class.java).apply {
-//                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-//                putExtra(CURRENT_STATE, START)
-//                putExtra("id", trainingId)
-//            }
-//            requireActivity().startService(intentService)
-        }
-    }*/
 }
