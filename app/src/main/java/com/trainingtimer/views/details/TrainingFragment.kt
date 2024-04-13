@@ -27,6 +27,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
+        /*val intentService = Intent(requireContext(), TimerService::class.java).apply {
+            putExtra("id", requireArguments().getInt("id"))
+        }
+        requireActivity().startService(intentService)*/
         viewModel.startViewModel()
 
         setMenu()
@@ -136,15 +140,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
-            /*if (TimerService != null) {    //no need if Service start first
-                Log.d("trainingFragment", "TimerService exist")
-                if (!TimerService.isCounting) {    //move to ViewModel
-                    startTimer()
-                }
-            } else {
-                Log.d("trainingFragment", "no TimerService")
-                startTimer()
-            }*/
         }
         binding.viewTimer.setOnClickListener {
             if (!TimerService.isCounting) {
