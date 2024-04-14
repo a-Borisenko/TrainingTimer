@@ -1,4 +1,4 @@
-package com.trainingtimer.views.details
+package com.trainingtimer.utils
 
 import android.app.Activity
 import android.content.Context
