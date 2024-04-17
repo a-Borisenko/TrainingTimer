@@ -1,9 +1,6 @@
 package com.trainingtimer.views.details
 
-import android.content.Context
-import android.content.Intent
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -15,6 +12,8 @@ import com.trainingtimer.domain.EditTrainingUseCase
 import com.trainingtimer.domain.GetTrainingListUseCase
 import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
+import com.trainingtimer.utils.DataService
+import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -118,13 +117,13 @@ class TrainingViewModel @Inject constructor(
 //        }
     }
 
-    fun start(id: Int, context: Context) {
+    fun startViewModel() {
 //        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
-        val serviceIntent = Intent(context, TimerService::class.java)
-        ContextCompat.startForegroundService(context, serviceIntent)
+//        val serviceIntent = Intent(context, TimerService::class.java)
+//        ContextCompat.startForegroundService(context, serviceIntent)
 
-        if (_secRemain.value == 0L) {
+        /*if (_secRemain.value == 0L) {
             _progress.value = 0f
         } else {
             _progress.value = 100f
@@ -135,6 +134,13 @@ class TrainingViewModel @Inject constructor(
             Log.d("viewModel", "${TimerService.currentId}")
         } else {
             launchMode(id)
+        }
+
+        if (!TimerService.isCounting) {
+            resetProgress()
+        }*/
+        if (DataService.currentId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
         }
     }
 
@@ -147,10 +153,11 @@ class TrainingViewModel @Inject constructor(
 
     fun updateTime(sec: Long) {
         _secRemain.value = sec
+        resetProgress()
     }
 
-    fun resetProgress(id: Int) {
-        if (id != Training.UNDEFINED_ID) {
+    fun resetProgress() {
+        if (TimerService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
             timerService.readyToCountdown()
         } else {
@@ -160,18 +167,26 @@ class TrainingViewModel @Inject constructor(
         Log.d("viewModel", "progress ${_progress.value}")
     }
 
-    /*fun cancelCountdown() {
-        timerService.cancelCountdown()
-    }*/
-
-    private fun launchMode(id: Int) {
-        if (!TimerService.isCounting) {
-            resetProgress(id)
-        }
-        if (id != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(id).observeForever(trainingData)
+    fun startTimer(time: Long) {
+        if (!TimerService.isCounting && time > 0L) {
+//            timerService.context = context
+            timerService.startCountdown(time)
+            TimerService.isLast = false
         }
     }
+
+    /*fun cancelCountdown() {
+        timerService.cancelCountdown()
+    }
+
+    private fun launchMode() {
+        if (!TimerService.isCounting) {
+            resetProgress()
+        }
+        if (TimerService.currentId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(TimerService.currentId).observeForever(trainingData)
+        }
+    }*/
 
     override fun onCleared() {
         if (!TimerService.isCounting) {
@@ -186,24 +201,15 @@ class TrainingViewModel @Inject constructor(
         //get time from DataBase
     }
 
-    fun getDialogTime() {
-        //get time from dialogFragment
-    }
-
     fun startTimer() {
         //start TimerService -> LiveData instead intent
-    }
-
-    fun stopTimer() {
-        //stop TimerService
     }*/
 
     fun trainingClickData(
         inputSets: String?,
         inputTitle: String?,
         inputReps: String?,
-        inputTime: String?,
-        trainingId: Int
+        inputTime: String?
     ) {
         val sets = parseSets(inputSets)
         val title = parseTitle(inputTitle)
@@ -215,11 +221,11 @@ class TrainingViewModel @Inject constructor(
                 startLoad()
                 delay(3000)
                 finishLoad()
-                if (trainingId == Training.UNDEFINED_ID) {
+                if (TimerService.currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, trainingId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, TimerService.currentId)
                     editTrainingUseCase.editTraining(item)
                 }
                 finishWork()
