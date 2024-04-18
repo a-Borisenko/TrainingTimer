@@ -108,37 +108,13 @@ class TrainingViewModel @Inject constructor(
                     _progress.value = it
                 }
         }
-//        try {
-            TimerService.isLast = false
-//        } catch (e: ) {
-//            val serviceIntent = Intent(context, TimerService::class.java)
-//            ContextCompat.startForegroundService(context, serviceIntent)
-//            TimerService.isLast = false
-//        }
+        TimerService.isLast = false
     }
 
     fun startViewModel() {
 //        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
-//        val serviceIntent = Intent(context, TimerService::class.java)
-//        ContextCompat.startForegroundService(context, serviceIntent)
 
-        /*if (_secRemain.value == 0L) {
-            _progress.value = 0f
-        } else {
-            _progress.value = 100f
-        }
-
-        if (TimerService.isCounting) {
-            launchMode(TimerService.currentId)
-            Log.d("viewModel", "${TimerService.currentId}")
-        } else {
-            launchMode(id)
-        }
-
-        if (!TimerService.isCounting) {
-            resetProgress()
-        }*/
         if (DataService.currentId != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
         }
@@ -169,7 +145,6 @@ class TrainingViewModel @Inject constructor(
 
     fun startTimer(time: Long) {
         if (!TimerService.isCounting && time > 0L) {
-//            timerService.context = context
             timerService.startCountdown(time)
             TimerService.isLast = false
         }
@@ -177,15 +152,6 @@ class TrainingViewModel @Inject constructor(
 
     /*fun cancelCountdown() {
         timerService.cancelCountdown()
-    }
-
-    private fun launchMode() {
-        if (!TimerService.isCounting) {
-            resetProgress()
-        }
-        if (TimerService.currentId != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(TimerService.currentId).observeForever(trainingData)
-        }
     }*/
 
     override fun onCleared() {
