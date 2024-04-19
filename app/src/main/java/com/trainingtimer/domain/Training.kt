@@ -14,5 +14,6 @@ data class Training(
     companion object {
 
         const val UNDEFINED_ID = -1
+        const val START_TIME = 0L
     }
 }
