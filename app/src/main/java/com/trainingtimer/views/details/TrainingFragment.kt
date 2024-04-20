@@ -1,5 +1,6 @@
 package com.trainingtimer.views.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -34,10 +35,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-        /*val intentService = Intent(requireContext(), TimerService::class.java).apply {
-            putExtra("id", requireArguments().getInt("id"))
-        }
-        requireActivity().startService(intentService)*/
+
         viewModel.startViewModel()
 
         setMenu()
@@ -146,6 +144,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
+            requireActivity().startService(Intent(context, TimerService::class.java))
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
         binding.viewTimer.setOnClickListener {
