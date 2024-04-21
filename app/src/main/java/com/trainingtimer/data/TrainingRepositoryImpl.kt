@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
-import com.trainingtimer.views.details.DATABASE_NAME
+import com.trainingtimer.utils.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
