@@ -144,7 +144,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            requireActivity().startService(Intent(context, TimerService::class.java))
+            val intentService = Intent(context, TimerService::class.java)
+            requireActivity().startService(intentService)
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
         binding.viewTimer.setOnClickListener {
