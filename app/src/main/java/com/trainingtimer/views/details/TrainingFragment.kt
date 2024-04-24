@@ -15,6 +15,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
+import com.trainingtimer.utils.CURRENT_STATE
+import com.trainingtimer.utils.START
+import com.trainingtimer.utils.TIME_VALUE
 import com.trainingtimer.views.timepicker.TimePickerFragment
 import com.trainingtimer.utils.hide
 import com.trainingtimer.utils.hideKeyboard
@@ -144,7 +147,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            val intentService = Intent(context, TimerService::class.java)
+            val intentService = Intent(context, TimerService::class.java).apply {
+                putExtra(CURRENT_STATE, START)
+                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
+            }
             requireActivity().startService(intentService)
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
