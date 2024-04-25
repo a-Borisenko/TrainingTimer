@@ -106,6 +106,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                             trainingClickData()
                             true
                         }
+
                         else -> false
                     }
                 } else false
@@ -147,11 +148,12 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            val intentService = Intent(context, TimerService::class.java).apply {
-                putExtra(CURRENT_STATE, START)
-                putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-            }
-            requireActivity().startService(intentService)
+            val intent = Intent(requireContext().applicationContext, TimerService::class.java)
+                .apply {
+                    putExtra(CURRENT_STATE, START)
+                    putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
+                }
+            requireContext().applicationContext.startService(intent)
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
         binding.viewTimer.setOnClickListener {
