@@ -154,7 +154,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                     putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
                 }
             requireContext().applicationContext.startService(intent)
-            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
+            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()), requireContext().applicationContext)
         }
         binding.viewTimer.setOnClickListener {
             if (!TimerService.isCounting) {
