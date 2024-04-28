@@ -1,5 +1,6 @@
 package com.trainingtimer.views.details
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -143,9 +144,9 @@ class TrainingViewModel @Inject constructor(
         Log.d("viewModel", "progress ${_progress.value}")
     }
 
-    fun startTimer(time: Long) {
+    fun startTimer(time: Long, context: Context) {
         if (!TimerService.isCounting && time > 0L) {
-            timerService.startCountdown(time)
+            timerService.startCountdown(time, context)
             TimerService.isLast = false
         }
     }
