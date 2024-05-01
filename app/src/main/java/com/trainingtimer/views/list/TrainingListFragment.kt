@@ -15,7 +15,7 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
-import com.trainingtimer.views.details.TimerService
+import com.trainingtimer.utils.DataService
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +28,8 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
+        val intent = Intent(requireContext().applicationContext, DataService::class.java)
+        requireContext().applicationContext.startService(intent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,10 +86,9 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun navigate(id: Int) {
-        val intentService = Intent(context, TimerService::class.java).apply {
-            putExtra("id", id)
-        }
-        requireActivity().startService(intentService)
+        /*val intentService = Intent(requireContext(), DataService::class.java)
+        requireActivity().startService(intentService)*/
+        DataService.currentId = id
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
             bundleOf("id" to id),
