@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.trainingtimer.domain.Training
-import com.trainingtimer.views.details.TimerService
 import kotlin.properties.Delegates
 
 class DataService : Service() {
@@ -31,13 +30,16 @@ class DataService : Service() {
             Log.d("DataService", "startTime = $old -> $new")
         }
 
-        var currentId =
-            if (TimerService.isCounting) {
+        var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
+                prop, old, new ->
+            Log.d("DataService", "currentId = $old -> $new")
+        }
+            /*if (TimerService.isCounting) {
                 TimerService.currentId
                 Log.d("DataService", "currentId = ${TimerService.currentId}")
             } else {
                 Training.UNDEFINED_ID
                 Log.d("DataService", "currentId = ${Training.UNDEFINED_ID}")
-            }
+            }*/
     }
 }
