@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startService(Intent(applicationContext, DataService::class.java))
+//        startService(Intent(applicationContext, DataService::class.java))
 
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
