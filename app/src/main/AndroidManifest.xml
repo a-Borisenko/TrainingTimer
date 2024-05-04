@@ -25,6 +25,7 @@
         </activity>
 
         <service android:name=".views.details.TimerService"/>
+        <service android:name=".utils.DataService"/>
     </application>
 
 </manifest>
