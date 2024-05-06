@@ -15,7 +15,7 @@ class DataService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("DataService", "started!!!")
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY /*super.onStartCommand(intent, flags, startId)*/
     }
 
     override fun onDestroy() {
