@@ -25,6 +25,11 @@ class DataService : Service() {
 
     companion object {
 
+        var isCounting: Boolean by Delegates.observable(false) {
+                prop, old, new ->
+            Log.d("DataService", "isCounting = $old -> $new")
+        }
+
         var startTime: Long by Delegates.observable(Training.START_TIME) {
                 prop, old, new ->
             Log.d("DataService", "startTime = $old -> $new")
