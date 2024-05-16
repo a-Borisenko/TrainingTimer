@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val timerService: TimerService,
+//    private val timerService: TimerService,
     rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
@@ -81,7 +81,7 @@ class TrainingViewModel @Inject constructor(
             _sets.value = it.sets.toString()
             _title.value = it.title
             _times.value = it.times.drop(1)
-            if (!TimerService.isCounting) {
+            if (!DataService.isCounting) {
                 _secRemain.value = timeStringToLong(it.rest)
             }
         }
@@ -134,19 +134,19 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun resetProgress() {
-        if (TimerService.currentId != Training.UNDEFINED_ID) {
+        if (DataService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
-            timerService.readyToCountdown()
+//            timerService.readyToCountdown()
         } else {
             _progress.value = 0f
-            timerService.zeroCountdown()
+//            timerService.zeroCountdown()
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }
 
-    fun startTimer(time: Long, context: Context) {
-        if (!TimerService.isCounting && time > 0L) {
-            timerService.startCountdown(time, context)
+    fun startTimer(time: Long) {
+        if (!DataService.isCounting && time > 0L) {
+//            timerService.startCountdown(time, context)
             TimerService.isLast = false
         }
     }
@@ -156,8 +156,8 @@ class TrainingViewModel @Inject constructor(
     }*/
 
     override fun onCleared() {
-        if (!TimerService.isCounting) {
-            timerService.finishedCountdown()
+        if (!DataService.isCounting) {
+//            timerService.finishedCountdown()
         } else {
             TimerService.isLast = true
         }
