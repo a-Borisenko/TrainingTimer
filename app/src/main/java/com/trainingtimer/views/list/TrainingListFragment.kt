@@ -86,8 +86,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun navigate(id: Int) {
-        /*val intentService = Intent(requireContext(), DataService::class.java)
-        requireActivity().startService(intentService)*/
         DataService.currentId = id
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
