@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -13,6 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.utils.CURRENT_STATE
@@ -148,12 +151,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            val intent = Intent(requireContext().applicationContext, TimerService::class.java)
+            ContextCompat.startForegroundService(
+                requireContext(),
+                TimerService.newIntent(requireContext())
+            )
+            /*val intent = Intent(requireContext().applicationContext, TimerService::class.java)
                 .apply {
                     putExtra(CURRENT_STATE, START)
                     putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
                 }
-            requireContext().applicationContext.startService(intent)
+            requireContext().applicationContext.startService(intent)*/
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
         binding.viewTimer.setOnClickListener {
