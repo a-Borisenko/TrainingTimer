@@ -28,15 +28,18 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 @DisableInstallInCheck
 @Module
 class TimerService @Inject constructor() : Service() {
 
-//    lateinit var context: Context
-    private var startTime = 0L
     private var secRemain = 0L
     private var progress = 100f
+
+    private var startTime: Long by Delegates.observable(DataService.startTime) { _, _, _ ->
+        secRemain = startTime
+    }
 
     private lateinit var notificationManager: NotificationManager
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -48,33 +51,15 @@ class TimerService @Inject constructor() : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        createNotificationChannel()
-        startForeground(1, createNotification())
-    }
-
-    private fun emitTwoValues(longValue: Long, floatValue: Float): Flow<Pair<Long, Float>> {
-        return flow {
-            emit(Pair(longValue, floatValue))
+        if (!isCounting) {
+            createNotificationChannel()
+            startForeground(1, createNotification())
         }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        startTime = DataService.startTime
-        secRemain = startTime
-        coroutineScope.launch {
-            DataService.isCounting = true
-            while (secRemain > 0L) {
-                delay(1000)
-                _secRemainFlow.value = --secRemain
-                progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
-//                updateNotification()
-                _progressFlow.value = progress
-                Log.d("service timer", "sec = $secRemain; progr = $progress")
-                emitTwoValues(secRemain, progress)
-            }
-            DataService.isCounting = false
-            stopSelf()
-//            finishedCountdown()
+        if (!isCounting) {
+            startCountdown()
         }
 
         /*currentId = intent.getIntExtra("id", Training.UNDEFINED_ID)
@@ -99,6 +84,25 @@ class TimerService @Inject constructor() : Service() {
         }*/
 
         return START_STICKY
+    }
+
+    private fun startCountdown() {
+        startTime = DataService.startTime
+        coroutineScope.launch {
+            isCounting = true
+            while (secRemain > 0L) {
+                delay(1000)
+                _secRemainFlow.value = --secRemain
+                progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
+                updateNotification()
+                _progressFlow.value = progress
+                Log.d("service timer", "sec = $secRemain; progr = $progress")
+                emitTwoValues(secRemain, progress)
+            }
+            isCounting = false
+            stopSelf()
+//                finishedCountdown()
+        }
     }
 
     /*fun readyToCountdown() {
@@ -207,20 +211,26 @@ class TimerService @Inject constructor() : Service() {
 //            .build()
     }*/
 
-    /*private fun updateNotification() {
+    private fun updateNotification() {
         notificationManager.notify(1, createNotification())
-    }*/
+    }
 
     private fun createNotificationChannel() {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID,
                 "channel_name",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun emitTwoValues(longValue: Long, floatValue: Float): Flow<Pair<Long, Float>> {
+        return flow {
+            emit(Pair(longValue, floatValue))
         }
     }
 
@@ -231,7 +241,10 @@ class TimerService @Inject constructor() : Service() {
     }
 
     companion object {
-        var isCounting = DataService.isCounting
+        var isCounting: Boolean by Delegates.observable(DataService.isCounting) { prop, old, new ->
+            DataService.isCounting = new
+        }
+
         var isLast = true
         var secInit = 0L
         var progressInit = 0f
