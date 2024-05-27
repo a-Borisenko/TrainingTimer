@@ -145,6 +145,7 @@ class TrainingViewModel @Inject constructor(
 
     fun startTimer(time: Long) {
         if (!DataService.isCounting && time > 0L) {
+            DataService.startTime = time
 //            timerService.startCountdown(time, context)
             TimerService.isLast = false
         }
