@@ -2,6 +2,7 @@ package com.trainingtimer.views.details
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -9,14 +10,14 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.trainingtimer.MainActivity
 import com.trainingtimer.R
 import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.CHANNEL_ID
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeLongToString
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,14 +26,38 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-@DisableInstallInCheck
-@Module
-class TimerService @Inject constructor() : Service() {
+@AndroidEntryPoint
+class TimerService : Service() {
+
+    @Inject
+    @ApplicationContext
+    lateinit var appContext: Context
+
+    /*private val dismissIntent by lazy {
+        val intent = Intent(appContext, NotificationBroadcastReceiver::class.java).apply {
+            action = ACTION_DISMISS
+        }
+        PendingIntent.getBroadcast(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+    }*/
+
+    private val openAppIntent by lazy {
+        val intent = Intent(appContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        PendingIntent.getActivity(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+    }
+
+    /*private val notificationIntent = Intent(applicationContext, MainActivity::class.java)
+    private val pendingIntent = PendingIntent.getActivity(
+        applicationContext,
+        0,
+        notificationIntent,
+        PendingIntent.FLAG_CANCEL_CURRENT
+    )*/
 
     private var secRemain = 0L
     private var progress = 100f
@@ -155,19 +180,20 @@ class TimerService @Inject constructor() : Service() {
         finishedCountdown()
     }*/
 
-    @Provides
+    /*@Provides
     fun timeFlow() = flow {
         while (secRemain > 0L) {
             delay(1000)
             Log.d("timeFlow", "emit $secRemain")    //don't work
             emit(secRemain)
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO)*/
 
     private fun createNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle("Countdown is running!")
         .setContentText(timeLongToString(secRemain))
         .setSmallIcon(R.drawable.ic_clock)
+        .setContentIntent(openAppIntent)
         .build()
 
     /*private fun buildNotification(): Notification {
