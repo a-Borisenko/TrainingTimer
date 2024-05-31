@@ -37,19 +37,30 @@ class TimerService : Service() {
     @ApplicationContext
     lateinit var appContext: Context
 
-    /*private val dismissIntent by lazy {
-        val intent = Intent(appContext, NotificationBroadcastReceiver::class.java).apply {
-            action = ACTION_DISMISS
-        }
-        PendingIntent.getBroadcast(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-    }*/
-
     private val openAppIntent by lazy {
         val intent = Intent(appContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        PendingIntent.getActivity(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(
+            appContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
+
+    /*private val dismissIntent by lazy {
+        val intent = Intent(this, TimerService::class.java).apply {
+            notificationManager.cancelAll()
+            stopSelf()
+        }
+        PendingIntent.getForegroundService(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }*/
 
     /*private val notificationIntent = Intent(applicationContext, MainActivity::class.java)
     private val pendingIntent = PendingIntent.getActivity(
@@ -194,6 +205,7 @@ class TimerService : Service() {
         .setContentText(timeLongToString(secRemain))
         .setSmallIcon(R.drawable.ic_clock)
         .setContentIntent(openAppIntent)
+//        .addAction(R.drawable.cancel_button_black, "Dismiss", dismissIntent)
         .build()
 
     /*private fun buildNotification(): Notification {
