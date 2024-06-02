@@ -51,8 +51,12 @@ class TimerService : Service() {
 
     /*private val dismissIntent by lazy {
         val intent = Intent(this, TimerService::class.java).apply {
-            notificationManager.cancelAll()
-            stopSelf()
+            isCounting = false
+//            zeroCountdown()
+            if (isLast) {
+                notificationManager.cancelAll()
+                stopSelf()
+            }
         }
         PendingIntent.getForegroundService(
             this,
