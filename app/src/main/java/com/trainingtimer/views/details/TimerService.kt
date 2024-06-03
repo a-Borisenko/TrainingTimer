@@ -195,15 +195,6 @@ class TimerService : Service() {
         finishedCountdown()
     }*/
 
-    /*@Provides
-    fun timeFlow() = flow {
-        while (secRemain > 0L) {
-            delay(1000)
-            Log.d("timeFlow", "emit $secRemain")    //don't work
-            emit(secRemain)
-        }
-    }.flowOn(Dispatchers.IO)*/
-
     private fun createNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle("Countdown is running!")
         .setContentText(timeLongToString(secRemain))
