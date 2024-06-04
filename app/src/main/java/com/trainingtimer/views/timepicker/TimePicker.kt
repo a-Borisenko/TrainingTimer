@@ -1,4 +1,4 @@
-package com.trainingtimer.domain
+package com.trainingtimer.views.timepicker
 
 import android.content.Context
 import android.os.Parcel

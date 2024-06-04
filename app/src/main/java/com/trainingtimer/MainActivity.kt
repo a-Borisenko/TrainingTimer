@@ -2,9 +2,13 @@ package com.trainingtimer
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.trainingtimer.R
-import com.trainingtimer.ui.list.TrainingListFragment
+import androidx.fragment.app.commit
+import com.trainingtimer.views.details.TimerService
+import com.trainingtimer.views.details.TrainingFragment
+import com.trainingtimer.views.list.TrainingListFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +23,14 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit()
+        }
+
+        if (TimerService.isCounting) {
+            supportFragmentManager.commit {
+                replace(R.id.fragment_container, TrainingFragment())
+                setReorderingAllowed(true)
+                addToBackStack(null)
+            }
         }
     }
 }

@@ -13,4 +13,5 @@ interface TrainingRepository {
     fun getTraining(trainingId: Int): LiveData<Training?>
 
     fun getTrainingList(): LiveData<List<Training>>
+
 }

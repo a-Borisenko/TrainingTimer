@@ -20,4 +20,6 @@
     <string name="error_input_sets">Invalid sets</string>
     <string name="error_input_title">Invalid title</string>
     <string name="error_input_times">Invalid times</string>
+    <string name="channel_name">notifyChanel</string>
+    <string name="channel_description">chanel for notifications</string>
 </resources>

@@ -1,9 +1,10 @@
-package com.trainingtimer.ui.list
+package com.trainingtimer.views.list
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,10 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
+import com.trainingtimer.utils.DataService
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private lateinit var viewModel: TrainingListViewModel
@@ -24,6 +28,8 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
+        val intent = Intent(requireContext().applicationContext, DataService::class.java)
+        requireContext().applicationContext.startService(intent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,6 +38,11 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         setupRecyclerView()
         viewModel.trainingList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
+        }
+        with(binding) {
+            progressBar.isVisible = false
+            trainingRecyclerView.isVisible = true
+            newTraining.isVisible = true
         }
     }
 
@@ -43,7 +54,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         setupSwipeListener(rvTrainingList)
     }
 
-    private fun setupSwipeListener(rvShopList: RecyclerView) {
+    private fun setupSwipeListener(rvTrainingList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -57,43 +68,36 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = listAdapter.currentList[viewHolder.adapterPosition]
+                val item = listAdapter.currentList[viewHolder.bindingAdapterPosition]
                 viewModel.deleteTraining(item)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(rvShopList)
+        itemTouchHelper.attachToRecyclerView(rvTrainingList)
     }
 
     private fun setupClickListener() {
-        listAdapter.onShopItemClickListener = {
-            Log.d("ListFrag", "item with id ${it.id} clicked!")
-            findNavController().navigate(
-                R.id.action_trainingListFragment_to_trainingFragment,
-                bundleOf("id" to it.id),
-                navOptions {
-                    anim {
-                        enter = anim.abc_popup_enter
-                        exit = anim.abc_popup_enter
-                        popEnter = anim.abc_popup_enter
-                        popExit = anim.abc_popup_enter
-                    }
-                }
-            )
+        listAdapter.onTrainingClickListener = {
+            navigate(it.id)
         }
         binding.newTraining.setOnClickListener {
-            findNavController().navigate(
-                R.id.action_trainingListFragment_to_trainingFragment,
-                bundleOf("id" to UNDEFINED_ID),
-                navOptions {
-                    anim {
-                        enter = anim.abc_popup_enter
-                        exit = anim.abc_popup_enter
-                        popEnter = anim.abc_popup_enter
-                        popExit = anim.abc_popup_enter
-                    }
-                }
-            )
+            navigate(UNDEFINED_ID)
         }
+    }
+
+    private fun navigate(id: Int) {
+        DataService.currentId = id
+        findNavController().navigate(
+            R.id.action_trainingListFragment_to_trainingFragment,
+            bundleOf("id" to id),
+            navOptions {
+                anim {
+                    enter = anim.abc_popup_enter
+                    exit = anim.abc_popup_enter
+                    popEnter = anim.abc_popup_enter
+                    popExit = anim.abc_popup_enter
+                }
+            }
+        )
     }
 }

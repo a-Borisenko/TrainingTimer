@@ -5,52 +5,29 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
+import com.trainingtimer.utils.DATABASE_NAME
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
-private const val DATABASE_NAME = "training-database"
-
-class TrainingRepositoryImpl private constructor(context: Context) : TrainingRepository {
+@DisableInstallInCheck
+@Module
+class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
 
     private val database: TrainingDatabase = Room.databaseBuilder(
-        context.applicationContext,
+        appContext.applicationContext,
         TrainingDatabase::class.java,
         DATABASE_NAME
     )
-//        .createFromAsset("database/myapp.db")
-//        .createFromFile(File("mypath"))
-        /*.addCallback(object : Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            ioThread {
-                with(TrainingDatabase.getInstance(context).trainingDao()) {
-                    addTraining(Training(1, "подтягивания", "x5", "01:00"))
-                    addTraining(Training(1, "отжимания", "x10", "01:00"))
-                    addTraining(Training(1, "приседания", "x15", "01:00"))
-                    for (i in 4 until 100) {
-                        val item = Training(i, "Training №$i", "x$i", "01:00")
-                        addTraining(item)
-                    }
-                }
-            }
-        }
-    })*/
+        .createFromAsset("initial_database.db")
         .build()
 
-    private var autoIncrementId = 100   //for init group
-
-    private val trainingDao = database.trainingDao()  //TrainingDatabase.database(context).trainingDao()
+    private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    /*init {
-        //TODO: init must be only if there is no DataBase on the phone yet
-        addTraining(Training(1, "подтягивания", "x5", "01:00"))
-        addTraining(Training(1, "отжимания", "x10", "01:00"))
-        addTraining(Training(1, "приседания", "x15", "01:00"))
-        for (i in 4 until 100) {
-            val item = Training(i, "Training №$i", "x$i", "01:00")
-            addTraining(item)
-        }
-    }*/
+    private var autoIncrementId = 0
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
@@ -69,10 +46,7 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
 
     override fun editTraining(training: Training) {
         executor.execute {
-            val oldElement = getTraining(training.id).value
-                ?: throw IllegalStateException("Training with id${training.id} not found")
-            trainingDao.deleteTraining(oldElement)
-            trainingDao.addTraining(training)
+            trainingDao.updateTraining(training)
         }
     }
 
@@ -84,24 +58,21 @@ class TrainingRepositoryImpl private constructor(context: Context) : TrainingRep
         return trainingDao.getTrainings()
     }
 
-    private fun updateTraining(training: Training) {
-        executor.execute {
-            trainingDao.updateTraining(training)
-        }
+    @Provides
+    fun getRep(): TrainingRepositoryImpl {
+        return INSTANCE
+            ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
     }
 
     companion object {
+        private lateinit var appContext: Context
         private var INSTANCE: TrainingRepositoryImpl? = null
 
         fun initialize(context: Context) {
+            appContext = context
             if (INSTANCE == null) {
-                INSTANCE = TrainingRepositoryImpl(context)
+                INSTANCE = TrainingRepositoryImpl()
             }
-        }
-
-        fun get(): TrainingRepositoryImpl {
-            return INSTANCE
-                ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
         }
     }
 }
