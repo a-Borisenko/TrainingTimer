@@ -24,7 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-//    private val timerService: TimerService,
     rep: TrainingRepositoryImpl
 ) : ViewModel() {
 
@@ -57,10 +56,6 @@ class TrainingViewModel @Inject constructor(
     private val _secRemain = MutableStateFlow(TimerService.secInit)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
 
-    /*val secRem: SharedFlow<Long> = flow {
-        emit(100L)
-    }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)*/
-
     private val _progress = MutableStateFlow(startProgress)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
@@ -86,10 +81,6 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    /*private val serviceTime = Observer<Long> {
-        _secRemain.value = it
-    }*/
-
     private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
     }
@@ -112,12 +103,12 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun startViewModel() {
-//        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
         }
+        resetProgress()
     }
 
     fun saveState(sets: String, title: String, times: String) {
@@ -135,10 +126,8 @@ class TrainingViewModel @Inject constructor(
     fun resetProgress() {
         if (DataService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
-//            timerService.readyToCountdown()
         } else {
             _progress.value = 0f
-//            timerService.zeroCountdown()
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }
@@ -146,31 +135,16 @@ class TrainingViewModel @Inject constructor(
     fun startTimer(time: Long) {
         if (!DataService.isCounting && time > 0L) {
             DataService.startTime = time
-//            timerService.startCountdown(time, context)
             TimerService.isLast = false
         }
     }
 
-    /*fun cancelCountdown() {
-        timerService.cancelCountdown()
-    }*/
-
     override fun onCleared() {
-        if (!DataService.isCounting) {
-//            timerService.finishedCountdown()
-        } else {
+        if (DataService.isCounting) {
             TimerService.isLast = true
         }
         super.onCleared()
     }
-
-    /*fun getTime() {
-        //get time from DataBase
-    }
-
-    fun startTimer() {
-        //start TimerService -> LiveData instead intent
-    }*/
 
     fun trainingClickData(
         inputSets: String?,

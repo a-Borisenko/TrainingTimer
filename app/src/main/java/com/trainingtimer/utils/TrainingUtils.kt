@@ -11,14 +11,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-const val START = "START"
-const val READY = "READY"
-const val FINISHED = "FINISHED"
-const val DESTROY = "DESTROY"
-
-const val TIME_VALUE = "TimeValue"
-const val CURRENT_STATE = "CurrentState"
-const val CHANNEL_ID = "NotificationChannelID"
+const val ACTION_DISMISS = "dismiss_action"
 
 const val DATABASE_NAME = "training-database"
 
@@ -59,10 +52,6 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
 fun View.show() {
     visibility = View.VISIBLE
 }
-
-/*fun View.invisible() {
-    visibility = View.INVISIBLE
-}*/
 
 fun View.hide() {
     visibility = View.GONE
