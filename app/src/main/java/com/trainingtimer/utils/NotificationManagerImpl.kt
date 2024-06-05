@@ -1,6 +1,6 @@
 package com.trainingtimer.utils
 
-import android.app.Notification
+/*import android.app.Notification
 import android.app.NotificationChannel
 import android.content.Context
 import android.os.Build
@@ -34,4 +34,4 @@ class NotificationManagerImpl @Inject constructor(
         const val NOTIFICATION_ID = 1
         const val CHANNEL_ID = "NotificationChannelID"
     }
-}
+}*/

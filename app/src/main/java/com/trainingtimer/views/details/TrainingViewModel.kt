@@ -56,6 +56,10 @@ class TrainingViewModel @Inject constructor(
     private val _secRemain = MutableStateFlow(TimerService.secInit)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
 
+    /*val secRem: SharedFlow<Long> = flow {
+        emit(100L)
+    }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)*/
+
     private val _progress = MutableStateFlow(startProgress)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
@@ -81,6 +85,10 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
+    /*private val serviceTime = Observer<Long> {
+        _secRemain.value = it
+    }*/
+
     private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
     }
@@ -103,6 +111,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun startViewModel() {
+//        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
@@ -126,8 +135,10 @@ class TrainingViewModel @Inject constructor(
     fun resetProgress() {
         if (DataService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
+//            timerService.readyToCountdown()
         } else {
             _progress.value = 0f
+//            timerService.zeroCountdown()
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }

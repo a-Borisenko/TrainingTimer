@@ -1,6 +1,6 @@
 package com.trainingtimer.utils
 
-import android.app.NotificationManager
+/*import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,4 +17,4 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             notificationManager.cancel(NOTIFICATION_ID)
         }
     }
-}
+}*/
