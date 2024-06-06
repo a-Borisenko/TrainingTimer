@@ -1,6 +1,5 @@
 package com.trainingtimer.views.details
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,14 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.utils.CURRENT_STATE
 import com.trainingtimer.utils.START
-import com.trainingtimer.utils.TIME_VALUE
-import com.trainingtimer.views.timepicker.TimePickerFragment
 import com.trainingtimer.utils.hide
 import com.trainingtimer.utils.hideKeyboard
 import com.trainingtimer.utils.launchWhenStarted
@@ -29,6 +23,7 @@ import com.trainingtimer.utils.onChange
 import com.trainingtimer.utils.show
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
+import com.trainingtimer.views.timepicker.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -52,7 +47,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
     }
 
-    // change to ViewModel
+    //TODO #2: change to ViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.saveState(
@@ -153,14 +148,8 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         binding.trainingBtn.setOnClickListener {
             ContextCompat.startForegroundService(
                 requireContext(),
-                TimerService.newIntent(requireContext())
+                TimerService.newIntent(requireContext(), START)
             )
-            /*val intent = Intent(requireContext().applicationContext, TimerService::class.java)
-                .apply {
-                    putExtra(CURRENT_STATE, START)
-                    putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-                }
-            requireContext().applicationContext.startService(intent)*/
             viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
         }
         binding.viewTimer.setOnClickListener {
@@ -169,8 +158,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             }
         }
     }
-
-    //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
 
     private fun trainingClickData() {
         if (!TimerService.isCounting) {

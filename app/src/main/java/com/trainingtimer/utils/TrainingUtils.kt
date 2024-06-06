@@ -12,12 +12,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
 const val START = "START"
-const val READY = "READY"
-const val FINISHED = "FINISHED"
 const val DESTROY = "DESTROY"
 
-const val TIME_VALUE = "TimeValue"
-const val CURRENT_STATE = "CurrentState"
 const val CHANNEL_ID = "NotificationChannelID"
 
 const val DATABASE_NAME = "training-database"

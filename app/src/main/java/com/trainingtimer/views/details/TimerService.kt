@@ -16,6 +16,7 @@ import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.CHANNEL_ID
 import com.trainingtimer.utils.DESTROY
 import com.trainingtimer.utils.DataService
+import com.trainingtimer.utils.START
 import com.trainingtimer.utils.timeLongToString
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -38,54 +39,6 @@ class TimerService : Service() {
     @ApplicationContext
     lateinit var appContext: Context
 
-    private val openAppIntent by lazy {
-        val intent = Intent(appContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        PendingIntent.getActivity(
-            appContext,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
-    private val stopServiceIntent by lazy {
-        val stopIntent = Intent(appContext, TimerService::class.java)
-        stopIntent.action = DESTROY
-        PendingIntent.getService(
-            appContext,
-            1,
-            stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
-    /*private val dismissIntent by lazy {
-        val intent = Intent(this, TimerService::class.java).apply {
-            isCounting = false
-//            zeroCountdown()
-            if (isLast) {
-                notificationManager.cancelAll()
-                stopSelf()
-            }
-        }
-        PendingIntent.getForegroundService(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }*/
-
-    /*private val notificationIntent = Intent(applicationContext, MainActivity::class.java)
-    private val pendingIntent = PendingIntent.getActivity(
-        applicationContext,
-        0,
-        notificationIntent,
-        PendingIntent.FLAG_CANCEL_CURRENT
-    )*/
-
     private var secRemain = 0L
     private var progress = 100f
 
@@ -98,7 +51,6 @@ class TimerService : Service() {
 
     override fun onBind(p0: Intent): IBinder? {
         TODO("Not yet implemented")
-//        return null
     }
 
     override fun onCreate() {
@@ -110,38 +62,17 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        when (intent.action) {
+        return when (intent.action) {
+            START -> {
+                startCountdown()
+                START_STICKY
+            }
             DESTROY -> {
                 secRemain = 1L
-                return START_NOT_STICKY
+                START_NOT_STICKY
             }
-            else -> if (!isCounting) {
-                startCountdown()
-            }
+            else -> START_STICKY
         }
-
-        /*currentId = intent.getIntExtra("id", Training.UNDEFINED_ID)
-//        createNotificationChannel()
-//        startForeground(1, buildNotification())
-        startTime = intent.getLongExtra(TIME_VALUE, 0L)
-        val action = intent.getStringExtra(CURRENT_STATE)
-//        secRemain = startTime
-//        secInit = startTime
-        Log.d("TimerService", "Service started, ID = $currentId")
-
-        when (action) {
-//            READY -> readyToCountdown()
-//            START -> startCountdown(startTime)
-//            FINISHED -> finishedCountdown()
-            DESTROY -> cancelCountdown()
-        }
-        if (currentId == Training.UNDEFINED_ID) {
-            zeroCountdown()
-        } else {
-            readyToCountdown()
-        }*/
-
-        return START_STICKY
     }
 
     private fun startCountdown() {
@@ -154,64 +85,13 @@ class TimerService : Service() {
                 progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
                 updateNotification()
                 _progressFlow.value = progress
-                Log.d("service timer", "sec = $secRemain; progr = $progress")
+                Log.d("TimerService", "sec = $secRemain; progress = $progress")
                 emitTwoValues(secRemain, progress)
             }
             isCounting = false
             stopSelf()
-//            finishedCountdown()
         }
     }
-
-    /*fun readyToCountdown() {
-        Log.d("service State", "READY")
-        progress = 100f
-        _progressFlow.value = 100f
-    }*/
-
-    /*fun zeroCountdown() {
-        progress = 0f
-        _progressFlow.value = 0f
-    }*/
-
-    /*fun finishedCountdown() {
-        Log.d("service State", "FINISHED")
-        isCounting = false
-        zeroCountdown()
-        if (isLast) {
-            notificationManager.cancelAll()
-            onDestroy()
-        }
-    }*/
-
-    /*fun startCountdown(time: Long) {
-        Log.d("service State", "START")
-        startTime = time
-        secRemain = time
-//        isLast = false
-        createNotificationChannel()
-        startForeground(1, buildNotification())
-
-        _secRemainFlow.onStart {
-            while (secRemain > 0L) {
-                delay(1000)
-                _secRemainFlow.value = --secRemain
-                progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
-                isCounting = true
-                updateNotification()
-                _progressFlow.value = progress
-                Log.d("service timer", "sec = $secRemain; progr = $progress")
-                emit(secRemain)
-            }
-            finishedCountdown()
-        }.launchIn(CoroutineScope(Dispatchers.IO))
-    }*/
-
-    /*fun cancelCountdown() {
-        Log.d("service timer", "cancel countdown")
-        this.stopForeground(false)
-        finishedCountdown()
-    }*/
 
     private fun createNotification() = NotificationCompat.Builder(this, CHANNEL_ID)
         .setContentTitle("Countdown is running!")
@@ -220,47 +100,6 @@ class TimerService : Service() {
         .setContentIntent(openAppIntent)
         .addAction(R.drawable.cancel_button_black, "Dismiss", stopServiceIntent)
         .build()
-
-    /*private fun buildNotification(): Notification {
-
-        val builder = NotificationCompat.Builder(appContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_clock)
-            .setContentTitle("My Notification")
-            .setContentText("This is a notification")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .addAction(R.drawable.cancel_button_black, "Dismiss", dismissIntent)
-            .addAction(R.drawable.check, "Open App", openAppIntent)
-
-        return builder.build()
-
-//        val notificationIntent = Intent(applicationContext, MainActivity::class.java)
-//        val pendingIntent = PendingIntent.getActivity(
-//            applicationContext,
-//            0,
-//            notificationIntent,
-//            PendingIntent.FLAG_CANCEL_CURRENT
-//        )
-//
-//        val deleteIntent = Intent(applicationContext, TimerService::class.java)
-//        deleteIntent.putExtra(CURRENT_STATE, DESTROY)
-//        val deletePendingIntent = PendingIntent.getService(
-//            applicationContext,
-//            0,
-//            deleteIntent,
-//            PendingIntent.FLAG_CANCEL_CURRENT
-//        )
-//
-//        return NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-//            .setContentTitle("Countdown is running!")
-//            .setContentText(timeLongToString(secRemain))
-//            .setSmallIcon(R.drawable.ic_clock)
-//            .setChannelId(CHANNEL_ID)
-//            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-//            .setContentIntent(pendingIntent)
-//            .setDeleteIntent(deletePendingIntent)
-//            .addAction(R.drawable.cancel_button_black, "Cancel", deletePendingIntent)
-//            .build()
-    }*/
 
     private fun updateNotification() {
         notificationManager.notify(1, createNotification())
@@ -287,8 +126,30 @@ class TimerService : Service() {
 
     override fun onDestroy() {
         Log.d("TimerService", "Service Stopped")
-//        stopForeground(true)
         super.onDestroy()
+    }
+
+    private val openAppIntent by lazy {
+        val intent = Intent(appContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        PendingIntent.getActivity(
+            appContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private val stopServiceIntent by lazy {
+        val stopIntent = Intent(appContext, TimerService::class.java)
+        stopIntent.action = DESTROY
+        PendingIntent.getService(
+            appContext,
+            1,
+            stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     companion object {
@@ -311,8 +172,10 @@ class TimerService : Service() {
         val secRemainLD: LiveData<Long>
             get() = _secRemainLD*/
 
-        fun newIntent(context: Context): Intent {
-            return Intent(context, TimerService::class.java)
+        fun newIntent(context: Context, action: String): Intent {
+            return Intent(context, TimerService::class.java).apply {
+                this.action = action
+            }
         }
     }
 }
