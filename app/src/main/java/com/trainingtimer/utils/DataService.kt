@@ -24,6 +24,7 @@ class DataService : Service() {
     }
 
     companion object {
+        const val START = "START"
 
         var isCounting: Boolean by Delegates.observable(false) {
                 prop, old, new ->

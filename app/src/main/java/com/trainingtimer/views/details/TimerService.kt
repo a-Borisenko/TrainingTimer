@@ -13,10 +13,8 @@ import androidx.core.app.NotificationCompat
 import com.trainingtimer.MainActivity
 import com.trainingtimer.R
 import com.trainingtimer.domain.Training
-import com.trainingtimer.utils.CHANNEL_ID
-import com.trainingtimer.utils.DESTROY
 import com.trainingtimer.utils.DataService
-import com.trainingtimer.utils.START
+import com.trainingtimer.utils.DataService.Companion.START
 import com.trainingtimer.utils.timeLongToString
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -156,6 +154,9 @@ class TimerService : Service() {
         var isCounting: Boolean by Delegates.observable(DataService.isCounting) { prop, old, new ->
             DataService.isCounting = new
         }
+
+        private const val DESTROY = "DESTROY"
+        private const val CHANNEL_ID = "NotificationChannelID"
 
         var isLast = true
         var secInit = 0L

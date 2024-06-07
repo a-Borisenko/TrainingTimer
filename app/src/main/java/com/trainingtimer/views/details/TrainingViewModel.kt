@@ -135,10 +135,8 @@ class TrainingViewModel @Inject constructor(
     fun resetProgress() {
         if (DataService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
-//            timerService.readyToCountdown()
         } else {
             _progress.value = 0f
-//            timerService.zeroCountdown()
         }
         Log.d("viewModel", "progress ${_progress.value}")
     }

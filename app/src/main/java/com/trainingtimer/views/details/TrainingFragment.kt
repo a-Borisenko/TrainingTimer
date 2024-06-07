@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.utils.START
+import com.trainingtimer.utils.DataService.Companion.START
 import com.trainingtimer.utils.hide
 import com.trainingtimer.utils.hideKeyboard
 import com.trainingtimer.utils.launchWhenStarted

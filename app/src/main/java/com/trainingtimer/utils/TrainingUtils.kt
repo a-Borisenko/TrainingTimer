@@ -11,12 +11,6 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-const val START = "START"
-const val DESTROY = "DESTROY"
-
-const val CHANNEL_ID = "NotificationChannelID"
-
-const val DATABASE_NAME = "training-database"
 
 fun timeStringToLong(time: String): Long {
     val min = (time.split(":"))[0].toLong()
