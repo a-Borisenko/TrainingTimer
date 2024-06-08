@@ -132,7 +132,7 @@ class TrainingViewModel @Inject constructor(
         resetProgress()
     }
 
-    fun resetProgress() {
+    private fun resetProgress() {
         if (DataService.currentId != Training.UNDEFINED_ID) {
             _progress.value = 100f
         } else {
