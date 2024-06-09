@@ -40,12 +40,5 @@ class DataService : Service() {
                 prop, old, new ->
             Log.d("DataService", "currentId = $old -> $new")
         }
-            /*if (TimerService.isCounting) {
-                TimerService.currentId
-                Log.d("DataService", "currentId = ${TimerService.currentId}")
-            } else {
-                Training.UNDEFINED_ID
-                Log.d("DataService", "currentId = ${Training.UNDEFINED_ID}")
-            }*/
     }
 }
