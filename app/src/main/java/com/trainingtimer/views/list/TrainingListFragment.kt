@@ -16,6 +16,8 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
 import com.trainingtimer.utils.DataService
+import com.trainingtimer.utils.hide
+import com.trainingtimer.utils.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,8 +42,8 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             listAdapter.submitList(it)
         }
         with(binding) {
-            progressBar.isVisible = false
-            trainingRecyclerView.isVisible = true
+            progressBar.hide()
+            trainingRecyclerView.show()
             newTraining.isVisible = true
         }
     }
