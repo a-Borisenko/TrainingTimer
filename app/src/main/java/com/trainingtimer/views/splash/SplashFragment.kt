@@ -53,9 +53,10 @@ class SplashFragment : Fragment(R.layout.splash_screen) {
 
     private fun navigateToMainScreen() {
         // Перейти к основному экрану приложения
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, TrainingListFragment())
-        transaction.commit()
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, TrainingListFragment())
+            .commit()
     }
 
     private fun showErrorMessage(error: Throwable) {
