@@ -1,14 +1,13 @@
 package com.trainingtimer.views.splash
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.trainingtimer.MainActivity
 import com.trainingtimer.R
 import com.trainingtimer.databinding.SplashScreenBinding
+import com.trainingtimer.views.list.TrainingListFragment
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment(R.layout.splash_screen) {
@@ -26,10 +25,10 @@ class SplashFragment : Fragment(R.layout.splash_screen) {
             viewModel.progressFlow.collect { progress ->
                 binding.splashScreenProgressBar.progress = progress
                 if (progress == 100) {
-                    launchMainActivity()
+                    navigateToMainScreen()
                 }
             }
-//            navigateToMainScreen()
+
             /*viewModel.loadingStateFlow.collect { state ->
                 when (state) {
                     is LoadingState.Loading -> {
@@ -60,14 +59,7 @@ class SplashFragment : Fragment(R.layout.splash_screen) {
         }*/
     }
 
-    private fun launchMainActivity() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        startActivity(intent)
-        requireActivity().finish()
-    }
-
-    /*private fun navigateToMainScreen() {
+    private fun navigateToMainScreen() {
         // Перейти к основному экрану приложения
         requireActivity().supportFragmentManager
             .popBackStack()
@@ -75,7 +67,7 @@ class SplashFragment : Fragment(R.layout.splash_screen) {
             .beginTransaction()
             .replace(R.id.fragment_container, TrainingListFragment())
             .commit()
-    }*/
+    }
 
     /*private fun showErrorMessage(error: Throwable) {
         // Показать сообщение об ошибке пользователю
