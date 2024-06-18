@@ -6,6 +6,7 @@ import androidx.fragment.app.commit
 import com.trainingtimer.views.details.TimerService
 import com.trainingtimer.views.details.TrainingFragment
 import com.trainingtimer.views.list.TrainingListFragment
+import com.trainingtimer.views.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment == null) {
-            val fragment = TrainingListFragment()
+            val fragment = SplashFragment()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
