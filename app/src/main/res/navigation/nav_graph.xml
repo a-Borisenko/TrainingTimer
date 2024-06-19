@@ -3,7 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/trainingListFragment">
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.trainingtimer.views.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/splash_screen" >
+
+        <action
+            android:id="@+id/action_splashFragment_to_trainingListFragment"
+            app:destination="@id/trainingListFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/trainingListFragment"

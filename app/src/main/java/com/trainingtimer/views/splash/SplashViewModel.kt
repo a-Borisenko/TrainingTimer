@@ -21,7 +21,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
     fun startSplashTimer() {
         viewModelScope.launch {
             while (_progressFlow.value < 100) {
-                delay(100)
+                delay(200)
                 dummy += 25
                 _progressFlow.value = dummy
             }

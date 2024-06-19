@@ -8,8 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import com.trainingtimer.R
 import com.trainingtimer.databinding.SplashScreenBinding
 import com.trainingtimer.views.list.TrainingListFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.splash_screen) {
 
     private val viewModel: SplashViewModel by viewModels()
