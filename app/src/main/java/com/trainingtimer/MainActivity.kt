@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.trainingtimer.views.details.TimerService
 import com.trainingtimer.views.details.TrainingFragment
-import com.trainingtimer.views.list.TrainingListFragment
 import com.trainingtimer.views.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,18 +16,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val currentFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container)
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         if (currentFragment == null) {
             val fragment = SplashFragment()
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragment_container, fragment)
+                .add(R.id.nav_host_fragment, fragment)
                 .commit()
         }
 
         if (TimerService.isCounting) {
             supportFragmentManager.commit {
-                replace(R.id.fragment_container, TrainingFragment())
+                replace(R.id.nav_host_fragment, TrainingFragment())
                 setReorderingAllowed(true)
                 addToBackStack(null)
             }
