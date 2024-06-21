@@ -5,9 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.SplashScreenBinding
-import com.trainingtimer.views.list.TrainingListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -63,12 +63,15 @@ class SplashFragment : Fragment(R.layout.splash_screen) {
 
     private fun navigateToMainScreen() {
         // Перейти к основному экрану приложения
-        requireActivity().supportFragmentManager
-            .popBackStack()
+        findNavController().navigate(
+            R.id.action_splashFragment_to_trainingListFragment
+        )
+        /*val host = NavHostFragment.create(R.navigation.nav_graph)
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container, TrainingListFragment())
-            .commit()
+            .replace(R.id.nav_host_fragment, TrainingListFragment())
+            .setPrimaryNavigationFragment(host)
+            .commit()*/
     }
 
     /*private fun showErrorMessage(error: Throwable) {

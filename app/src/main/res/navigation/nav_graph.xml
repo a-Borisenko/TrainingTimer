@@ -13,7 +13,9 @@
 
         <action
             android:id="@+id/action_splashFragment_to_trainingListFragment"
-            app:destination="@id/trainingListFragment" />
+            app:destination="@id/trainingListFragment"
+            app:popUpTo="@+id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
