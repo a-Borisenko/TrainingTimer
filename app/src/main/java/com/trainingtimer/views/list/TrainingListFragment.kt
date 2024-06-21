@@ -94,10 +94,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             bundleOf("id" to id),
             navOptions {
                 anim {
-                    enter = anim.abc_popup_enter
-                    exit = anim.abc_popup_enter
-                    popEnter = anim.abc_popup_enter
-                    popExit = anim.abc_popup_enter
+                    enter = anim.abc_slide_in_top
+                    exit = anim.abc_slide_out_bottom
+                    popEnter = anim.abc_slide_in_bottom
+                    popExit = anim.abc_slide_out_top
                 }
             }
         )
