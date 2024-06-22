@@ -6,7 +6,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,19 +23,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
-    private lateinit var viewModel: TrainingListViewModel
+    private val viewModel: TrainingListViewModel by viewModels()
     private lateinit var listAdapter: TrainingAdapter
     private lateinit var binding: FragmentTrainingListBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
-        val intent = Intent(requireContext().applicationContext, DataService::class.java)
-        requireContext().applicationContext.startService(intent)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val intent = Intent(requireContext().applicationContext, DataService::class.java)
+        requireContext().applicationContext.startService(intent)
+
         binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
         viewModel.trainingList.observe(viewLifecycleOwner) {
