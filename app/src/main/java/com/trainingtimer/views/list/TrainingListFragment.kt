@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,6 +20,8 @@ import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.hide
 import com.trainingtimer.utils.show
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
@@ -37,10 +40,17 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         viewModel.trainingList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
         }
-        with(binding) {
-            progressBar.hide()
-            trainingRecyclerView.show()
-            newTraining.isVisible = true
+        loadView()
+    }
+
+    private fun loadView() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(3000)
+            with(binding) {
+                progressBar.hide()
+                trainingRecyclerView.show()
+                newTraining.isVisible = true
+            }
         }
     }
 
