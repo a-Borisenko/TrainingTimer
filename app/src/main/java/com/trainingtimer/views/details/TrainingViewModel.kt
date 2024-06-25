@@ -171,11 +171,11 @@ class TrainingViewModel @Inject constructor(
                 startLoad()
                 delay(3000)
                 finishLoad()
-                if (TimerService.currentId == Training.UNDEFINED_ID) {
+                if (DataService.currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, TimerService.currentId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, DataService.currentId)
                     editTrainingUseCase.editTraining(item)
                 }
                 finishWork()
