@@ -15,7 +15,6 @@ import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,9 +44,9 @@ class TrainingViewModel @Inject constructor(
     private val _errorInputTimes = MutableStateFlow(false)
     val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
+//    private val _loading = MutableLiveData<Boolean>()
+//    val loading: LiveData<Boolean>
+//        get() = _loading
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
@@ -168,9 +167,9 @@ class TrainingViewModel @Inject constructor(
         val fieldValid = validateInput(sets, title, reps)
         if (fieldValid) {
             viewModelScope.launch {
-                startLoad()
-                delay(3000)
-                finishLoad()
+//                startLoad()
+//                delay(3000)
+//                finishLoad()
                 if (DataService.currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
@@ -221,11 +220,11 @@ class TrainingViewModel @Inject constructor(
         _shouldCloseScreen.value = Unit
     }
 
-    private fun startLoad() {
+    /*private fun startLoad() {
         _loading.value = true
     }
 
     private fun finishLoad() {
         _loading.value = false
-    }
+    }*/
 }

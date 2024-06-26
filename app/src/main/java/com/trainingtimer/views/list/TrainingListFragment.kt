@@ -1,6 +1,5 @@
 package com.trainingtimer.views.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -32,8 +31,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val intent = Intent(requireContext().applicationContext, DataService::class.java)
-        requireContext().applicationContext.startService(intent)
 
         binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
@@ -100,10 +97,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             bundleOf("id" to id),
             navOptions {
                 anim {
-                    enter = anim.abc_slide_in_top
-                    exit = anim.abc_slide_out_bottom
-                    popEnter = anim.abc_slide_in_bottom
-                    popExit = anim.abc_slide_out_top
+                    enter = anim.abc_slide_in_bottom
+                    exit = anim.abc_slide_out_top
+                    popEnter = anim.abc_slide_in_top
+                    popExit = anim.abc_slide_out_bottom
                 }
             }
         )

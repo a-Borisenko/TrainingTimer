@@ -16,11 +16,8 @@ import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.utils.DataService.Companion.START
-import com.trainingtimer.utils.hide
-import com.trainingtimer.utils.hideKeyboard
 import com.trainingtimer.utils.launchWhenStarted
 import com.trainingtimer.utils.onChange
-import com.trainingtimer.utils.show
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
 import com.trainingtimer.views.timepicker.TimePickerFragment
@@ -146,11 +143,13 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun onClickListeners() {
         binding.trainingBtn.setOnClickListener {
-            ContextCompat.startForegroundService(
-                requireContext(),
-                TimerService.newIntent(requireContext(), START)
-            )
-            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
+            if (!TimerService.isCounting) {
+                ContextCompat.startForegroundService(
+                    requireContext(),
+                    TimerService.newIntent(requireContext(), START)
+                )
+                viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
+            }
         }
         binding.viewTimer.setOnClickListener {
             if (!TimerService.isCounting) {
@@ -161,7 +160,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun trainingClickData() {
         if (!TimerService.isCounting) {
-            hideView()
+//            hideView()
             viewModel.trainingClickData(
                 binding.etSets.text?.toString(),
                 binding.etTitle.text?.toString(),
@@ -172,7 +171,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     //TODO #1: move to List (start mode)
-    private fun hideView() {
+    /*private fun hideView() {
         viewModel.loading.observe(viewLifecycleOwner) {
             if (it) {
                 with(binding) {
@@ -187,7 +186,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 requireActivity().hideKeyboard(requireView())
             }
         }
-    }
+    }*/
 
     private fun addTextChangeListeners() {
         binding.etSets.onChange {
