@@ -26,6 +26,11 @@ class DataService : Service() {
     companion object {
         const val START = "START"
 
+        var needLoading: Boolean by Delegates.observable(false) {
+                prop, old, new ->
+            Log.d("DataService", "needLoading = $old -> $new")
+        }
+
         var isCounting: Boolean by Delegates.observable(false) {
                 prop, old, new ->
             Log.d("DataService", "isCounting = $old -> $new")

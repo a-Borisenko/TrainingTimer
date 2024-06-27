@@ -44,20 +44,12 @@ class TrainingViewModel @Inject constructor(
     private val _errorInputTimes = MutableStateFlow(false)
     val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
 
-//    private val _loading = MutableLiveData<Boolean>()
-//    val loading: LiveData<Boolean>
-//        get() = _loading
-
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
     private val _secRemain = MutableStateFlow(TimerService.secInit)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
-
-    /*val secRem: SharedFlow<Long> = flow {
-        emit(100L)
-    }.shareIn(viewModelScope, started = SharingStarted.Lazily, replay = 1)*/
 
     private val _progress = MutableStateFlow(startProgress)
     val progress: StateFlow<Float> = _progress.asStateFlow()
@@ -167,9 +159,7 @@ class TrainingViewModel @Inject constructor(
         val fieldValid = validateInput(sets, title, reps)
         if (fieldValid) {
             viewModelScope.launch {
-//                startLoad()
-//                delay(3000)
-//                finishLoad()
+                DataService.needLoading = true
                 if (DataService.currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
@@ -219,12 +209,4 @@ class TrainingViewModel @Inject constructor(
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
-
-    /*private fun startLoad() {
-        _loading.value = true
-    }
-
-    private fun finishLoad() {
-        _loading.value = false
-    }*/
 }

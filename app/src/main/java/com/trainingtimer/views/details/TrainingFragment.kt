@@ -44,7 +44,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         addTextChangeListeners()
     }
 
-    //TODO #2: change to ViewModel
+    //TODO #1: change to ViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.saveState(
@@ -160,7 +160,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private fun trainingClickData() {
         if (!TimerService.isCounting) {
-//            hideView()
             viewModel.trainingClickData(
                 binding.etSets.text?.toString(),
                 binding.etTitle.text?.toString(),
@@ -169,24 +168,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             )
         }
     }
-
-    //TODO #1: move to List (start mode)
-    /*private fun hideView() {
-        viewModel.loading.observe(viewLifecycleOwner) {
-            if (it) {
-                with(binding) {
-                    tilSets.hide()
-                    tilTitle.hide()
-                    tilTimes.hide()
-                    viewTimer.hide()
-                    trainingBtn.hide()
-                    countdownBar.hide()
-                    progressBar.show()
-                }
-                requireActivity().hideKeyboard(requireView())
-            }
-        }
-    }*/
 
     private fun addTextChangeListeners() {
         binding.etSets.onChange {

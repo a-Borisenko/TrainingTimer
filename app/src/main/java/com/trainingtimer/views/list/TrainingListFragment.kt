@@ -42,12 +42,13 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun loadView() {
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(3000)
+            if (DataService.needLoading) delay(2000)
             with(binding) {
                 progressBar.hide()
                 trainingRecyclerView.show()
                 newTraining.isVisible = true
             }
+            DataService.needLoading = false
         }
     }
 
