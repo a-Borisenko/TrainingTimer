@@ -19,7 +19,6 @@ import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.hide
 import com.trainingtimer.utils.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -37,18 +36,26 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         viewModel.trainingList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
         }
-        loadView()
+        viewLifecycleOwner.lifecycleScope.launch {
+            uiState()
+        }
+        viewModel.loadView()
     }
 
-    private fun loadView() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            if (DataService.needLoading) delay(2000)
-            with(binding) {
-                progressBar.hide()
-                trainingRecyclerView.show()
-                newTraining.isVisible = true
+    private suspend fun uiState() {
+        viewModel.uiState.collect { state ->
+            when (state) {
+                TrainingUiState.Loading -> {
+                    binding.progressBar.show()
+                    binding.trainingRecyclerView.hide()
+                    binding.newTraining.isVisible = false
+                }
+                TrainingUiState.Loaded -> {
+                    binding.progressBar.hide()
+                    binding.trainingRecyclerView.show()
+                    binding.newTraining.isVisible = true
+                }
             }
-            DataService.needLoading = false
         }
     }
 
