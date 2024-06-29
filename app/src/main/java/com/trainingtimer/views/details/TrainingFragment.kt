@@ -136,7 +136,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                     }
                 }.launchWhenStarted(lifecycleScope)
             shouldCloseScreen.observe(viewLifecycleOwner) {
-                findNavController().popBackStack()
+                findNavController().popBackStack()    // TODO #2: crash when app launch from Notification, time up & save
             }
         }
     }
