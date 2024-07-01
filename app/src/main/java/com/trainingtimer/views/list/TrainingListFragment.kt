@@ -90,12 +90,22 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun setupClickListener() {
+        binding.newTraining.setOnLongClickListener {
+            navCal()
+        }
         listAdapter.onTrainingClickListener = {
             navigate(it.id)
         }
         binding.newTraining.setOnClickListener {
             navigate(UNDEFINED_ID)
         }
+    }
+
+    private fun navCal(): Boolean {
+        findNavController().navigate(
+            R.id.action_trainingListFragment_to_calendar
+        )
+        return false
     }
 
     private fun navigate(id: Int) {

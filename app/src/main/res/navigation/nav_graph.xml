@@ -27,7 +27,16 @@
         <action
             android:id="@+id/action_trainingListFragment_to_trainingFragment"
             app:destination="@id/trainingFragment" />
+        <action
+            android:id="@+id/action_trainingListFragment_to_calendar"
+            app:destination="@id/calendarView" />
     </fragment>
+
+    <fragment
+        android:id="@+id/calendarView"
+        android:name="com.trainingtimer.views.calendar.CalendarFragment"
+        android:label="CalendarFragment"
+        tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/trainingFragment"
