@@ -22,4 +22,6 @@
     <string name="error_input_times">Invalid times</string>
     <string name="channel_name">notifyChanel</string>
     <string name="channel_description">chanel for notifications</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
 </resources>
