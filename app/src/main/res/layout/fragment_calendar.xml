@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +14,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp">
         <Button
+            android:id="@+id/previous_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -22,7 +22,6 @@
             android:textColor="@color/blue"
             android:background="@null"
             android:textStyle="bold"
-            android:onClick="previousMonthAction"
             android:textSize="20sp"/>
 
         <TextView
@@ -36,6 +35,7 @@
             android:textColor="@color/black"/>
 
         <Button
+            android:id="@+id/next_month"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +43,6 @@
             android:textColor="@color/blue"
             android:background="@null"
             android:textStyle="bold"
-            android:onClick="nextMonthAction"
             android:textSize="20sp"/>
 
     </LinearLayout>
@@ -52,15 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="SUN"
-            android:textColor="@color/grey"
-            android:textAlignment="center"
-            android:textSize="16sp"/>
 
         <TextView
             android:layout_width="0dp"
@@ -116,13 +106,23 @@
             android:textAlignment="center"
             android:textSize="16sp"/>
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="SUN"
+            android:textColor="@color/grey"
+            android:textAlignment="center"
+            android:textSize="16sp"/>
+
 
     </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendarRecyclerView"
+        android:id="@+id/calendar_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>
