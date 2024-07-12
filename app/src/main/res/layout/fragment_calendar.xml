@@ -12,7 +12,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp">
+
         <Button
             android:id="@+id/previous_month"
             android:layout_width="0dp"
@@ -20,14 +22,13 @@
             android:layout_weight="1"
             android:text="@string/back"
             android:textColor="@color/blue"
-            android:background="@null"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/month_year_tv"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:text="@string/calendar_title"
             android:textSize="20sp"
@@ -41,9 +42,9 @@
             android:layout_weight="1"
             android:text="@string/forward"
             android:textColor="@color/blue"
-            android:background="@null"
             android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:layout_marginEnd="20dp"/>
 
     </LinearLayout>
 
