@@ -131,13 +131,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun previousMonthAction() {
-        selectedDate = selectedDate.minusMonths(1)
-        setMonthView()
+        Toast.makeText(context, "previous month clicked!!!", Toast.LENGTH_SHORT).show()
     }
 
     private fun nextMonthAction() {
-        selectedDate = selectedDate.plusMonths(1)
-        setMonthView()
+        Toast.makeText(context, "next month clicked!!!", Toast.LENGTH_SHORT).show()
     }
 
     fun onItemClick(position: Int, dayText: String) {
