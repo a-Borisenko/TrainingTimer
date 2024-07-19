@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +22,7 @@ import java.time.format.DateTimeFormatter
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
+    private val viewModel: CalendarViewModel by viewModels()
     private lateinit var listAdapter: CalendarAdapter
     private lateinit var binding: FragmentCalendarBinding
 
@@ -78,7 +80,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }*/
     }
 
-    private fun navigate(id: Int) {
+    /*private fun navigate(id: Int) {
         DataService.currentId = id
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
@@ -92,7 +94,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 }
             }
         )
-    }
+    }*/
 
     /*private fun initWidgets() {
         binding.calendarRecyclerView = findViewById<RecyclerView>(R.id.calendarRecyclerView)
@@ -109,7 +111,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         calendarRecyclerView.setAdapter(calendarAdapter)*/
     }
 
-    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+    // TODO: move to ViewModel
+    /*private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
         val daysInMonthArray = ArrayList<String>()
         val yearMonth = YearMonth.from(date)
         val daysInMonth = yearMonth.lengthOfMonth()
@@ -123,8 +126,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             }
         }
         return daysInMonthArray
-    }
+    }*/
 
+    // TODO: move to ViewModel
     private fun monthYearFromDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
         return date.format(formatter)
@@ -138,10 +142,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         Toast.makeText(context, "next month clicked!!!", Toast.LENGTH_SHORT).show()
     }
 
-    fun onItemClick(position: Int, dayText: String) {
+    /*fun onItemClick(position: Int, dayText: String) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
-    }
+    }*/
 }
