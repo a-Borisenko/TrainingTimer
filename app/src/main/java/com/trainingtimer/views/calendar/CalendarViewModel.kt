@@ -20,6 +20,11 @@ class CalendarViewModel : ViewModel() {
 
 //    val trainingList = getTrainingListUseCase.getTrainingList()
 
+
+    fun moveToDate() {
+        // TODO: set date
+    }
+
     private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
         val daysInMonthArray = ArrayList<String>()
         val yearMonth = YearMonth.from(date)
