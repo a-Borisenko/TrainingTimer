@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.utils.DataService
+import java.text.DateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -38,12 +39,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupRecyclerView() {
-        /*val rvTrainingList = binding.trainingRecyclerView
-        listAdapter = TrainingAdapter()
-        rvTrainingList.adapter = listAdapter
-        setupClickListener()
-        setupSwipeListener(rvTrainingList)*/
-
         val rvDayList = binding.calendarRecyclerView
         listAdapter = CalendarAdapter()
         rvDayList.adapter = listAdapter
@@ -75,33 +70,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         listAdapter.onDayClickListener = {
             Toast.makeText(context, "${it.dayOfMonth} clicked!!!", Toast.LENGTH_SHORT).show()
         }
-        /*binding.newTraining.setOnClickListener {
-            navigate(Training.UNDEFINED_ID)
-        }*/
     }
 
-    /*private fun navigate(id: Int) {
-        DataService.currentId = id
-        findNavController().navigate(
-            R.id.action_trainingListFragment_to_trainingFragment,
-            bundleOf("id" to id),
-            navOptions {
-                anim {
-                    enter = com.google.android.material.R.anim.abc_slide_in_bottom
-                    exit = com.google.android.material.R.anim.abc_slide_out_top
-                    popEnter = com.google.android.material.R.anim.abc_slide_in_top
-                    popExit = com.google.android.material.R.anim.abc_slide_out_bottom
-                }
-            }
-        )
-    }*/
-
-    /*private fun initWidgets() {
-        binding.calendarRecyclerView = findViewById<RecyclerView>(R.id.calendarRecyclerView)
-        monthYearText = findViewById<TextView>(R.id.month_year_tv)
-    }*/
-
     private fun setMonthView() {
+        val calendar = Calendar.getInstance()
+        calendar.set(
+            2020,
+            6,
+            27
+        )
+//        calendarView.date = calendar.timeInMillis
+
         /*binding.monthYearTV.text = monthYearFromDate(selectedDate)
         val daysInMonth = daysInMonthArray(selectedDate)
         val calendarAdapter = CalendarAdapter(daysInMonth, this)
@@ -112,7 +91,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     // TODO: move to ViewModel
-    /*private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+        /*val selectedDate = calendarView.date
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = selectedDate
+        val dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM)
+        textView.text = "Selected date: ${dateFormatter.format(calendar.time)}"*/
+
         val daysInMonthArray = ArrayList<String>()
         val yearMonth = YearMonth.from(date)
         val daysInMonth = yearMonth.lengthOfMonth()
@@ -126,7 +111,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             }
         }
         return daysInMonthArray
-    }*/
+    }
 
     // TODO: move to ViewModel
     private fun monthYearFromDate(date: LocalDate): String {
