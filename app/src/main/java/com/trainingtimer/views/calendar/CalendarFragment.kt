@@ -1,25 +1,18 @@
 package com.trainingtimer.views.calendar
 
 import android.icu.util.Calendar
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.utils.DataService
-import java.text.DateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -30,6 +23,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private lateinit var monthYearText: TextView
 //    private val calendarRecyclerView: RecyclerView? = null
     private lateinit var selectedDate: LocalDate
+    private val loadedDates : MutableList<Date> = mutableListOf()
+    private lateinit var selectedMonthDate: Date
+    var latestPos = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
