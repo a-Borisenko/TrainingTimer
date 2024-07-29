@@ -86,16 +86,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         binding.calendarRecyclerView.itemAnimator = null
         listAdapter.submitList(loadedDates)
         val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL,false)
-        binding.pageRecyclerView.layoutManager = layoutManager
+        binding.calendarRecyclerView.layoutManager = layoutManager
 
         // Add PagerSnapHelper to make RecyclerView scroll like a Pager
         val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.pageRecyclerView)
+        snapHelper.attachToRecyclerView(binding.calendarRecyclerView)
 
         // Start calendar from the current month
-        binding.pageRecyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate!!))
+        binding.calendarRecyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate!!))
 
-        binding.pageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.calendarRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if(newState == RecyclerView.SCROLL_STATE_IDLE){
@@ -129,12 +129,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         binding.nextMonth.setOnClickListener{
             // Go to the next month
             if(latestPos +1 <= loadedDates.size-1)
-                binding.pageRecyclerView.smoothScrollToPosition(latestPos+1)
+                binding.calendarRecyclerView.smoothScrollToPosition(latestPos+1)
         }
         binding.previousMonth.setOnClickListener {
             // Go to the previous month
             if(latestPos - 1 >= 0){
-                binding.pageRecyclerView.smoothScrollToPosition(latestPos-1)
+                binding.calendarRecyclerView.smoothScrollToPosition(latestPos-1)
             }
         }
     }
