@@ -3,10 +3,8 @@ package com.trainingtimer.views.calendar
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +19,11 @@ import java.util.Locale
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
-    private val viewModel: CalendarViewModel by viewModels()
+//    private val viewModel: CalendarViewModel by viewModels()
     private lateinit var listAdapter: CalendarAdapter
     private lateinit var binding: FragmentCalendarBinding
 
-    private lateinit var monthYearText: TextView
+//    private lateinit var monthYearText: TextView
 //    private val calendarRecyclerView: RecyclerView? = null
     private lateinit var selectedDate: LocalDate
     private val loadedDates : MutableList<Date> = mutableListOf()
@@ -63,7 +61,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         // Start from the current month
         selectedMonthDate = calendar.time
-        binding.monthYearTv.text = dateFormatter(selectedMonthDate!!)
+        binding.monthYearText.text = dateFormatter(selectedMonthDate)
 
         // Initiate the months list
 //        startList()
@@ -93,7 +91,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         snapHelper.attachToRecyclerView(binding.calendarRecyclerView)
 
         // Start calendar from the current month
-        binding.calendarRecyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate!!))
+        binding.calendarRecyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate))
 
         binding.calendarRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -105,22 +103,22 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     // If switched to a different month
                     if(latestPos != pos){
                         // Assign new selected date
-                        selectedMonthDate = adapter.getItemByPos(pos)
-                        binding.monthText.text = dateFormatter(selectedMonthDate!!)
+                        selectedMonthDate = listAdapter.getItemByPos(pos)
+                        binding.monthYearText.text = dateFormatter(selectedMonthDate)
                         // Assign new latest position
                         latestPos = pos
 
                         // If at the start of the list, load previous months and scroll back to the same month
                         if(pos == 0){
                             loadPreviousMonths()
-                            adapter.submitList(loadedDates.toMutableList())
-                            recyclerView.scrollToPosition(adapter.getItemPos(selectedMonthDate!!))
+                            listAdapter.submitList(loadedDates.toMutableList())
+                            recyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate))
                         }
                         // If at the end of the list, load next months and scroll back to the same month
                         if(pos == loadedDates.size-1){
                             loadNextMonths()
-                            adapter.submitList(loadedDates.toMutableList())
-                            recyclerView.scrollToPosition(adapter.getItemPos(selectedMonthDate!!))
+                            listAdapter.submitList(loadedDates.toMutableList())
+                            recyclerView.scrollToPosition(listAdapter.getItemPos(selectedMonthDate))
                         }
                     }
                 }
@@ -139,6 +137,37 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
 
+    private fun dateFormatter(date : Date) : String {
+        val sdf = SimpleDateFormat("MMMM - yyyy", Locale.getDefault())
+        return sdf.format(date)
+    }
+
+    private fun loadPreviousMonths(){
+        val calendar = java.util.Calendar.getInstance()
+        calendar.time = loadedDates[0]
+
+        // Load the previous year
+        for(i in 1..12){
+            calendar.add(java.util.Calendar.MONTH,-1)
+            loadedDates.add(calendar.time)
+        }
+        // Sort by time
+        latestPos += 12
+        loadedDates.sort()
+    }
+    private fun loadNextMonths(){
+        val calendar = java.util.Calendar.getInstance()
+        calendar.time = loadedDates.last()
+
+        // Load the next year
+        for(i in 1..12){
+            calendar.add(java.util.Calendar.MONTH,1)
+            loadedDates.add(calendar.time)
+        }
+        // Sort by time
+        loadedDates.sort()
+    }
+
     private fun setupClickListener() {
         binding.previousMonth.setOnClickListener {
             previousMonthAction()
@@ -148,7 +177,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
 
         listAdapter.onDayClickListener = {
-            Toast.makeText(context, "${it.dayOfMonth} clicked!!!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "${it.time} clicked!!!", Toast.LENGTH_SHORT).show()
         }
     }
 
