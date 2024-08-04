@@ -1,59 +1,95 @@
 package com.trainingtimer.views.calendar
 
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.trainingtimer.R
 import com.trainingtimer.databinding.CalendarCellBinding
-import com.trainingtimer.domain.Day
+import com.trainingtimer.domain.CalendarDay
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
-class CalendarAdapter : ListAdapter<Day, CalendarViewHolder>(CalendarDiffCallback()) {
+class CalendarAdapter(
+    val events: List<Date>,
+    val context: Context,
+    val selectedDate: Date?,
+    val currentMonth: Date,
+    val onItemClick: (CalendarDay) -> Unit
+) : ListAdapter<CalendarDay, CalendarAdapter.ViewHolder>(CalendarDiffCallBack()) {
 
-    var onDayLongClickListener: ((Day) -> Unit)? = null
-    var onDayClickListener: ((Day) -> Unit)? = null
+    inner class ViewHolder(private val binding: CalendarCellBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(date: CalendarDay) {
 
-//    private val daysOfMonth: ArrayList<String>? = null
-//    private val onItemListener: OnItemListener? = null
 
-    /*fun CalendarAdapter(daysOfMonth: ArrayList<String>?, onItemListener: OnItemListener?) {
-        this.daysOfMonth = daysOfMonth
-        this.onItemListener = onItemListener
-    }*/
+            if (isInTheSelectedMonth(date.date, currentMonth)) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = CalendarCellBinding.inflate(inflater, parent, false)
+                binding.root.setOnClickListener {
+                    // only click current month days
+                    onItemClick(date)
+                }
 
-//        val view: View = inflater.inflate(R.layout.calendar_cell, parent, false)
-//        val layoutParams = view.layoutParams
-//        layoutParams.height = (parent.height * 0.166666666).toInt()
-        return CalendarViewHolder(binding)
+                val calendar = Calendar.getInstance()
+                // if date is inside the selected month, set background resource
+                if (areDatesEqual(calendar.time, date.date)) {
+                    // Today
+                    binding.backgroundConstraint.background =
+                        ContextCompat.getDrawable(context, R.drawable.calendar_cell_today)
+                } else {
+                    var isEventDay = false
+                    events.forEach {
+                        if (areDatesEqual(it, date.date)) {
+                            isEventDay = true
+                            return@forEach
+                        }
+                    }
+                    if (isEventDay) {
+                        // event day
+                        binding.backgroundConstraint.background =
+                            ContextCompat.getDrawable(context, R.drawable.calendar_cell_event)
+                    } else {
+                        // normal day
+                        binding.backgroundConstraint.background =
+                            ContextCompat.getDrawable(context, R.drawable.calendar_cell_background)
+                    }
+                }
+            } else {
+                // if not in the selected month, display gray
+                binding.backgroundConstraint.background =
+                    ContextCompat.getDrawable(context, R.drawable.calendar_cell_gray)
+                binding.textView.setTextColor(Color.parseColor("#D3D3D3"))
+            }
+            binding.textView.text = date.dayOfMonth
+            if (selectedDate != null) {
+                binding.backgroundConstraint.isSelected = areDatesEqual(selectedDate, date.date)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        val day = getItem(position)
-        holder.dayOfMonth.text = day.dayOfMonth
-//            daysOfMonth?.get(position) ?: "day not found"
-
-        /*with(holder) {
-            listSets.text = day.sets.toString()
-            listTitle.text = training.title
-            listTimes.text = training.times
-            listRest.text = training.rest
-        }*/
-        holder.binding.root.setOnClickListener {
-            onDayClickListener?.invoke(day)
-        }
-        holder.binding.root.setOnLongClickListener {
-            onDayLongClickListener?.invoke(day)
-            true
-        }
+    fun areDatesEqual(dateFirst: Date, dateSecond: Date): Boolean {
+        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        return sdf.format(dateFirst).equals(sdf.format(dateSecond))
     }
 
-    /*override fun getItemCount(): Int {
-        return daysOfMonth!!.size
-    }*/
+    fun isInTheSelectedMonth(dateFirst: Date, dateSecond: Date): Boolean {
+        val sdf = SimpleDateFormat("yyyyMM", Locale.getDefault())
+        return sdf.format(dateFirst).equals(sdf.format(dateSecond))
+    }
 
-    /*interface OnItemListener {
-        fun onItemClick(position: Int, dayText: String?)
-    }*/
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            CalendarCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        holder.bind(getItem(position))
+    }
 }
