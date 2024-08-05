@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 
 class CalendarViewModel : ViewModel() {
 
@@ -25,7 +22,7 @@ class CalendarViewModel : ViewModel() {
         // TODO: set date
     }
 
-    private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
+    /*private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
         val daysInMonthArray = ArrayList<String>()
         val yearMonth = YearMonth.from(date)
         val daysInMonth = yearMonth.lengthOfMonth()
@@ -39,12 +36,12 @@ class CalendarViewModel : ViewModel() {
             }
         }
         return daysInMonthArray
-    }
+    }*/
 
-    private fun monthYearFromDate(date: LocalDate): String {
+    /*private fun monthYearFromDate(date: LocalDate): String {
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
         return date.format(formatter)
-    }
+    }*/
 
     private val _uiState = MutableStateFlow<TrainingUiState>(TrainingUiState.Loading)
     val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
