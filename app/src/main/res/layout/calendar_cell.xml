@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backgroundConstraint"
-        android:layout_width="50dp"
+        android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/calendar_cell_background"
