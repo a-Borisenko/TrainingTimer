@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
-import com.trainingtimer.views.calendar.CalendarAdapter
+import com.trainingtimer.views.calendar.date.DateAdapter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -90,7 +90,7 @@ class MonthAdapter(
         val date = getItem(position)
         val list = daysInMonthList(date)
 
-        val adapter = CalendarAdapter(events, context, selectedDate, date) { calendarDay ->
+        val adapter = DateAdapter(events, context, selectedDate, date) { calendarDay ->
 
             // Single selection
             // If clicked on the selected day, unselect
