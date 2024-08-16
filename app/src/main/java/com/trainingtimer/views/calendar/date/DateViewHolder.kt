@@ -1,4 +1,4 @@
-package com.trainingtimer.views.calendar
+package com.trainingtimer.views.calendar.date
 
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.databinding.CalendarCellBinding

@@ -1,4 +1,4 @@
-package com.trainingtimer.views.calendar
+package com.trainingtimer.views.calendar.date
 
 import android.content.Context
 import android.graphics.Color
@@ -15,13 +15,13 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class CalendarAdapter(
+class DateAdapter(
     val events: List<Date>,
     val context: Context,
     val selectedDate: Date?,
     val currentMonth: Date,
     val onItemClick: (CalendarDay) -> Unit
-) : ListAdapter<CalendarDay, CalendarAdapter.ViewHolder>(CalendarDiffCallBack()) {
+) : ListAdapter<CalendarDay, DateAdapter.ViewHolder>(DateDiffCallBack()) {
 
     inner class ViewHolder(private val binding: CalendarCellBinding) :
         RecyclerView.ViewHolder(binding.root) {

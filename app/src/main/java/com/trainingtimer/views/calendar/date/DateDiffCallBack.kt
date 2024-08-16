@@ -1,9 +1,9 @@
-package com.trainingtimer.views.calendar
+package com.trainingtimer.views.calendar.date
 
 import androidx.recyclerview.widget.DiffUtil
 import com.trainingtimer.domain.CalendarDay
 
-class CalendarDiffCallBack: DiffUtil.ItemCallback<CalendarDay>() {
+class DateDiffCallBack: DiffUtil.ItemCallback<CalendarDay>() {
 
     override fun areItemsTheSame(oldItem: CalendarDay, newItem: CalendarDay): Boolean {
         return oldItem.dayOfMonth == newItem.dayOfMonth
