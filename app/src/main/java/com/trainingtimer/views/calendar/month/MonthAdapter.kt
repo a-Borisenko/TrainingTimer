@@ -6,12 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
-import com.trainingtimer.domain.CalendarDay
 import com.trainingtimer.views.calendar.date.DateAdapter
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import com.trainingtimer.views.calendar.date.areDatesEqual
 import java.util.Date
-import java.util.Locale
 
 class MonthAdapter(
     val context: Context,
@@ -22,15 +19,7 @@ class MonthAdapter(
     var selectedDate: Date? = null
     var selectedMonthPos: Int? = null
 
-
-    private fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
-        // Function to compare two dates are the same day
-        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        if (dateFirst == null || dateSecond == null) {
-            return false
-        }
-        return sdf.format(dateFirst).equals(sdf.format(dateSecond))
-    }
+    private val monthCalculator = MonthCalculator()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -53,62 +42,21 @@ class MonthAdapter(
         return currentList[pos]
     }
 
-    private fun daysInMonthList(date: Date): List<CalendarDay> {
-        val daysInMonthList: MutableList<CalendarDay> = mutableListOf()
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2
-        when(dayOfWeek){
-            -1 -> {
-                // SUNDAY
-                calendar.add(Calendar.DAY_OF_MONTH,-6)
-                while(daysInMonthList.size < 42){
-                    daysInMonthList.add(CalendarDay(
-                        calendar.get(Calendar.DAY_OF_MONTH).toString(),
-                        calendar.time
-                    ))
-                    calendar.add(Calendar.DAY_OF_MONTH,1)
-                }
-            }
-            else -> {
-                // OTHER DAYS
-                calendar.add(Calendar.DAY_OF_MONTH,-dayOfWeek)
-                while(daysInMonthList.size < 42){
-                    daysInMonthList.add(CalendarDay(
-                        calendar.get(Calendar.DAY_OF_MONTH).toString(),
-                        calendar.time
-                    ))
-                    calendar.add(Calendar.DAY_OF_MONTH,1)
-                }
-            }
-        }
-        return daysInMonthList
-    }
-
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         val date = getItem(position)
-        val list = daysInMonthList(date)
+        val list = monthCalculator.getDaysInMonth(date)
 
         val adapter = DateAdapter(events, context, selectedDate, date) { calendarDay ->
-
-            // Single selection
-            // If clicked on the selected day, unselect
             if (areDatesEqual(selectedDate, calendarDay.date)) {
                 val lastPos = selectedMonthPos
                 selectedMonthPos = null
                 selectedDate = null
                 notifyItemChanged(lastPos!!)
             } else {
-
-                // If clicked on an unselected day, select
-                // If not selected a day before, select
                 if (selectedMonthPos == null) {
                     selectedMonthPos = position
                     selectedDate = calendarDay.date
                 } else {
-
-                    // If already selected a day before, switch the selected date
                     notifyItemChanged(selectedMonthPos!!)
                     selectedMonthPos = position
                     selectedDate = calendarDay.date
