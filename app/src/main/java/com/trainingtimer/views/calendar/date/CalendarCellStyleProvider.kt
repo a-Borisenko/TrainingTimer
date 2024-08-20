@@ -6,8 +6,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-fun areDatesEqual(dateFirst: Date, dateSecond: Date): Boolean {
+fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
     val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    if (dateFirst == null || dateSecond == null) {
+        return false
+    }
     return sdf.format(dateFirst).equals(sdf.format(dateSecond))
 }
 
