@@ -14,12 +14,12 @@ class MonthAdapter(
     val context: Context,
     private val events: List<Date>,
     val onItemClick: (date: Date?) -> Unit
-) :
-    ListAdapter<Date, MonthViewHolder>(MonthDiffCallBack()) {
+) : ListAdapter<Date, MonthViewHolder>(MonthDiffCallBack()) {
     var selectedDate: Date? = null
     var selectedMonthPos: Int? = null
 
     private val monthCalculator = MonthCalculator()
+    private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -46,30 +46,37 @@ class MonthAdapter(
         val date = getItem(position)
         val list = monthCalculator.getDaysInMonth(date)
 
-        val adapter = DateAdapter(events, context, selectedDate, date) { calendarDay ->
-            if (areDatesEqual(selectedDate, calendarDay.date)) {
-                val lastPos = selectedMonthPos
-                selectedMonthPos = null
-                selectedDate = null
-                notifyItemChanged(lastPos!!)
-            } else {
-                if (selectedMonthPos == null) {
-                    selectedMonthPos = position
-                    selectedDate = calendarDay.date
-                } else {
-                    notifyItemChanged(selectedMonthPos!!)
-                    selectedMonthPos = position
-                    selectedDate = calendarDay.date
-                }
-                notifyItemChanged(selectedMonthPos!!)
-                onItemClick(selectedDate)
+        val adapter = dateAdapterCache.getOrPut(position) {
+            DateAdapter(events, context, selectedDate, date) { calendarDay ->
+                onDateSelected(calendarDay.date, position)
             }
         }
+
         holder.apply {
             daysRecycler.layoutManager = GridLayoutManager(context, 7)
             daysRecycler.adapter = adapter
             daysRecycler.itemAnimator = null
         }
         adapter.submitList(list)
+    }
+
+    private fun onDateSelected(selectedDate: Date?, position: Int) {
+        if (areDatesEqual(this.selectedDate, selectedDate)) {
+            val lastPos = selectedMonthPos
+            selectedMonthPos = null
+            this.selectedDate = null
+            notifyItemChanged(lastPos!!)
+        } else {
+            if (selectedMonthPos == null) {
+                selectedMonthPos = position
+                this.selectedDate = selectedDate
+            } else {
+                notifyItemChanged(selectedMonthPos!!)
+                selectedMonthPos = position
+                this.selectedDate = selectedDate
+            }
+            notifyItemChanged(selectedMonthPos!!)
+            onItemClick(this.selectedDate)
+        }
     }
 }
