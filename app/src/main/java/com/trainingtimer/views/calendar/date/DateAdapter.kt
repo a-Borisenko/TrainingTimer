@@ -12,8 +12,8 @@ import java.util.Date
 class DateAdapter(
     events: List<Date>,
     val context: Context,
-    val selectedDate: Date?,
-    val currentMonth: Date,
+    private val selectedDate: Date?,
+    private val currentMonth: Date,
     val onItemClick: (CalendarDay) -> Unit
 ) : ListAdapter<CalendarDay, DateViewHolder>(DateDiffCallBack()) {
 
