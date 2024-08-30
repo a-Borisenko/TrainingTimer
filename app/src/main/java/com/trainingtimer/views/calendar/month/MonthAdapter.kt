@@ -15,6 +15,7 @@ class MonthAdapter(
     private val events: List<Date>,
     val onItemClick: (date: Date?) -> Unit
 ) : ListAdapter<Date, MonthViewHolder>(MonthDiffCallBack()) {
+
     var selectedDate: Date? = null
     var selectedMonthPos: Int? = null
 
@@ -28,14 +29,7 @@ class MonthAdapter(
     }
 
     fun getItemPos(date: Date): Int {
-        var selectedDate: Date? = null
-        currentList.forEach {
-            if (areDatesEqual(it, date)) {
-                selectedDate = it
-                return@forEach
-            }
-        }
-        return currentList.indexOf(selectedDate)
+        return currentList.indexOf(currentList.find { areDatesEqual(it, date) })
     }
 
     fun getItemByPos(pos: Int): Date {
