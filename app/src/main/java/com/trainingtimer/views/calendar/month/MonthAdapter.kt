@@ -16,9 +16,7 @@ class MonthAdapter(
     val onItemClick: (date: Date?) -> Unit
 ) : ListAdapter<Date, MonthViewHolder>(MonthDiffCallBack()) {
 
-    var selectedDate: Date? = null
-    var selectedMonthPos: Int? = null
-
+    private var selectedInfo: Pair<Date?, Int?> = null to null
     private val monthCalculator = MonthCalculator()
     private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
 
@@ -29,7 +27,7 @@ class MonthAdapter(
     }
 
     fun getItemPos(date: Date): Int {
-        return currentList.indexOf(currentList.find { areDatesEqual(it, date) })
+        return currentList.indexOfFirst { areDatesEqual(it, date) }
     }
 
     fun getItemByPos(pos: Int): Date {
@@ -41,36 +39,30 @@ class MonthAdapter(
         val list = monthCalculator.getDaysInMonth(date)
 
         val adapter = dateAdapterCache.getOrPut(position) {
-            DateAdapter(events, context, selectedDate, date) { calendarDay ->
+            DateAdapter(events, context, selectedInfo.first, date) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
         }
 
-        holder.apply {
-            daysRecycler.layoutManager = GridLayoutManager(context, 7)
+        with(holder) {
+            if (daysRecycler.layoutManager == null) {
+                daysRecycler.layoutManager = GridLayoutManager(context, 7)
+                daysRecycler.itemAnimator = null
+            }
             daysRecycler.adapter = adapter
-            daysRecycler.itemAnimator = null
         }
         adapter.submitList(list)
     }
 
     private fun onDateSelected(selectedDate: Date?, position: Int) {
-        if (areDatesEqual(this.selectedDate, selectedDate)) {
-            val lastPos = selectedMonthPos
-            selectedMonthPos = null
-            this.selectedDate = null
-            notifyItemChanged(lastPos!!)
+        if (areDatesEqual(selectedInfo.first, selectedDate)) {
+            notifyItemChanged(selectedInfo.second!!)
+            selectedInfo = null to null
         } else {
-            if (selectedMonthPos == null) {
-                selectedMonthPos = position
-                this.selectedDate = selectedDate
-            } else {
-                notifyItemChanged(selectedMonthPos!!)
-                selectedMonthPos = position
-                this.selectedDate = selectedDate
-            }
-            notifyItemChanged(selectedMonthPos!!)
-            onItemClick(this.selectedDate)
+            selectedInfo.second?.let { notifyItemChanged(it) }
+            selectedInfo = selectedDate to position
+            notifyItemChanged(position)
+            onItemClick(selectedInfo.first)
         }
     }
 }
