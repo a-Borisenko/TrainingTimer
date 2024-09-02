@@ -1,6 +1,7 @@
 package com.trainingtimer.views.calendar.date
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -26,22 +27,26 @@ class DateAdapter(
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
-        val date = getItem(position)
+        val calendarDay = getItem(position)
+        configureViewHolder(holder, calendarDay)
+    }
 
+    private fun configureViewHolder(holder: DateViewHolder, calendarDay: CalendarDay) {
         holder.binding.root.setOnClickListener {
             // only click current month days
-            onItemClick(date)
+            onItemClick(calendarDay)
         }
 
-        val backgroundResource = cellStyleProvider.getBackgroundResourceForCell(
-            date.date, currentMonth
-        )
-        holder.backgroundConstraint.background =
-            ContextCompat.getDrawable(context, backgroundResource)
+        holder.backgroundConstraint.background = getBackgroundResource(calendarDay.date)
+        holder.textView.text = calendarDay.dayOfMonth
 
-        holder.textView.text = date.dayOfMonth
-        if (selectedDate != null) {
-            holder.backgroundConstraint.isSelected = areDatesEqual(selectedDate, date.date)
-        }
+        holder.backgroundConstraint.isSelected = selectedDate?.let {
+            areDatesEqual(it, calendarDay.date)
+        } ?: false
+    }
+
+    private fun getBackgroundResource(date: Date): Drawable? {
+        val backgroundResource = cellStyleProvider.getBackgroundResourceForCell(date, currentMonth)
+        return ContextCompat.getDrawable(context, backgroundResource)
     }
 }
