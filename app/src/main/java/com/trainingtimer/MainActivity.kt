@@ -16,24 +16,33 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         applicationContext.startService(Intent(applicationContext, DataService::class.java))
 
-        val currentFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        if (currentFragment == null) {
-            val fragment = SplashFragment()
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.nav_host_fragment, fragment)
-                .commit()
-        }
+        setupInitialFragment()
+    }
 
-        if (TimerService.isCounting) {
-            supportFragmentManager.commit {
-                replace(R.id.nav_host_fragment, TrainingFragment())
-                setReorderingAllowed(true)
-                addToBackStack(null)
-            }
+    private fun setupInitialFragment() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+
+        if (currentFragment == null) {
+            showSplashFragment()
+        } else if (TimerService.isCounting) {
+            replaceWithTrainingFragment()
+        }
+    }
+
+    private fun showSplashFragment() {
+        supportFragmentManager.commit {
+            add(R.id.nav_host_fragment, SplashFragment())
+        }
+    }
+
+    private fun replaceWithTrainingFragment() {
+        supportFragmentManager.commit {
+            replace(R.id.nav_host_fragment, TrainingFragment())
+            setReorderingAllowed(true)
+            addToBackStack(null)
         }
     }
 }
