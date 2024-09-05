@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.NumberPicker
 import com.trainingtimer.R
@@ -24,36 +23,35 @@ class TimePicker @JvmOverloads constructor(
     private val secondPicker: NumberPicker
 
     init {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(
-            R.layout.time_picker_widget,
-            this,
-            true
-        )
-        // digits of minute
-        minutePicker = findViewById<View>(R.id.minute) as NumberPicker
-        minutePicker.minValue = 0
-        minutePicker.maxValue = 59
-        setCurrentMinute(0)
-        minutePicker.setFormatter(TWO_DIGIT_FORMATTER)
-        minutePicker.setOnValueChangedListener { spinner, oldVal, newVal ->
-            currentMinutes = newVal
-        }
+        val inflater = LayoutInflater.from(context)
+        inflater.inflate(R.layout.time_picker_widget, this, true)
 
-        // digits of seconds
-        secondPicker = findViewById<View>(R.id.seconds) as NumberPicker
-        secondPicker.minValue = 0
-        secondPicker.maxValue = 59
-        setCurrentSecond(0)
-        secondPicker.setFormatter(TWO_DIGIT_FORMATTER)
-        secondPicker.setOnValueChangedListener { picker, oldVal, newVal ->
-            currentSeconds = newVal
+        minutePicker = createPicker(R.id.minute, ::onMinuteChanged)
+        secondPicker = createPicker(R.id.seconds, ::onSecondsChanged)
+    }
+
+    private fun createPicker(pickerId: Int, listener: (Int) -> Unit): NumberPicker {
+        return findViewById<NumberPicker>(pickerId).apply {
+            minValue = 0
+            maxValue = 59
+            setFormatter(TWO_DIGIT_FORMATTER)
+            setOnValueChangedListener { _, _, newVal -> listener(newVal) }
+            value = 0 // setting start value
         }
+    }
+
+    private fun onMinuteChanged(newVal: Int) {
+        currentMinutes = newVal
+    }
+
+    private fun onSecondsChanged(newVal: Int) {
+        currentSeconds = newVal
     }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         minutePicker.isEnabled = enabled
+        secondPicker.isEnabled = enabled
     }
 
     override fun getBaseline(): Int {
@@ -68,24 +66,18 @@ class TimePicker @JvmOverloads constructor(
     override fun onRestoreInstanceState(state: Parcelable) {
         val ss = state as TimePickerSavedState
         super.onRestoreInstanceState(ss.superState)
-        setCurrentMinute(ss.minutes)
-        setCurrentSecond(ss.seconds)
+        currentMinutes = ss.minutes
+        currentSeconds = ss.seconds
+        minutePicker.value = currentMinutes
+        secondPicker.value = currentSeconds
     }
 
     fun getCurrentMinutes(): Int {
         return currentMinutes
     }
 
-    private fun setCurrentMinute(currentMinute: Int) {
-        currentMinutes = currentMinute
-    }
-
     fun getCurrentSeconds(): Int {
         return currentSeconds
-    }
-
-    private fun setCurrentSecond(currentSecond: Int) {
-        currentSeconds = currentSecond
     }
 
     companion object {
