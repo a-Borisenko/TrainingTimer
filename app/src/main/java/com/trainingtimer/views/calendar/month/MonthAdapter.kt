@@ -39,7 +39,7 @@ class MonthAdapter(
         val list = monthCalculator.getDaysInMonth(date)
 
         val adapter = dateAdapterCache.getOrPut(position) {
-            DateAdapter(events, context, selectedInfo.first, date) { calendarDay ->
+            DateAdapter(events, context, selectedInfo.first) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
         }
