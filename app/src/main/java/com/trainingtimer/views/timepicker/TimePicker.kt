@@ -72,12 +72,8 @@ class TimePicker @JvmOverloads constructor(
         secondPicker.value = currentSeconds
     }
 
-    fun getCurrentMinutes(): Int {
-        return currentMinutes
-    }
-
-    fun getCurrentSeconds(): Int {
-        return currentSeconds
+    fun getTimeLong(): Long {
+        return (currentMinutes * 60 + currentSeconds).toLong()
     }
 
     companion object {
