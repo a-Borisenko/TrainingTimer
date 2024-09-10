@@ -23,8 +23,7 @@ class TimePickerFragment : DialogFragment() {
     override fun onResume() {
         super.onResume()
         binding.save.setOnClickListener {
-            val time = (binding.timePicker.getCurrentMinutes() * 60
-                    + binding.timePicker.getCurrentSeconds()).toLong()
+            val time = binding.timePicker.getTimeLong()
             setFragmentResult("key", bundleOf("time" to time))
             dismiss()
         }
