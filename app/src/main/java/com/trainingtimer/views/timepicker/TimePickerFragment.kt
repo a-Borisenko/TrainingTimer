@@ -2,7 +2,6 @@ package com.trainingtimer.views.timepicker
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -14,7 +13,7 @@ class TimePickerFragment : DialogFragment() {
     private lateinit var binding: TimePickerDialogBinding
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = TimePickerDialogBinding.inflate(LayoutInflater.from(context))
+        binding = TimePickerDialogBinding.inflate(layoutInflater)
         return AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .create()
