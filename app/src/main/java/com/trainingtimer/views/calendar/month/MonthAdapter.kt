@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.views.calendar.date.DateAdapter
-import com.trainingtimer.views.calendar.date.areDatesEqual
 import java.util.Date
 
 class MonthAdapter(
@@ -43,15 +42,16 @@ class MonthAdapter(
                 onDateSelected(calendarDay.date, position)
             }
         }
-
-        with(holder) {
-            if (daysRecycler.layoutManager == null) {
-                daysRecycler.layoutManager = GridLayoutManager(context, 7)
-                daysRecycler.itemAnimator = null
-            }
-            daysRecycler.adapter = adapter
-        }
+        holder.bindHolder(adapter)
         adapter.submitList(list)
+    }
+
+    private fun MonthViewHolder.bindHolder(adapter: DateAdapter) {
+        if (daysRecycler.layoutManager == null) {
+            daysRecycler.layoutManager = GridLayoutManager(context, 7)
+            daysRecycler.itemAnimator = null
+        }
+        daysRecycler.adapter = adapter
     }
 
     private fun onDateSelected(selectedDate: Date?, position: Int) {
