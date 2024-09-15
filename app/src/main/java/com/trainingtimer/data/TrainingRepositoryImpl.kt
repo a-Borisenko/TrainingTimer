@@ -26,11 +26,11 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = 0
+    private var autoIncrementId = trainingDao.getTrainings().value?.size ?: 0
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
-            training.id = autoIncrementId++
+            training.id = ++autoIncrementId
         }
         executor.execute {
             trainingDao.addTraining(training)
