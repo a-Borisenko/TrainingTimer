@@ -49,6 +49,7 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
         }
     }
 
+    @Provides
     override fun getTraining(trainingId: Int): LiveData<Training?> {
         return trainingDao.getTraining(trainingId)
     }
@@ -57,11 +58,6 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
         return trainingDao.getTrainings()
     }
 
-    @Provides
-    fun getRep(): TrainingRepositoryImpl {
-        return INSTANCE
-            ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
-    }
 
     companion object {
         private const val DATABASE_NAME = "training-database"
