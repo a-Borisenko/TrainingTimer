@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -31,18 +32,6 @@ fun <T> Flow<T>.collectInViewScope(fragment: Fragment, action: suspend (T) -> Un
 }
 
 
-/*fun <T> Flow<T>.launchWhenStarted(lifecycleScope: LifecycleCoroutineScope) {
-    lifecycleScope.launchWhenStarted {
-        this@launchWhenStarted.collect()
-    }
-}*/
-
-/*fun Context.hideKeyboard(view: View) {
-    val inputMethodManager =
-        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-}*/
-
 fun EditText.onChange(textChanged: ((String) -> Unit)) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -52,6 +41,18 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
         }
     })
 }
+
+
+fun validateField(input: String, errorField: MutableStateFlow<Boolean>): Boolean {
+    return if (input.isBlank()) {
+        errorField.value = true
+        false
+    } else {
+        errorField.value = false
+        true
+    }
+}
+
 
 fun View.show() {
     visibility = View.VISIBLE
