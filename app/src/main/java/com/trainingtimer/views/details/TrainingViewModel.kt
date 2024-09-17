@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trainingtimer.data.TrainingRepositoryImpl
 import com.trainingtimer.domain.AddTrainingUseCase
 import com.trainingtimer.domain.EditTrainingUseCase
 import com.trainingtimer.domain.GetTrainingListUseCase
@@ -14,22 +13,23 @@ import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeStringToLong
+import com.trainingtimer.utils.validateField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    rep: TrainingRepositoryImpl
+    private val getTrainingUseCase: GetTrainingUseCase,
+    private val addTrainingUseCase: AddTrainingUseCase,
+    private val editTrainingUseCase: EditTrainingUseCase,
+    private val getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
-
-    private val getTrainingUseCase = GetTrainingUseCase(rep.getRep())
-    private val addTrainingUseCase = AddTrainingUseCase(rep.getRep())
-    private val editTrainingUseCase = EditTrainingUseCase(rep.getRep())
-    private val getTrainingListUseCase = GetTrainingListUseCase(rep.getRep())
 
     private var saveState = false
     private var startProgress = 0f
@@ -86,18 +86,8 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
-        viewModelScope.launch {
-            TimerService.secRemainFlow
-                .collect {
-                    _secRemain.value = it
-                }
-        }
-        viewModelScope.launch {
-            TimerService.progressFlow
-                .collect {
-                    _progress.value = it
-                }
-        }
+        TimerService.secRemainFlow.onEach { _secRemain.value = it }.launchIn(viewModelScope)
+        TimerService.progressFlow.onEach { _progress.value = it }.launchIn(viewModelScope)
         TimerService.isLast = false
     }
 
@@ -152,10 +142,10 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
-        val sets = parseSets(inputSets)
-        val title = parseTitle(inputTitle)
-        val reps = parseTimes(inputReps)
-        val time = parseRest(inputTime)
+        val sets = parseInput(inputSets)
+        val title = parseInput(inputTitle)
+        val reps = parseInput(inputReps)
+        val time = parseInput(inputTime)
         val fieldValid = validateInput(sets, title, reps)
         if (fieldValid) {
             viewModelScope.launch {
@@ -172,26 +162,12 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    private fun parseSets(inputSets: String?) = inputSets?.trim() ?: ""
-    private fun parseTitle(inputTitle: String?) = inputTitle?.trim() ?: ""
-    private fun parseTimes(inputTimes: String?) = inputTimes?.trim() ?: ""
-    private fun parseRest(inputRest: String?) = inputRest?.trim() ?: ""
+    private fun parseInput(input: String?) = input?.trim() ?: ""
 
     private fun validateInput(sets: String, title: String, times: String): Boolean {
-        var res = true
-        if (times.isBlank()) {
-            _errorInputTimes.value = true
-            res = false
-        }
-        if (title.isBlank()) {
-            _errorInputTitle.value = true
-            res = false
-        }
-        if (sets.isBlank()) {
-            _errorInputSets.value = true
-            res = false
-        }
-        return res
+        return validateField(sets, _errorInputSets) &&
+                validateField(title, _errorInputTitle) &&
+                validateField(times, _errorInputTimes)
     }
 
     fun resetErrorInputSets() {
