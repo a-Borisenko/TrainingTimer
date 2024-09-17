@@ -1,6 +1,8 @@
 package com.trainingtimer.domain
 
-class EditTrainingUseCase(private val trainingRepository: TrainingRepository) {
+import javax.inject.Inject
+
+class EditTrainingUseCase @Inject constructor(private val trainingRepository: TrainingRepository) {
 
     fun editTraining(training: Training) {
         trainingRepository.editTraining(training)
