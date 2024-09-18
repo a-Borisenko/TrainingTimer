@@ -75,8 +75,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
             errorInputTimes.collectInViewScope(this@TrainingFragment) {
                 binding.tilTimes.error = if (it) getString(R.string.error_input_times) else null
             }
-            shouldCloseScreen.observe(viewLifecycleOwner) {
-                findNavController().popBackStack()    // TODO #2: crash when app launch from Notification, time up & save
+            shouldCloseScreen.collectInViewScope(this@TrainingFragment) {
+                it?.let {
+                    findNavController().popBackStack()
+                }
             }
         }
     }

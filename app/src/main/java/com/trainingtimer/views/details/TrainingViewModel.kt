@@ -1,8 +1,6 @@
 package com.trainingtimer.views.details
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,9 +42,8 @@ class TrainingViewModel @Inject constructor(
     private val _errorInputTimes = MutableStateFlow(false)
     val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
 
-    private val _shouldCloseScreen = MutableLiveData<Unit>()
-    val shouldCloseScreen: LiveData<Unit>
-        get() = _shouldCloseScreen
+    private val _shouldCloseScreen = MutableStateFlow<Unit?>(null)
+    val shouldCloseScreen: StateFlow<Unit?> = _shouldCloseScreen.asStateFlow()
 
     private val _secRemain = MutableStateFlow(TimerService.secInit)
     val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
@@ -76,10 +73,6 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    /*private val serviceTime = Observer<Long> {
-        _secRemain.value = it
-    }*/
-
     private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
     }
@@ -92,7 +85,6 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun startViewModel() {
-//        TimerService.secRemainLD.observeForever(serviceTime)
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
