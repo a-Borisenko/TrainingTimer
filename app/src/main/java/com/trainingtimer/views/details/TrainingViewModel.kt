@@ -11,13 +11,13 @@ import com.trainingtimer.domain.GetTrainingUseCase
 import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeStringToLong
-import com.trainingtimer.utils.validateField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,47 +30,28 @@ class TrainingViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var saveState = false
-    private var startProgress = 0f
     private var newId = 0
 
-    private val _errorInputSets = MutableStateFlow(false)
-    val errorInputSets: StateFlow<Boolean> = _errorInputSets.asStateFlow()
-
-    private val _errorInputTitle = MutableStateFlow(false)
-    val errorInputTitle: StateFlow<Boolean> = _errorInputTitle.asStateFlow()
-
-    private val _errorInputTimes = MutableStateFlow(false)
-    val errorInputTimes: StateFlow<Boolean> = _errorInputTimes.asStateFlow()
-
-    private val _shouldCloseScreen = MutableStateFlow<Unit?>(null)
-    val shouldCloseScreen: StateFlow<Unit?> = _shouldCloseScreen.asStateFlow()
-
-    private val _secRemain = MutableStateFlow(TimerService.secInit)
-    val secRemain: StateFlow<Long> = _secRemain.asStateFlow()
-
-    private val _progress = MutableStateFlow(startProgress)
-    val progress: StateFlow<Float> = _progress.asStateFlow()
-
-    private val _sets = MutableStateFlow("")
-    val sets: StateFlow<String> = _sets.asStateFlow()
-
-    private val _title = MutableStateFlow("")
-    val title: StateFlow<String> = _title.asStateFlow()
-
-    private val _times = MutableStateFlow("")
-    val times: StateFlow<String> = _times.asStateFlow()
+    private val _state = MutableStateFlow(TrainingState())
+    val state: StateFlow<TrainingState> = _state.asStateFlow()
 
 
-
-    private val trainingData = Observer<Training?> {
-        if (!saveState) {
-            _sets.value = it.sets.toString()
-            _title.value = it.title
-            _times.value = it.times.drop(1)
-            if (!DataService.isCounting) {
-                _secRemain.value = timeStringToLong(it.rest)
+    private val trainingData = Observer<Training?> { training ->
+        if (!saveState && training != null) {
+            _state.update { currentState ->
+                currentState.copy(
+                    sets = training.sets.toString(),
+                    title = training.title,
+                    times = training.times.drop(1),
+                    secRemain = if (!DataService.isCounting) {
+                        timeStringToLong(training.rest)
+                    } else {
+                        currentState.secRemain
+                    }
+                )
             }
         }
+        Log.d("viewModel", "trainingData update ${_state.value}")
     }
 
     private val trainingsNumber = Observer<List<Training>> {
@@ -79,8 +60,18 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
-        TimerService.secRemainFlow.onEach { _secRemain.value = it }.launchIn(viewModelScope)
-        TimerService.progressFlow.onEach { _progress.value = it }.launchIn(viewModelScope)
+        TimerService.secRemainFlow.onEach { secRemain ->
+            _state.update { currentState ->
+                currentState.copy(secRemain = secRemain)
+            }
+        }.launchIn(viewModelScope)
+
+        TimerService.progressFlow.onEach { progress ->
+            _state.update { currentState ->
+                currentState.copy(progress = progress)
+            }
+        }.launchIn(viewModelScope)
+
         TimerService.isLast = false
     }
 
@@ -95,23 +86,31 @@ class TrainingViewModel @Inject constructor(
 
     fun saveState(sets: String, title: String, times: String) {
         saveState = true
-        _sets.value = sets
-        _title.value = title
-        _times.value = times
+        _state.update { currentState ->
+            currentState.copy(
+                sets = sets,
+                title = title,
+                times = times
+            )
+        }
+        Log.d("viewModel", "saveState() update ${_state.value}")
     }
 
     fun updateTime(sec: Long) {
-        _secRemain.value = sec
+        _state.update { currentState ->
+            currentState.copy(secRemain = sec)
+        }
+        Log.d("viewModel", "updateTime() update ${_state.value}")
         resetProgress()
     }
 
     private fun resetProgress() {
-        if (DataService.currentId != Training.UNDEFINED_ID) {
-            _progress.value = 100f
-        } else {
-            _progress.value = 0f
+        _state.update { currentState ->
+            currentState.copy(
+                progress = if (DataService.currentId != Training.UNDEFINED_ID) 100f else 0f
+            )
         }
-        Log.d("viewModel", "progress ${_progress.value}")
+        Log.d("viewModel", "progress ${_state.value.progress}")
     }
 
     fun startTimer(time: Long) {
@@ -134,11 +133,14 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
+        Log.d("viewModel", "!!! trainingClickData !!!")
         val sets = parseInput(inputSets)
         val title = parseInput(inputTitle)
         val reps = parseInput(inputReps)
         val time = parseInput(inputTime)
+
         val fieldValid = validateInput(sets, title, reps)
+
         if (fieldValid) {
             viewModelScope.launch {
                 DataService.needLoading = true
@@ -149,7 +151,8 @@ class TrainingViewModel @Inject constructor(
                     val item = Training(sets.toInt(), title, "x$reps", time, DataService.currentId)
                     editTrainingUseCase.editTraining(item)
                 }
-                finishWork()
+                _state.update { it.copy(shouldCloseScreen = true) }
+                Log.d("viewModel", "trainingClickData() update ${_state.value}")
             }
         }
     }
@@ -157,24 +160,46 @@ class TrainingViewModel @Inject constructor(
     private fun parseInput(input: String?) = input?.trim() ?: ""
 
     private fun validateInput(sets: String, title: String, times: String): Boolean {
-        return validateField(sets, _errorInputSets) &&
-                validateField(title, _errorInputTitle) &&
-                validateField(times, _errorInputTimes)
+        val s = if (sets.isBlank()) {
+            _state.update { it.copy(errorInputSets = true) }
+            false
+        } else {
+            _state.update { it.copy(errorInputSets = false) }
+            true
+        }
+
+        val t = if (title.isBlank()) {
+            _state.update { it.copy(errorInputTitle = true) }
+            false
+        } else {
+            _state.update { it.copy(errorInputTitle = false) }
+            true
+        }
+
+        val r = if (times.isBlank()) {
+            _state.update { it.copy(errorInputTimes = true) }
+            false
+        } else {
+            _state.update { it.copy(errorInputTimes = false) }
+            true
+        }
+        Log.d("viewModel", "validateInput() update ${_state.value}")
+
+        return  s && t && r
     }
 
-    fun resetErrorInputSets() {
-        _errorInputSets.value = false
+    fun resetErrorInputSets(sets: String) {
+        _state.update { it.copy(sets = sets, errorInputSets = false) }
+        Log.d("viewModel", "resetErrorInputSets() update ${_state.value}")
     }
 
-    fun resetErrorInputTitle() {
-        _errorInputTitle.value = false
+    fun resetErrorInputTitle(title: String) {
+        _state.update { it.copy(title = title, errorInputTitle = false) }
+        Log.d("viewModel", "resetErrorInputTitle() update ${_state.value}")
     }
 
-    fun resetErrorInputTimes() {
-        _errorInputTimes.value = false
-    }
-
-    private fun finishWork() {
-        _shouldCloseScreen.value = Unit
+    fun resetErrorInputTimes(times: String) {
+        _state.update { it.copy(times = times, errorInputTimes = false) }
+        Log.d("viewModel", "resetErrorInputTimes() update ${_state.value}")
     }
 }

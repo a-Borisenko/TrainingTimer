@@ -55,30 +55,22 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun observeViewModel() {
-        viewModel.apply {
-            sets.collectInViewScope(this@TrainingFragment) { binding.etSets.setText(it) }
-            title.collectInViewScope(this@TrainingFragment) { binding.etTitle.setText(it) }
-            times.collectInViewScope(this@TrainingFragment) { binding.etTimes.setText(it) }
-            secRemain.collectInViewScope(this@TrainingFragment) {
-                binding.viewTimer.text = timeLongToString(it)
-            }
-            progress.collectInViewScope(this@TrainingFragment) {
-                binding.countdownBar.progress = it.toInt()
-            }
+        viewModel.state.collectInViewScope(this) { state ->
+            binding.etSets.setText(state.sets)
+            binding.etTitle.setText(state.title)
+            binding.etTimes.setText(state.times)
+            binding.viewTimer.text = timeLongToString(state.secRemain)
+            binding.countdownBar.progress = state.progress.toInt()
 
-            errorInputSets.collectInViewScope(this@TrainingFragment) {
-                binding.tilSets.error = if (it) getString(R.string.error_input_sets) else null
-            }
-            errorInputTitle.collectInViewScope(this@TrainingFragment) {
-                binding.tilTitle.error = if (it) getString(R.string.error_input_title) else null
-            }
-            errorInputTimes.collectInViewScope(this@TrainingFragment) {
-                binding.tilTimes.error = if (it) getString(R.string.error_input_times) else null
-            }
-            shouldCloseScreen.collectInViewScope(this@TrainingFragment) {
-                it?.let {
-                    findNavController().popBackStack()
-                }
+            binding.tilSets.error =
+                if (state.errorInputSets) getString(R.string.error_input_sets) else null
+            binding.tilTitle.error =
+                if (state.errorInputTitle) getString(R.string.error_input_title) else null
+            binding.tilTimes.error =
+                if (state.errorInputTimes) getString(R.string.error_input_times) else null
+
+            if (state.shouldCloseScreen) {
+                findNavController().popBackStack()
             }
         }
     }
@@ -120,9 +112,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 }
             }
 
-            etSets.onChange { viewModel.resetErrorInputSets() }
-            etTitle.onChange { viewModel.resetErrorInputTitle() }
-            etTimes.onChange { viewModel.resetErrorInputTimes() }
+            etSets.onChange { viewModel.resetErrorInputSets(etSets.text.toString()) }
+            etTitle.onChange { viewModel.resetErrorInputTitle(etTitle.text.toString()) }
+            etTimes.onChange { viewModel.resetErrorInputTimes(etTimes.text.toString()) }
         }
 
         childFragmentManager.setFragmentResultListener("key", this) { _, bundle ->
