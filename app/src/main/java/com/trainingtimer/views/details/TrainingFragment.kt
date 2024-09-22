@@ -1,58 +1,50 @@
 package com.trainingtimer.views.details
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.utils.CURRENT_STATE
-import com.trainingtimer.utils.START
-import com.trainingtimer.utils.TIME_VALUE
-import com.trainingtimer.views.timepicker.TimePickerFragment
-import com.trainingtimer.utils.hide
-import com.trainingtimer.utils.hideKeyboard
-import com.trainingtimer.utils.launchWhenStarted
+import com.trainingtimer.utils.DataService.Companion.START
+import com.trainingtimer.utils.collectInViewScope
 import com.trainingtimer.utils.onChange
-import com.trainingtimer.utils.show
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
+import com.trainingtimer.views.timepicker.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private val viewModel: TrainingViewModel by viewModels()
-    private lateinit var binding: FragmentTrainingBinding
+    private var _binding: FragmentTrainingBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentTrainingBinding.bind(view)
+        _binding = FragmentTrainingBinding.bind(view)
 
         viewModel.startViewModel()
 
         setMenu()
-        onClickListeners()
-        setDialogFragmentListener()
-        dataObservers()
-        inputErrorsObserve()
-        addTextChangeListeners()
+        setListeners()
+        observeViewModel()
     }
 
-    // change to ViewModel
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    // TODO #1: change to ViewModel
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.saveState(
@@ -62,155 +54,82 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         )
     }
 
-    private fun dataObservers() {
-        with(viewModel) {
-            sets
-                .onEach {
-                    binding.etSets.setText(it)
-                }.launchWhenStarted(lifecycleScope)
-            title
-                .onEach {
-                    binding.etTitle.setText(it)
-                }.launchWhenStarted(lifecycleScope)
-            times
-                .onEach {
-                    binding.etTimes.setText(it)
-                }.launchWhenStarted(lifecycleScope)
-            secRemain
-                .onEach {
-                    binding.viewTimer.text = timeLongToString(it)
-                }.launchWhenStarted(lifecycleScope)
-            progress
-                .onEach {
-                    binding.countdownBar.progress = it.toInt()
-                }.launchWhenStarted(lifecycleScope)
-        }
-    }
+    private fun observeViewModel() {
+        viewModel.state.collectInViewScope(this) { state ->
+            binding.etSets.setText(state.sets)
+            binding.etTitle.setText(state.title)
+            binding.etTimes.setText(state.times)
+            binding.viewTimer.text = timeLongToString(state.secRemain)
+            binding.countdownBar.progress = state.progress.toInt()
 
-    private fun setDialogFragmentListener() {
-        childFragmentManager.setFragmentResultListener(
-            "key", this
-        ) { _, bundle ->
-            viewModel.updateTime(bundle.getLong("time"))
-        }
-    }
+            binding.tilSets.error =
+                if (state.errorInputSets) getString(R.string.error_input_sets) else null
+            binding.tilTitle.error =
+                if (state.errorInputTitle) getString(R.string.error_input_title) else null
+            binding.tilTimes.error =
+                if (state.errorInputTimes) getString(R.string.error_input_times) else null
 
-    private fun setMenu() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.fragment_training, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return if (!TimerService.isCounting) {
-                    when (menuItem.itemId) {
-                        R.id.save_btn -> {
-                            trainingClickData()
-                            true
-                        }
-
-                        else -> false
-                    }
-                } else false
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun inputErrorsObserve() {
-        with(viewModel) {
-            errorInputSets
-                .onEach {
-                    binding.tilSets.error = if (it) {
-                        getString(R.string.error_input_sets)
-                    } else {
-                        null
-                    }
-                }.launchWhenStarted(lifecycleScope)
-            errorInputTitle
-                .onEach {
-                    binding.tilTitle.error = if (it) {
-                        getString(R.string.error_input_title)
-                    } else {
-                        null
-                    }
-                }.launchWhenStarted(lifecycleScope)
-            errorInputTimes
-                .onEach {
-                    binding.tilTimes.error = if (it) {
-                        getString(R.string.error_input_times)
-                    } else {
-                        null
-                    }
-                }.launchWhenStarted(lifecycleScope)
-            shouldCloseScreen.observe(viewLifecycleOwner) {
+            if (state.shouldCloseScreen) {
                 findNavController().popBackStack()
             }
         }
     }
 
-    private fun onClickListeners() {
-        binding.trainingBtn.setOnClickListener {
-            ContextCompat.startForegroundService(
-                requireContext(),
-                TimerService.newIntent(requireContext())
-            )
-            /*val intent = Intent(requireContext().applicationContext, TimerService::class.java)
-                .apply {
-                    putExtra(CURRENT_STATE, START)
-                    putExtra(TIME_VALUE, timeStringToLong(binding.viewTimer.text.toString()))
-                }
-            requireContext().applicationContext.startService(intent)*/
-            viewModel.startTimer(timeStringToLong(binding.viewTimer.text.toString()))
-        }
-        binding.viewTimer.setOnClickListener {
-            if (!TimerService.isCounting) {
-                TimePickerFragment().show(childFragmentManager, "timePicker")
+    private fun setMenu() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_training, menu)
             }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when {
+                    !TimerService.isCounting && menuItem.itemId == R.id.save_btn -> {
+                        trainingClickData()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setListeners() {
+        binding.apply {
+            trainingBtn.setOnClickListener {
+                if (!TimerService.isCounting) {
+                    ContextCompat.startForegroundService(
+                        requireContext(),
+                        TimerService.newIntent(requireContext(), START)
+                    )
+                    viewModel.startTimer(timeStringToLong(viewTimer.text.toString()))
+                }
+            }
+
+            viewTimer.setOnClickListener {
+                if (!TimerService.isCounting) {
+                    TimePickerFragment().show(childFragmentManager, "timePicker")
+                }
+            }
+
+            etSets.onChange { viewModel.resetErrorInputSets(etSets.text.toString()) }
+            etTitle.onChange { viewModel.resetErrorInputTitle(etTitle.text.toString()) }
+            etTimes.onChange { viewModel.resetErrorInputTimes(etTimes.text.toString()) }
+        }
+
+        childFragmentManager.setFragmentResultListener("key", this) { _, bundle ->
+            viewModel.updateTime(bundle.getLong("time"))
         }
     }
 
-    //viewModel 58:00; dataFlow 1:11:42; launchController 1:25:48
-
     private fun trainingClickData() {
         if (!TimerService.isCounting) {
-            hideView()
             viewModel.trainingClickData(
                 binding.etSets.text?.toString(),
                 binding.etTitle.text?.toString(),
                 binding.etTimes.text?.toString(),
                 binding.viewTimer.text?.toString()
             )
-        }
-    }
-
-    //TODO #1: move to List (start mode)
-    private fun hideView() {
-        viewModel.loading.observe(viewLifecycleOwner) {
-            if (it) {
-                with(binding) {
-                    tilSets.hide()
-                    tilTitle.hide()
-                    tilTimes.hide()
-                    viewTimer.hide()
-                    trainingBtn.hide()
-                    countdownBar.hide()
-                    progressBar.show()
-                }
-                requireActivity().hideKeyboard(requireView())
-            }
-        }
-    }
-
-    private fun addTextChangeListeners() {
-        binding.etSets.onChange {
-            viewModel.resetErrorInputSets()
-        }
-        binding.etTitle.onChange {
-            viewModel.resetErrorInputTitle()
-        }
-        binding.etTimes.onChange {
-            viewModel.resetErrorInputTimes()
         }
     }
 }

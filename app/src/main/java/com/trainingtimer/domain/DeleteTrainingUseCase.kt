@@ -1,6 +1,8 @@
 package com.trainingtimer.domain
 
-class DeleteTrainingUseCase(private val trainingRepository: TrainingRepository) {
+import javax.inject.Inject
+
+class DeleteTrainingUseCase @Inject constructor(private val trainingRepository: TrainingRepository) {
 
     fun deleteTraining(training: Training) {
         trainingRepository.deleteTraining(training)

@@ -3,7 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/trainingListFragment">
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.trainingtimer.views.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/splash_screen" >
+
+        <action
+            android:id="@+id/action_splashFragment_to_trainingListFragment"
+            app:destination="@id/trainingListFragment"
+            app:popUpTo="@+id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/trainingListFragment"
@@ -14,7 +27,16 @@
         <action
             android:id="@+id/action_trainingListFragment_to_trainingFragment"
             app:destination="@id/trainingFragment" />
+        <action
+            android:id="@+id/action_trainingListFragment_to_calendar"
+            app:destination="@id/calendarView" />
     </fragment>
+
+    <fragment
+        android:id="@+id/calendarView"
+        android:name="com.trainingtimer.views.calendar.CalendarFragment"
+        android:label="CalendarFragment"
+        tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/trainingFragment"

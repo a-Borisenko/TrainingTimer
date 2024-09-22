@@ -1,12 +1,12 @@
 package com.trainingtimer.views.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,33 +16,46 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
 import com.trainingtimer.utils.DataService
+import com.trainingtimer.utils.hide
+import com.trainingtimer.utils.show
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
-    private lateinit var viewModel: TrainingListViewModel
+    private val viewModel: TrainingListViewModel by viewModels()
     private lateinit var listAdapter: TrainingAdapter
     private lateinit var binding: FragmentTrainingListBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[TrainingListViewModel::class.java]
-        val intent = Intent(requireContext().applicationContext, DataService::class.java)
-        requireContext().applicationContext.startService(intent)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
         viewModel.trainingList.observe(viewLifecycleOwner) {
             listAdapter.submitList(it)
         }
-        with(binding) {
-            progressBar.isVisible = false
-            trainingRecyclerView.isVisible = true
-            newTraining.isVisible = true
+        viewLifecycleOwner.lifecycleScope.launch {
+            uiState()
+        }
+        viewModel.loadView()
+    }
+
+    private suspend fun uiState() {
+        viewModel.uiState.collect { state ->
+            when (state) {
+                TrainingUiState.Loading -> {
+                    binding.progressBar.show()
+                    binding.trainingRecyclerView.hide()
+                    binding.newTraining.isVisible = false
+                }
+                TrainingUiState.Loaded -> {
+                    binding.progressBar.hide()
+                    binding.trainingRecyclerView.show()
+                    binding.newTraining.isVisible = true
+                }
+            }
         }
     }
 
@@ -77,12 +90,22 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun setupClickListener() {
+        binding.newTraining.setOnLongClickListener {
+            navCal()
+        }
         listAdapter.onTrainingClickListener = {
             navigate(it.id)
         }
         binding.newTraining.setOnClickListener {
             navigate(UNDEFINED_ID)
         }
+    }
+
+    private fun navCal(): Boolean {
+        findNavController().navigate(
+            R.id.action_trainingListFragment_to_calendar
+        )
+        return false
     }
 
     private fun navigate(id: Int) {
@@ -92,10 +115,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
             bundleOf("id" to id),
             navOptions {
                 anim {
-                    enter = anim.abc_popup_enter
-                    exit = anim.abc_popup_enter
-                    popEnter = anim.abc_popup_enter
-                    popExit = anim.abc_popup_enter
+                    enter = anim.abc_slide_in_bottom
+                    exit = anim.abc_slide_out_top
+                    popEnter = anim.abc_slide_in_top
+                    popExit = anim.abc_slide_out_bottom
                 }
             }
         )

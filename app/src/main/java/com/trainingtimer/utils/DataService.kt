@@ -24,6 +24,12 @@ class DataService : Service() {
     }
 
     companion object {
+        const val START = "START"
+
+        var needLoading: Boolean by Delegates.observable(false) {
+                prop, old, new ->
+            Log.d("DataService", "needLoading = $old -> $new")
+        }
 
         var isCounting: Boolean by Delegates.observable(false) {
                 prop, old, new ->
@@ -39,12 +45,5 @@ class DataService : Service() {
                 prop, old, new ->
             Log.d("DataService", "currentId = $old -> $new")
         }
-            /*if (TimerService.isCounting) {
-                TimerService.currentId
-                Log.d("DataService", "currentId = ${TimerService.currentId}")
-            } else {
-                Training.UNDEFINED_ID
-                Log.d("DataService", "currentId = ${Training.UNDEFINED_ID}")
-            }*/
     }
 }

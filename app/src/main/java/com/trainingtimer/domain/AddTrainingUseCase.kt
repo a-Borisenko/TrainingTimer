@@ -1,6 +1,8 @@
 package com.trainingtimer.domain
 
-class AddTrainingUseCase(private val trainingRepository: TrainingRepository) {
+import javax.inject.Inject
+
+class AddTrainingUseCase @Inject constructor(private val trainingRepository: TrainingRepository) {
 
     fun addTraining(training: Training) {
         trainingRepository.addTraining(training)

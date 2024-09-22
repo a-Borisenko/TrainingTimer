@@ -22,4 +22,15 @@
     <string name="error_input_times">Invalid times</string>
     <string name="channel_name">notifyChanel</string>
     <string name="channel_description">chanel for notifications</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
+    <string name="calendar_title">Jan 1970</string>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THUR</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
+    <string name="sunday">SUN</string>
+    <string name="day">1</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.trainingtimer.views.details
 
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -13,9 +14,7 @@ import com.trainingtimer.MainActivity
 import com.trainingtimer.R
 import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
-import com.trainingtimer.utils.NotificationManager
-import com.trainingtimer.utils.NotificationManagerImpl.Companion.CHANNEL_ID
-import com.trainingtimer.utils.NotificationManagerImpl.Companion.NOTIFICATION_ID
+import com.trainingtimer.utils.DataService.Companion.START
 import com.trainingtimer.utils.timeLongToString
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -37,34 +36,6 @@ class TimerService : Service() {
     @Inject
     @ApplicationContext
     lateinit var appContext: Context
-
-    private val openAppIntent by lazy {
-        val intent = Intent(appContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        PendingIntent.getActivity(
-            appContext,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
-
-    private val dismissIntent by lazy {
-        val intent = Intent(this, TimerService::class.java).apply {
-            isCounting = false
-            if (isLast) {
-                notificationManager.cancelNotification(NOTIFICATION_ID)
-                stopSelf()
-            }
-        }
-        PendingIntent.getForegroundService(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
 
     private var secRemain = 0L
     private var progress = 100f
@@ -89,10 +60,17 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (!isCounting) {
-            startCountdown()
+        return when (intent.action) {
+            START -> {
+                startCountdown()
+                START_STICKY
+            }
+            DESTROY -> {
+                secRemain = 1L
+                START_NOT_STICKY
+            }
+            else -> START_STICKY
         }
-        return START_STICKY
     }
 
     private fun startCountdown() {
@@ -105,7 +83,7 @@ class TimerService : Service() {
                 progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
                 updateNotification()
                 _progressFlow.value = progress
-                Log.d("service timer", "sec = $secRemain; progr = $progress")
+                Log.d("TimerService", "sec = $secRemain; progress = $progress")
                 emitTwoValues(secRemain, progress)
             }
             isCounting = false
@@ -118,11 +96,11 @@ class TimerService : Service() {
         .setContentText(timeLongToString(secRemain))
         .setSmallIcon(R.drawable.ic_clock)
         .setContentIntent(openAppIntent)
-        .addAction(R.drawable.cancel_button_black, "Dismiss", dismissIntent)
+        .addAction(R.drawable.cancel_button_black, "Dismiss", stopServiceIntent)
         .build()
 
     private fun updateNotification() {
-        notificationManager.showNotification(createNotification())
+        notificationManager.notify(1, createNotification())
     }
 
     private fun createNotificationChannel() {
@@ -132,7 +110,7 @@ class TimerService : Service() {
             val notificationChannel = NotificationChannel(
                 CHANNEL_ID,
                 "channel_name",
-                NotificationCompat.PRIORITY_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             )
             notificationManager.createNotificationChannel(notificationChannel)
         }
@@ -149,10 +127,36 @@ class TimerService : Service() {
         super.onDestroy()
     }
 
+    private val openAppIntent by lazy {
+        val intent = Intent(appContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        PendingIntent.getActivity(
+            appContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    private val stopServiceIntent by lazy {
+        val stopIntent = Intent(appContext, TimerService::class.java)
+        stopIntent.action = DESTROY
+        PendingIntent.getService(
+            appContext,
+            1,
+            stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
     companion object {
         var isCounting: Boolean by Delegates.observable(DataService.isCounting) { prop, old, new ->
             DataService.isCounting = new
         }
+
+        private const val DESTROY = "DESTROY"
+        private const val CHANNEL_ID = "NotificationChannelID"
 
         var isLast = true
         var secInit = 0L
@@ -165,8 +169,14 @@ class TimerService : Service() {
         private val _progressFlow = MutableStateFlow(progressInit)
         val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
 
-        fun newIntent(context: Context): Intent {
-            return Intent(context, TimerService::class.java)
+        /*private val _secRemainLD = MutableLiveData<Long>()
+        val secRemainLD: LiveData<Long>
+            get() = _secRemainLD*/
+
+        fun newIntent(context: Context, action: String): Intent {
+            return Intent(context, TimerService::class.java).apply {
+                this.action = action
+            }
         }
     }
 }

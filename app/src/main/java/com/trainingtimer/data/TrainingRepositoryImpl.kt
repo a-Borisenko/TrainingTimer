@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
-import com.trainingtimer.utils.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
@@ -27,11 +26,11 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = 0
+    private var autoIncrementId = trainingDao.getTrainings().value?.size ?: 0
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
-            training.id = autoIncrementId++
+            training.id = ++autoIncrementId
         }
         executor.execute {
             trainingDao.addTraining(training)
@@ -50,6 +49,7 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
         }
     }
 
+    @Provides
     override fun getTraining(trainingId: Int): LiveData<Training?> {
         return trainingDao.getTraining(trainingId)
     }
@@ -58,13 +58,9 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
         return trainingDao.getTrainings()
     }
 
-    @Provides
-    fun getRep(): TrainingRepositoryImpl {
-        return INSTANCE
-            ?: throw IllegalStateException("TrainingRepositoryImpl must be initialized")
-    }
 
     companion object {
+        private const val DATABASE_NAME = "training-database"
         private lateinit var appContext: Context
         private var INSTANCE: TrainingRepositoryImpl? = null
 

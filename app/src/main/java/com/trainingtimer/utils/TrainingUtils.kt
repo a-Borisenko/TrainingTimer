@@ -1,19 +1,15 @@
 package com.trainingtimer.utils
 
-import android.app.Activity
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 
-const val ACTION_DISMISS = "dismiss_action"
-
-const val DATABASE_NAME = "training-database"
 
 fun timeStringToLong(time: String): Long {
     val min = (time.split(":"))[0].toLong()
@@ -27,17 +23,14 @@ fun timeLongToString(time: Long): String {
     return "${"%02d".format(min)}:${"%02d".format(sec)}"
 }
 
-fun <T> Flow<T>.launchWhenStarted(lifecycleScope: LifecycleCoroutineScope) {
-    lifecycleScope.launchWhenStarted {
-        this@launchWhenStarted.collect()
+
+// extension function for Fragment that runs a Flow<T> collection in a viewLifecycleScope
+fun <T> Flow<T>.collectInViewScope(fragment: Fragment, action: suspend (T) -> Unit) {
+    fragment.viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        collectLatest(action)
     }
 }
 
-fun Context.hideKeyboard(view: View) {
-    val inputMethodManager =
-        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-}
 
 fun EditText.onChange(textChanged: ((String) -> Unit)) {
     this.addTextChangedListener(object : TextWatcher {
@@ -48,6 +41,18 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
         }
     })
 }
+
+
+fun validateField(input: String, errorField: MutableStateFlow<Boolean>): Boolean {
+    return if (input.isBlank()) {
+        errorField.value = true
+        false
+    } else {
+        errorField.value = false
+        true
+    }
+}
+
 
 fun View.show() {
     visibility = View.VISIBLE
