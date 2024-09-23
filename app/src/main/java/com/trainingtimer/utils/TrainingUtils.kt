@@ -7,7 +7,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -40,17 +39,6 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
             textChanged.invoke(s.toString())
         }
     })
-}
-
-
-fun validateField(input: String, errorField: MutableStateFlow<Boolean>): Boolean {
-    return if (input.isBlank()) {
-        errorField.value = true
-        false
-    } else {
-        errorField.value = false
-        true
-    }
 }
 
 
