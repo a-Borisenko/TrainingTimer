@@ -32,8 +32,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTrainingBinding.bind(view)
 
-        viewModel.startViewModel()
-
         setMenu()
         setListeners()
         observeViewModel()
@@ -42,16 +40,6 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    // TODO #1: change to ViewModel
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewModel.saveState(
-            binding.etSets.text.toString(),
-            binding.etTitle.text.toString(),
-            binding.etTimes.text.toString()
-        )
     }
 
     private fun observeViewModel() {

@@ -23,10 +23,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
-    private val getTrainingUseCase: GetTrainingUseCase,
+    getTrainingUseCase: GetTrainingUseCase,
     private val addTrainingUseCase: AddTrainingUseCase,
     private val editTrainingUseCase: EditTrainingUseCase,
-    private val getTrainingListUseCase: GetTrainingListUseCase
+    getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
     private var saveState = false
@@ -51,7 +51,6 @@ class TrainingViewModel @Inject constructor(
                 )
             }
         }
-        Log.d("viewModel", "trainingData update ${_state.value}")
     }
 
     private val trainingsNumber = Observer<List<Training>> {
@@ -73,9 +72,6 @@ class TrainingViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
-    }
-
-    fun startViewModel() {
         getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
@@ -84,23 +80,10 @@ class TrainingViewModel @Inject constructor(
         resetProgress()
     }
 
-    fun saveState(sets: String, title: String, times: String) {
-        saveState = true
-        _state.update { currentState ->
-            currentState.copy(
-                sets = sets,
-                title = title,
-                times = times
-            )
-        }
-        Log.d("viewModel", "saveState() update ${_state.value}")
-    }
-
     fun updateTime(sec: Long) {
         _state.update { currentState ->
             currentState.copy(secRemain = sec)
         }
-        Log.d("viewModel", "updateTime() update ${_state.value}")
         resetProgress()
     }
 
@@ -133,7 +116,6 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
-        Log.d("viewModel", "!!! trainingClickData !!!")
         val sets = parseInput(inputSets)
         val title = parseInput(inputTitle)
         val reps = parseInput(inputReps)
@@ -152,7 +134,6 @@ class TrainingViewModel @Inject constructor(
                     editTrainingUseCase.editTraining(item)
                 }
                 _state.update { it.copy(shouldCloseScreen = true) }
-                Log.d("viewModel", "trainingClickData() update ${_state.value}")
             }
         }
     }
@@ -183,23 +164,19 @@ class TrainingViewModel @Inject constructor(
             _state.update { it.copy(errorInputTimes = false) }
             true
         }
-        Log.d("viewModel", "validateInput() update ${_state.value}")
 
         return  s && t && r
     }
 
     fun resetErrorInputSets(sets: String) {
         _state.update { it.copy(sets = sets, errorInputSets = false) }
-        Log.d("viewModel", "resetErrorInputSets() update ${_state.value}")
     }
 
     fun resetErrorInputTitle(title: String) {
         _state.update { it.copy(title = title, errorInputTitle = false) }
-        Log.d("viewModel", "resetErrorInputTitle() update ${_state.value}")
     }
 
     fun resetErrorInputTimes(times: String) {
         _state.update { it.copy(times = times, errorInputTimes = false) }
-        Log.d("viewModel", "resetErrorInputTimes() update ${_state.value}")
     }
 }
