@@ -141,31 +141,16 @@ class TrainingViewModel @Inject constructor(
     private fun parseInput(input: String?) = input?.trim() ?: ""
 
     private fun validateInput(sets: String, title: String, times: String): Boolean {
-        val s = if (sets.isBlank()) {
-            _state.update { it.copy(errorInputSets = true) }
-            false
-        } else {
-            _state.update { it.copy(errorInputSets = false) }
-            true
-        }
+        val setsValid = sets.isNotBlank()
+        _state.update { it.copy(errorInputSets = !setsValid) }
 
-        val t = if (title.isBlank()) {
-            _state.update { it.copy(errorInputTitle = true) }
-            false
-        } else {
-            _state.update { it.copy(errorInputTitle = false) }
-            true
-        }
+        val titleValid = title.isNotBlank()
+        _state.update { it.copy(errorInputTitle = !titleValid) }
 
-        val r = if (times.isBlank()) {
-            _state.update { it.copy(errorInputTimes = true) }
-            false
-        } else {
-            _state.update { it.copy(errorInputTimes = false) }
-            true
-        }
+        val timesValid = times.isNotBlank()
+        _state.update { it.copy(errorInputTimes = !timesValid) }
 
-        return  s && t && r
+        return setsValid && titleValid && timesValid
     }
 
     fun resetErrorInputSets(sets: String) {
