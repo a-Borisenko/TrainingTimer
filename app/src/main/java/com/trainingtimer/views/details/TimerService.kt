@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.trainingtimer.MainActivity
 import com.trainingtimer.R
-import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.DataService.Companion.START
 import com.trainingtimer.utils.timeLongToString
@@ -160,18 +159,13 @@ class TimerService : Service() {
 
         var isLast = true
         var secInit = 0L
-        var progressInit = 0f
-        var currentId = Training.UNDEFINED_ID
+        private var progressInit = 0f
 
         private val _secRemainFlow = MutableStateFlow(secInit)
         val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
 
         private val _progressFlow = MutableStateFlow(progressInit)
         val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
-
-        /*private val _secRemainLD = MutableLiveData<Long>()
-        val secRemainLD: LiveData<Long>
-            get() = _secRemainLD*/
 
         fun newIntent(context: Context, action: String): Intent {
             return Intent(context, TimerService::class.java).apply {
