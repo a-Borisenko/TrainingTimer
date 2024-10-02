@@ -81,7 +81,6 @@ class TimerService : Service() {
 
                 updateNotification()
                 Log.d("TimerService", "sec = $secRemain; progress = $progress")
-//                emitTwoValues(secRemain, progress)
             }
             isCounting = false
             stopSelf()
@@ -127,12 +126,6 @@ class TimerService : Service() {
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
-
-    /*private fun emitTwoValues(longValue: Long, floatValue: Float): Flow<Pair<Long, Float>> {
-        return flow {
-            emit(Pair(longValue, floatValue))
-        }
-    }*/
 
     override fun onDestroy() {
         Log.d("TimerService", "Service Stopped")
