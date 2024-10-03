@@ -161,6 +161,7 @@ class TimerService : Service() {
             DataService.isCounting = new
         }
 
+        var isLast = true
         private const val DESTROY = "DESTROY"
         private const val CHANNEL_ID = "NotificationChannelID"
 
