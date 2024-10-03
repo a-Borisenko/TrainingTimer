@@ -4,7 +4,7 @@ data class TrainingState(
     val sets: String = "",
     val title: String = "",
     val times: String = "",
-    val secRemain: Long = TimerService.secInit,
+    val secRemain: Long = 0L,
     val progress: Float = 0f,
     val errorInputSets: Boolean = false,
     val errorInputTitle: Boolean = false,
