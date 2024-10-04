@@ -1,53 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".views.calendar.CalendarFragment">
 
 
-    <TextView
-        android:id="@+id/monthText"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="@string/calendar_title"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/nextMonth"
-        app:layout_constraintStart_toEndOf="@+id/previousMonth"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/previousMonth"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="48dp"
-        android:src="@drawable/baseline_arrow_back_ios_new_24"
-        app:layout_constraintBottom_toBottomOf="@+id/monthText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/monthText" />
+        <ImageView
+            android:id="@+id/previousMonth"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/baseline_arrow_back_ios_new_24" />
 
-    <ImageView
-        android:id="@+id/nextMonth"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="48dp"
-        android:src="@drawable/baseline_arrow_forward_ios_24"
-        app:layout_constraintBottom_toBottomOf="@+id/monthText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/monthText" />
+        <TextView
+            android:id="@+id/monthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/calendar_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/nextMonth"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/baseline_arrow_forward_ios_24" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monthText"
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -56,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="MON"
+            android:text="@string/monday"
             android:textSize="14sp" />
 
         <TextView
@@ -64,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TUE"
+            android:text="@string/tuesday"
             android:textSize="14sp" />
 
         <TextView
@@ -72,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="WED"
+            android:text="@string/wednesday"
             android:textSize="14sp" />
 
         <TextView
@@ -80,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="THU"
+            android:text="@string/thursday"
             android:textSize="14sp" />
 
         <TextView
@@ -88,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="FRI"
+            android:text="@string/friday"
             android:textSize="14sp" />
 
         <TextView
@@ -96,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="SAT"
+            android:text="@string/saturday"
             android:textSize="14sp" />
 
         <TextView
@@ -104,19 +98,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="SUN"
+            android:text="@string/sunday"
             android:textSize="14sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pageRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/page_recycler_item" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
