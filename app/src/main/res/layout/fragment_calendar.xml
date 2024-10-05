@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".views.calendar.CalendarFragment">
 
-
+    <!-- Навигация по месяцам -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,27 +16,21 @@
 
         <ImageView
             android:id="@+id/previousMonth"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            style="@style/CalendarNavButton"
             android:src="@drawable/baseline_arrow_back_ios_new_24" />
 
         <TextView
             android:id="@+id/monthText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/calendar_title"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            style="@style/CalendarMonthText"
+            android:text="@string/calendar_title" />
 
         <ImageView
             android:id="@+id/nextMonth"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            style="@style/CalendarNavButton"
             android:src="@drawable/baseline_arrow_forward_ios_24" />
-
     </LinearLayout>
 
+    <!-- Дни недели -->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -46,66 +40,41 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/monday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/tuesday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/wednesday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/thursday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/friday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/saturday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:text="@string/sunday"
-            android:textSize="14sp" />
+            style="@style/CalendarHeaderText" />
     </LinearLayout>
 
+    <!-- Список дней месяца -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="4dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         tools:listitem="@layout/page_recycler_item" />
 </LinearLayout>
