@@ -53,7 +53,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         binding.pageRecyclerView.adapter = adapter
         binding.pageRecyclerView.itemAnimator = null
         adapter.submitList(loadedDates)
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.pageRecyclerView.layoutManager = layoutManager
 
         // Add PagerSnapHelper to make RecyclerView scroll like a Pager
