@@ -65,7 +65,10 @@ class DateViewHolder(
     }
 
     private fun isInTheSelectedMonth(date: Date): Boolean {
-        val sdf = SimpleDateFormat("yyyyMM", Locale.getDefault())
-        return sdf.format(date) == sdf.format(events.first()) // Пример использования, нужно изменить в зависимости от логики.
+        if (events.isNotEmpty()) {
+            val sdf = SimpleDateFormat("yyyyMM", Locale.getDefault())
+            return sdf.format(date) == sdf.format(events.first())
+        }
+        return false
     }
 }
