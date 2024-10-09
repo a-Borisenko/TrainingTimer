@@ -1,63 +1,100 @@
 package com.trainingtimer.views.calendar
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.trainingtimer.utils.DataService
-import com.trainingtimer.views.list.TrainingUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CalendarViewModel : ViewModel() {
 
-//    private val getTrainingListUseCase = GetTrainingListUseCase(rep.getRep())
-//    private val deleteTrainingUseCase = DeleteTrainingUseCase(rep.getRep())
+    // Хранение текущей выбранной даты через StateFlow
+    private val _selectedMonthDate = MutableStateFlow(Date())
+    val selectedMonthDate: StateFlow<Date> get() = _selectedMonthDate
 
-//    val trainingList = getTrainingListUseCase.getTrainingList()
+    val events = mutableListOf<Date>()
 
+    // Хранение загруженных дат через StateFlow
+    private val _loadedDates = MutableStateFlow<MutableList<Date>>(mutableListOf())
+    val loadedDates: StateFlow<MutableList<Date>> get() = _loadedDates
 
-    fun moveToDate() {
-        // TODO: set date
+    var latestPos = 0
+
+    init {
+        // Инициализация данных при запуске
+        initializeDates()
     }
 
-    /*private fun daysInMonthArray(date: LocalDate): ArrayList<String> {
-        val daysInMonthArray = ArrayList<String>()
-        val yearMonth = YearMonth.from(date)
-        val daysInMonth = yearMonth.lengthOfMonth()
-        val firstOfMonth: LocalDate = selectedDate.withDayOfMonth(1)
-        val dayOfWeek = firstOfMonth.dayOfWeek.value
-        for (i in 1..42) {
-            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
-            } else {
-                daysInMonthArray.add((i - dayOfWeek).toString())
-            }
+    // Функция для инициализации списка с датами
+    private fun initializeDates() {
+        val calendar = java.util.Calendar.getInstance()
+        val initialDate = calendar.time
+        _selectedMonthDate.value = initialDate
+
+        // Создание списка произвольных событий
+        for (i in 1..10) {
+            calendar.add(java.util.Calendar.DATE, i)
+            events.add(calendar.time)
         }
-        return daysInMonthArray
-    }*/
 
-    /*private fun monthYearFromDate(date: LocalDate): String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-        return date.format(formatter)
-    }*/
+        val loadedDates = mutableListOf<Date>()
 
-    private val _uiState = MutableStateFlow<TrainingUiState>(TrainingUiState.Loading)
-    val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
-
-    fun loadView() {
-        viewModelScope.launch {
-            if (DataService.needLoading) {
-                _uiState.value = TrainingUiState.Loading
-                delay(2000)
-            }
-            _uiState.value = TrainingUiState.Loaded
-            DataService.needLoading = false
+        for (i in -5..-1) {
+            calendar.add(java.util.Calendar.MONTH, i)
+            loadedDates.add(calendar.time)
+            calendar.time = initialDate
         }
+        loadedDates.add(initialDate)
+        calendar.time = initialDate
+        for (i in 1..5) {
+            calendar.add(java.util.Calendar.MONTH, i)
+            loadedDates.add(calendar.time)
+            calendar.time = initialDate
+        }
+
+        _loadedDates.value = loadedDates
+        latestPos = loadedDates.size / 2
     }
 
-    /*fun deleteTraining(training: Training) {
-        deleteTrainingUseCase.deleteTraining(training)
-    }*/
+    // Форматирование даты
+    fun dateFormatter(date: Date): String {
+        val sdf = SimpleDateFormat("MMMM - yyyy", Locale.getDefault())
+        return sdf.format(date)
+    }
+
+    // Загрузка предыдущих месяцев
+    fun loadPreviousMonths() {
+        val calendar = java.util.Calendar.getInstance()
+        val loadedDates = _loadedDates.value
+        calendar.time = loadedDates[0]
+
+        for (i in 1..12) {
+            calendar.add(java.util.Calendar.MONTH, -1)
+            loadedDates.add(calendar.time)
+        }
+        latestPos += 12
+        loadedDates.sort()
+        _loadedDates.value = loadedDates
+    }
+
+    // Загрузка следующих месяцев
+    fun loadNextMonths() {
+        val calendar = java.util.Calendar.getInstance()
+        val loadedDates = _loadedDates.value
+        calendar.time = loadedDates.last()
+
+        for (i in 1..12) {
+            calendar.add(java.util.Calendar.MONTH, 1)
+            loadedDates.add(calendar.time)
+        }
+        loadedDates.sort()
+        _loadedDates.value = loadedDates
+    }
+
+    // Обновление даты
+    fun updateSelectedDate(position: Int) {
+        val loadedDates = _loadedDates.value
+        _selectedMonthDate.value = loadedDates[position]
+    }
 }
