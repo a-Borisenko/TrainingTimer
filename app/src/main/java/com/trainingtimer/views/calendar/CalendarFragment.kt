@@ -50,19 +50,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupObservers() {
-        // Подписка на изменения выбранной даты
         lifecycleScope.launchWhenStarted {
             viewModel.selectedMonthDate.collect { selectedDate ->
                 binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                adapter.notifyDataSetChanged()  // Обновляем отображение адаптера
                 binding.pageRecyclerView.scrollToPosition(adapter.getItemPos(selectedDate))
             }
         }
 
-        // Подписка на изменения загруженных дат
         lifecycleScope.launchWhenStarted {
             viewModel.loadedDates.collect { dates ->
-                adapter.submitList(dates.toList())  // Передаём неизменяемую копию списка
+                adapter.submitList(dates.toList())
             }
         }
     }
@@ -99,6 +96,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             if (viewModel.latestPos - 1 >= 0) {
                 binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos - 1)
             }
+        }
+
+        binding.monthText.setOnClickListener {
+            binding.pageRecyclerView.smoothScrollToPosition(viewModel.loadedDates.value.size / 2)
         }
     }
 }
