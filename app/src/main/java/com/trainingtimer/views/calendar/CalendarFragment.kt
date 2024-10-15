@@ -29,7 +29,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         setupObservers()
         setupListeners()
 
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.pageRecyclerView.layoutManager = layoutManager
 
         val snapHelper = PagerSnapHelper()

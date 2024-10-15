@@ -1,6 +1,7 @@
 package com.trainingtimer.views.calendar.month
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,6 +35,15 @@ class MonthAdapter(
     }
 
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
+        // Рассчитываем высоту элемента
+        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+        val weekCount = 6  // Максимум 6 недель в месяце
+        val itemHeight = screenHeight / weekCount  // Равномерное распределение высоты на строки
+
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height = itemHeight
+        holder.itemView.layoutParams = layoutParams
+
         val date = getItem(position)
         val list = monthCalculator.getDaysInMonth(date)
 
