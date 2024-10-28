@@ -2,8 +2,12 @@ package com.trainingtimer.views.calendar.month
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
@@ -38,6 +42,17 @@ class MonthAdapter(
         // Рассчитываем высоту элемента
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
         val weekCount = 6  // Максимум 6 недель в месяце
+
+        holder.binding.root.apply {
+            doOnAttach {
+                if (isGesture(it)) {
+                    TODO("screen set for gesture")
+                } else {
+                    TODO("screen set for 3 buttons")
+                }
+            }
+        }
+
         val itemHeight = screenHeight / weekCount  // Равномерное распределение высоты на строки
 
         val layoutParams = holder.itemView.layoutParams
@@ -54,6 +69,17 @@ class MonthAdapter(
         }
         holder.bindHolder(adapter)
         adapter.submitList(list)
+    }
+
+    private fun isGesture(view: View): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                (view.rootWindowInsets?.getInsets(WindowInsets.Type.systemGestures())?.left
+                    ?: 0) > 0
+            } else {
+                TODO("VERSION.SDK_INT < R")
+            }
+        } else false
     }
 
     private fun MonthViewHolder.bindHolder(adapter: DateAdapter) {
