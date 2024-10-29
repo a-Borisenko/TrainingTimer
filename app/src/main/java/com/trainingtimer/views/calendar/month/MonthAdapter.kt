@@ -23,6 +23,7 @@ class MonthAdapter(
     private var selectedInfo: Pair<Date?, Int?> = null to null
     private val monthCalculator = MonthCalculator()
     private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
+    private var itemHeight = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -46,14 +47,12 @@ class MonthAdapter(
         holder.binding.root.apply {
             doOnAttach {
                 if (isGesture(it)) {
-                    TODO("screen set for gesture")
+                    itemHeight = screenHeight / weekCount  // Равномерное распределение высоты на строки
                 } else {
                     TODO("screen set for 3 buttons")
                 }
             }
         }
-
-        val itemHeight = screenHeight / weekCount  // Равномерное распределение высоты на строки
 
         val layoutParams = holder.itemView.layoutParams
         layoutParams.height = itemHeight
