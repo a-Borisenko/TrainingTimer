@@ -47,9 +47,9 @@ class MonthAdapter(
         holder.binding.root.apply {
             doOnAttach {
                 if (isGesture(it)) {
-                    itemHeight = screenHeight / weekCount  // Равномерное распределение высоты на строки
+                    itemHeight = screenHeight / (weekCount + 1)
                 } else {
-                    TODO("screen set for 3 buttons")
+                    itemHeight = screenHeight / (weekCount + 2)
                 }
             }
         }
@@ -76,7 +76,7 @@ class MonthAdapter(
                 (view.rootWindowInsets?.getInsets(WindowInsets.Type.systemGestures())?.left
                     ?: 0) > 0
             } else {
-                TODO("VERSION.SDK_INT < R")
+                TODO("VERSION.SDK_INT = Q")
             }
         } else false
     }
