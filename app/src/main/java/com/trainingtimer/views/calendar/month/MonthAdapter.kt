@@ -40,16 +40,15 @@ class MonthAdapter(
     }
 
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
-        // Рассчитываем высоту элемента
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-        val weekCount = 6  // Максимум 6 недель в месяце
+        val weekCount = 6
 
         holder.binding.root.apply {
             doOnAttach {
-                if (isGesture(it)) {
-                    itemHeight = screenHeight / (weekCount + 1)
+                itemHeight = if (isGesture(it)) {
+                    screenHeight / (weekCount + 1)
                 } else {
-                    itemHeight = screenHeight / (weekCount + 2)
+                    screenHeight / (weekCount + 2)
                 }
             }
         }
