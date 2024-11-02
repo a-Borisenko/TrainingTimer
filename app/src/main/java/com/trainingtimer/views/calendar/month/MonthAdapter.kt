@@ -58,7 +58,8 @@ class MonthAdapter(
         holder.itemView.layoutParams = layoutParams
 
         val date = getItem(position)
-        val list = monthCalculator.getDaysInMonth(date)
+//        val list = monthCalculator.getDaysInMonth(date)
+        val list = monthCalculator.getDaysInWeek(date)
 
         val adapter = dateAdapterCache.getOrPut(position) {
             DateAdapter(events, context, selectedInfo.first) { calendarDay ->
