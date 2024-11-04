@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +30,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         setupObservers()
         setupListeners()
 
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        val layoutManager = GridLayoutManager(requireContext(), 6, RecyclerView.HORIZONTAL, false)
         binding.pageRecyclerView.layoutManager = layoutManager
 
         val snapHelper = PagerSnapHelper()
