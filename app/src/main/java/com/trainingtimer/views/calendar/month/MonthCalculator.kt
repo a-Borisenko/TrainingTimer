@@ -33,6 +33,29 @@ class MonthCalculator {
         return daysInMonthList
     }
 
+    fun getDaysInWeek(date: Date): List<CalendarDay> {
+        val daysInWeekList: MutableList<CalendarDay> = mutableListOf()
+        val calendar = Calendar.getInstance()
+
+        calendar.time = date
+        calendar.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1)
+
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 1
+        calendar.add(Calendar.DAY_OF_WEEK_IN_MONTH, dayOfWeek)
+
+        while (daysInWeekList.size < 7) {
+            daysInWeekList.add(
+                CalendarDay(
+                    calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH).toString(),
+                    calendar.time
+                )
+            )
+            calendar.add(Calendar.DAY_OF_WEEK_IN_MONTH, 1)
+        }
+
+        return daysInWeekList
+    }
+
     fun getWeeksInMonth(date: Date): List<Week> {
         val daysInMonth = getDaysInMonth(date)
         val weeks = mutableListOf<Week>()
