@@ -42,7 +42,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
             Toast.makeText(
                 requireContext(),
-                "Selected date is : ${sdf.format(it)}",
+                "Selected date is : ${sdf.format(it!!)}",
                 Toast.LENGTH_LONG
             ).show()
         }
