@@ -3,6 +3,7 @@ package com.trainingtimer.views.calendar.month
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +60,7 @@ class MonthAdapter(
 
         val date = getItem(position)
 //        val list = monthCalculator.getDaysInMonth(date)
-        val list = monthCalculator.getDaysInWeek(date)
+        val listOfWeek = monthCalculator.getDaysInWeek(date)
 
         val adapter = dateAdapterCache.getOrPut(position) {
             DateAdapter(events, context, selectedInfo.first) { calendarDay ->
@@ -67,7 +68,7 @@ class MonthAdapter(
             }
         }
         holder.bindHolder(adapter)
-        adapter.submitList(list)
+        adapter.submitList(listOfWeek)
     }
 
     private fun isGesture(view: View): Boolean {
@@ -85,6 +86,7 @@ class MonthAdapter(
         if (daysRecycler.layoutManager == null) {
             daysRecycler.layoutManager = GridLayoutManager(context, 7)
             daysRecycler.itemAnimator = null
+            Log.d("MonthAdapter", "layoutManager = GridLayoutManager(context, 7)")
         }
         daysRecycler.adapter = adapter
     }
