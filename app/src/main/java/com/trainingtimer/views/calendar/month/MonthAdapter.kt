@@ -60,7 +60,9 @@ class MonthAdapter(
 
         val date = getItem(position)
 //        val list = monthCalculator.getDaysInMonth(date)
-        val listOfWeek = monthCalculator.getDaysInWeek(date)
+        val previousList = monthCalculator.getPreviousWeek(date)
+        val thisWeek = monthCalculator.getThisWeek(date)
+        val nextWeeks = monthCalculator.getNextWeeks(date)
 
         val adapter = dateAdapterCache.getOrPut(position) {
             DateAdapter(events, context, selectedInfo.first) { calendarDay ->
@@ -68,7 +70,7 @@ class MonthAdapter(
             }
         }
         holder.bindHolder(adapter)
-        adapter.submitList(listOfWeek)
+        adapter.submitList(previousList + thisWeek + nextWeeks)
     }
 
     private fun isGesture(view: View): Boolean {
