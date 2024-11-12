@@ -1,6 +1,7 @@
 package com.trainingtimer.views.calendar
 
 import androidx.lifecycle.ViewModel
+import com.trainingtimer.domain.CalendarDay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
@@ -9,61 +10,71 @@ import java.util.Locale
 
 class CalendarViewModel : ViewModel() {
 
-    private val _selectedMonthDate = MutableStateFlow(Date())
-    val selectedMonthDate: StateFlow<Date> get() = _selectedMonthDate
+    private val _selectedWeekDate = MutableStateFlow(Date())
+    val selectedWeekDate: StateFlow<Date> get() = _selectedWeekDate
 
-    private val _loadedDates = MutableStateFlow<List<Date>>(emptyList())
-    val loadedDates: StateFlow<List<Date>> get() = _loadedDates
+    private val _loadedWeeks = MutableStateFlow<List<List<CalendarDay>>>(emptyList())
+    val loadedWeeks: StateFlow<List<List<CalendarDay>>> get() = _loadedWeeks
 
     val events = mutableListOf<Date>()
     var latestPos = 0
 
     init {
-        initializeDates()
+        initializeWeeks()
     }
 
-    private fun initializeDates() {
+    private fun initializeWeeks() {
         val calendar = java.util.Calendar.getInstance()
         val initialDate = calendar.time
-        _selectedMonthDate.value = initialDate
+        _selectedWeekDate.value = initialDate
 
-        // Инициализация событий на ближайшие 10 дней
+        // Добавляем события на 10 дней для тестирования
         for (i in 1..10) {
             calendar.add(java.util.Calendar.DATE, i)
             events.add(calendar.time)
         }
 
-        // Инициализация списка дат
-        _loadedDates.value = generateDatesAround(initialDate)
-        latestPos = _loadedDates.value.size / 2
+        _loadedWeeks.value = generateWeeksAround(initialDate)
+        latestPos = _loadedWeeks.value.size / 2
     }
 
-    private fun generateDatesAround(baseDate: Date): List<Date> {
+    private fun generateWeeksAround(baseDate: Date): List<List<CalendarDay>> {
         val calendar = java.util.Calendar.getInstance()
         calendar.time = baseDate
 
-        val dates = mutableListOf<Date>()
-        val initialDate = calendar.time
+        val weeks = mutableListOf<List<CalendarDay>>()
 
-        // Добавляем предыдущие 5 месяцев
+        // Добавляем недели перед базовой неделей
         for (i in -5..-1) {
-            calendar.add(java.util.Calendar.MONTH, i)
-            dates.add(calendar.time)
-            calendar.time = initialDate
+            weeks.add(generateWeek(calendar.apply { add(java.util.Calendar.WEEK_OF_YEAR, i) }.time))
         }
 
-        // Добавляем текущий месяц
-        dates.add(initialDate)
+        // Базовая неделя
+        weeks.add(generateWeek(baseDate))
 
-        // Добавляем следующие 5 месяцев
-        calendar.time = initialDate
+        // Добавляем недели после базовой недели
         for (i in 1..5) {
-            calendar.add(java.util.Calendar.MONTH, i)
-            dates.add(calendar.time)
-            calendar.time = initialDate
+            weeks.add(generateWeek(calendar.apply { add(java.util.Calendar.WEEK_OF_YEAR, i) }.time))
         }
 
-        return dates
+        return weeks
+    }
+
+    private fun generateWeek(date: Date): List<CalendarDay> {
+        val week = mutableListOf<CalendarDay>()
+        val calendar = java.util.Calendar.getInstance()
+        calendar.time = date
+
+        // Перематываем к началу недели
+        calendar.set(java.util.Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+
+        // Генерируем 7 дней для недели
+        for (i in 0 until 7) {
+            week.add(CalendarDay(calendar.get(java.util.Calendar.DAY_OF_MONTH).toString(), calendar.time))
+            calendar.add(java.util.Calendar.DATE, 1)
+        }
+
+        return week
     }
 
     fun dateFormatter(date: Date): String {
@@ -71,44 +82,43 @@ class CalendarViewModel : ViewModel() {
         return sdf.format(date)
     }
 
-    fun loadPreviousMonths() {
+    fun loadPreviousWeeks() {
+        val currentLoadedWeeks = _loadedWeeks.value.toMutableList()
+        val firstWeek = currentLoadedWeeks.first().firstOrNull()?.date ?: return
+
+        val newWeeks = mutableListOf<List<CalendarDay>>()
         val calendar = java.util.Calendar.getInstance()
-        val currentLoadedDates = _loadedDates.value.toMutableList()
+        calendar.time = firstWeek
 
-        // Работа с первой датой
-        calendar.time = currentLoadedDates.first()
-
-        // Добавляем предыдущие 12 месяцев
-        val newDates = mutableListOf<Date>()
-        for (i in 1..12) {
-            calendar.add(java.util.Calendar.MONTH, -1)
-            newDates.add(calendar.time)
+        for (i in 1..6) {
+            calendar.add(java.util.Calendar.WEEK_OF_YEAR, -1)
+            newWeeks.add(0, generateWeek(calendar.time))
         }
 
-        // Объединяем новые даты с текущими и обновляем состояние
-        _loadedDates.value = (newDates + currentLoadedDates).sortedBy { it.time }
-        latestPos += 12
+        _loadedWeeks.value = newWeeks + currentLoadedWeeks
+        latestPos += newWeeks.size
     }
 
-    fun loadNextMonths() {
+    fun loadNextWeeks() {
+        val currentLoadedWeeks = _loadedWeeks.value.toMutableList()
+        val lastWeek = currentLoadedWeeks.last().lastOrNull()?.date ?: return
+
+        val newWeeks = mutableListOf<List<CalendarDay>>()
         val calendar = java.util.Calendar.getInstance()
-        val currentLoadedDates = _loadedDates.value.toMutableList()
+        calendar.time = lastWeek
 
-        // Работа с последней датой
-        calendar.time = currentLoadedDates.last()
-
-        // Добавляем следующие 12 месяцев
-        val newDates = mutableListOf<Date>()
-        for (i in 1..12) {
-            calendar.add(java.util.Calendar.MONTH, 1)
-            newDates.add(calendar.time)
+        for (i in 1..6) {
+            calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
+            newWeeks.add(generateWeek(calendar.time))
         }
 
-        // Объединяем новые даты с текущими и обновляем состояние
-        _loadedDates.value = (currentLoadedDates + newDates).sortedBy { it.time }
+        _loadedWeeks.value = currentLoadedWeeks + newWeeks
     }
 
-    fun updateSelectedDate(position: Int) {
-        _selectedMonthDate.value = _loadedDates.value[position]
+    fun updateSelectedWeek(position: Int) {
+        // Проверяем, что индекс позиции находится в пределах загруженных недель
+        if (position in _loadedWeeks.value.indices) {
+            _selectedWeekDate.value = _loadedWeeks.value[position].first().date
+        }
     }
 }

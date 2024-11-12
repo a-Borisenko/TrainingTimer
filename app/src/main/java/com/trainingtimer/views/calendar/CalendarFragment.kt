@@ -6,13 +6,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.views.calendar.month.MonthAdapter
+import com.trainingtimer.views.calendar.month.WeekAdapter
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -20,7 +19,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
-    private lateinit var adapter: MonthAdapter
+    private lateinit var adapter: WeekAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,7 +29,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         setupObservers()
         setupListeners()
 
-        val layoutManager = GridLayoutManager(requireContext(), 6, RecyclerView.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.pageRecyclerView.layoutManager = layoutManager
 
         val snapHelper = PagerSnapHelper()
@@ -38,13 +37,15 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupAdapter() {
-        adapter = MonthAdapter(requireContext(), viewModel.events) {
-            val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-            Toast.makeText(
-                requireContext(),
-                "Selected date is : ${sdf.format(it!!)}",
-                Toast.LENGTH_LONG
-            ).show()
+        adapter = WeekAdapter(requireContext(), viewModel.events) { selectedDate ->
+            selectedDate?.let {
+                val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
+                Toast.makeText(
+                    requireContext(),
+                    "Selected date is: ${sdf.format(it)}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
         binding.pageRecyclerView.adapter = adapter
         binding.pageRecyclerView.itemAnimator = null
@@ -52,15 +53,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun setupObservers() {
         lifecycleScope.launchWhenStarted {
-            viewModel.selectedMonthDate.collect { selectedDate ->
+            viewModel.selectedWeekDate.collect { selectedDate ->
                 binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                binding.pageRecyclerView.scrollToPosition(adapter.getItemPos(selectedDate))
+                val weekPosition = adapter.getItemPos(selectedDate)
+                binding.pageRecyclerView.scrollToPosition(weekPosition)
             }
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.loadedDates.collect { dates ->
-                adapter.submitList(dates.toList())
+            viewModel.loadedWeeks.collect { weeks ->
+                adapter.submitList(weeks)
             }
         }
     }
@@ -70,18 +72,18 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val layoutManager =
-                        binding.pageRecyclerView.layoutManager as LinearLayoutManager
+                    val layoutManager = binding.pageRecyclerView.layoutManager as LinearLayoutManager
                     val pos = layoutManager.findFirstVisibleItemPosition()
 
                     if (viewModel.latestPos != pos) {
-                        viewModel.updateSelectedDate(pos)
+                        viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
 
+                        // Подгружаем недели при скролле к началу или концу
                         if (pos == 0) {
-                            viewModel.loadPreviousMonths()
-                        } else if (pos == viewModel.loadedDates.value.size - 1) {
-                            viewModel.loadNextMonths()
+                            viewModel.loadPreviousWeeks()
+                        } else if (pos == viewModel.loadedWeeks.value.size - 1) {
+                            viewModel.loadNextWeeks()
                         }
                     }
                 }
@@ -89,7 +91,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         })
 
         binding.nextMonth.setOnClickListener {
-            if (viewModel.latestPos + 1 <= viewModel.loadedDates.value.size - 1)
+            if (viewModel.latestPos + 1 <= viewModel.loadedWeeks.value.size - 1)
                 binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos + 1)
         }
 
@@ -100,7 +102,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
 
         binding.monthText.setOnClickListener {
-            binding.pageRecyclerView.smoothScrollToPosition(viewModel.loadedDates.value.size / 2)
+            binding.pageRecyclerView.smoothScrollToPosition(viewModel.loadedWeeks.value.size / 2)
         }
     }
 }
