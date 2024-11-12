@@ -32,7 +32,7 @@ class MonthCalculator {
         return daysInMonthList
     }
 
-    fun getDaysInWeek(date: Date): List<CalendarDay> {
+    private fun getDaysInWeek(date: Date): List<CalendarDay> {
         val daysInWeekList: MutableList<CalendarDay> = mutableListOf()
         val calendar = Calendar.getInstance()
 
@@ -51,6 +51,18 @@ class MonthCalculator {
         }
 
         return daysInWeekList
+    }
+
+    fun getPreviousWeek(date: Date): List<CalendarDay> {
+        return getDaysInWeek(date)
+    }
+
+    fun getThisWeek(date: Date): List<CalendarDay> {
+        return getDaysInWeek(date)
+    }
+
+    fun getNextWeeks(date: Date): List<CalendarDay> {
+        return getDaysInWeek(date) + getDaysInWeek(date) + getDaysInWeek(date)
     }
 
     fun getWeeksInMonth(date: Date): List<List<CalendarDay>> {
