@@ -28,8 +28,8 @@ class CalendarViewModel : ViewModel() {
         val initialDate = calendar.time
         _selectedWeekDate.value = initialDate
 
-        // Добавляем события на 10 дней для тестирования
-        for (i in 1..10) {
+        // Добавляем события на 100 дней для тестирования
+        for (i in 1..100) {
             calendar.add(java.util.Calendar.DATE, i)
             events.add(calendar.time)
         }
