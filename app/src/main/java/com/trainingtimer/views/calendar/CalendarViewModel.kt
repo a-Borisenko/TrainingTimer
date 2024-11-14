@@ -17,7 +17,7 @@ class CalendarViewModel : ViewModel() {
     val loadedWeeks: StateFlow<List<List<CalendarDay>>> get() = _loadedWeeks
 
     val events = mutableListOf<Date>()
-    var latestPos = 0
+    var latestPos: Int = 0
 
     init {
         initializeWeeks()
@@ -25,39 +25,25 @@ class CalendarViewModel : ViewModel() {
 
     private fun initializeWeeks() {
         val calendar = java.util.Calendar.getInstance()
-        val initialDate = calendar.time
-        _selectedWeekDate.value = initialDate
+        calendar.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY)
+        calendar.set(java.util.Calendar.DAY_OF_MONTH, 1)
 
-        // Добавляем события на 100 дней для тестирования
-        for (i in 1..100) {
+        val weeks = mutableListOf<List<CalendarDay>>()
+        for (i in 0 until 52) {
+            weeks.add(generateWeek(calendar.time))
+            if (calendar.get(java.util.Calendar.MONTH) == java.util.Calendar.getInstance().get(java.util.Calendar.MONTH)) {
+                latestPos = i
+            }
+            calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
+        }
+
+        for (i in 1..30) {
             calendar.add(java.util.Calendar.DATE, i)
             events.add(calendar.time)
         }
 
-        _loadedWeeks.value = generateWeeksAround(initialDate)
-        latestPos = _loadedWeeks.value.size / 2
-    }
-
-    private fun generateWeeksAround(baseDate: Date): List<List<CalendarDay>> {
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = baseDate
-
-        val weeks = mutableListOf<List<CalendarDay>>()
-
-        // Добавляем недели перед базовой неделей
-        for (i in -5..-1) {
-            weeks.add(generateWeek(calendar.apply { add(java.util.Calendar.WEEK_OF_YEAR, i) }.time))
-        }
-
-        // Базовая неделя
-        weeks.add(generateWeek(baseDate))
-
-        // Добавляем недели после базовой недели
-        for (i in 1..5) {
-            weeks.add(generateWeek(calendar.apply { add(java.util.Calendar.WEEK_OF_YEAR, i) }.time))
-        }
-
-        return weeks
+        _loadedWeeks.value = weeks
+//        latestPos = weeks.size / 2
     }
 
     private fun generateWeek(date: Date): List<CalendarDay> {
@@ -65,10 +51,9 @@ class CalendarViewModel : ViewModel() {
         val calendar = java.util.Calendar.getInstance()
         calendar.time = date
 
-        // Перематываем к началу недели
+        calendar.firstDayOfWeek = java.util.Calendar.MONDAY
         calendar.set(java.util.Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
 
-        // Генерируем 7 дней для недели
         for (i in 0 until 7) {
             week.add(CalendarDay(calendar.get(java.util.Calendar.DAY_OF_MONTH).toString(), calendar.time))
             calendar.add(java.util.Calendar.DATE, 1)
@@ -77,46 +62,16 @@ class CalendarViewModel : ViewModel() {
         return week
     }
 
+    /*fun getCurrentMonth(): Int {
+
+    }*/
+
     fun dateFormatter(date: Date): String {
         val sdf = SimpleDateFormat("MMMM - yyyy", Locale.getDefault())
         return sdf.format(date)
     }
 
-    fun loadPreviousWeeks() {
-        val currentLoadedWeeks = _loadedWeeks.value.toMutableList()
-        val firstWeek = currentLoadedWeeks.first().firstOrNull()?.date ?: return
-
-        val newWeeks = mutableListOf<List<CalendarDay>>()
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = firstWeek
-
-        for (i in 1..6) {
-            calendar.add(java.util.Calendar.WEEK_OF_YEAR, -1)
-            newWeeks.add(0, generateWeek(calendar.time))
-        }
-
-        _loadedWeeks.value = newWeeks + currentLoadedWeeks
-        latestPos += newWeeks.size
-    }
-
-    fun loadNextWeeks() {
-        val currentLoadedWeeks = _loadedWeeks.value.toMutableList()
-        val lastWeek = currentLoadedWeeks.last().lastOrNull()?.date ?: return
-
-        val newWeeks = mutableListOf<List<CalendarDay>>()
-        val calendar = java.util.Calendar.getInstance()
-        calendar.time = lastWeek
-
-        for (i in 1..6) {
-            calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
-            newWeeks.add(generateWeek(calendar.time))
-        }
-
-        _loadedWeeks.value = currentLoadedWeeks + newWeeks
-    }
-
     fun updateSelectedWeek(position: Int) {
-        // Проверяем, что индекс позиции находится в пределах загруженных недель
         if (position in _loadedWeeks.value.indices) {
             _selectedWeekDate.value = _loadedWeeks.value[position].first().date
         }
