@@ -56,6 +56,10 @@ class WeekAdapter(
                 onDateSelected(calendarDay.date, position)
             }
         }
+
+        if (adapter.currentList != week) {
+            adapter.submitList(week)
+        }
         holder.bindHolder(adapter)
         adapter.submitList(week)
     }
