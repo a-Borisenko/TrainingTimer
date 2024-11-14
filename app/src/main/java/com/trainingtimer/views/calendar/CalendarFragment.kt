@@ -34,6 +34,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.pageRecyclerView)
+        binding.pageRecyclerView.scrollToPosition(viewModel.latestPos)
     }
 
     private fun setupAdapter() {
@@ -80,11 +81,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         viewModel.latestPos = pos
 
                         // Подгружаем недели при скролле к началу или концу
-                        if (pos == 0) {
+                        /*if (pos == 0) {
                             viewModel.loadPreviousWeeks()
                         } else if (pos == viewModel.loadedWeeks.value.size - 1) {
                             viewModel.loadNextWeeks()
-                        }
+                        }*/
                     }
                 }
             }
@@ -102,7 +103,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
 
         binding.monthText.setOnClickListener {
-            binding.pageRecyclerView.smoothScrollToPosition(viewModel.loadedWeeks.value.size / 2)
+            binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos)
         }
     }
 }
