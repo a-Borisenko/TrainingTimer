@@ -79,13 +79,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
-
-                        // Подгружаем недели при скролле к началу или концу
-                        /*if (pos == 0) {
-                            viewModel.loadPreviousWeeks()
-                        } else if (pos == viewModel.loadedWeeks.value.size - 1) {
-                            viewModel.loadNextWeeks()
-                        }*/
                     }
                 }
             }
