@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.views.calendar.month.WeekAdapter
+import com.trainingtimer.views.calendar.week.WeekAdapter
 import java.text.SimpleDateFormat
 import java.util.Locale
 

@@ -1,4 +1,4 @@
-package com.trainingtimer.views.calendar.month
+package com.trainingtimer.views.calendar.week
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView

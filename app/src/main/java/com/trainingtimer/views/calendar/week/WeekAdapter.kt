@@ -1,4 +1,4 @@
-package com.trainingtimer.views.calendar.month
+package com.trainingtimer.views.calendar.week
 
 import android.content.Context
 import android.content.res.Resources
