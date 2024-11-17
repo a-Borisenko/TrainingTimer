@@ -1,6 +1,7 @@
 package com.trainingtimer.views.calendar
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -34,7 +35,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.pageRecyclerView)
-        binding.pageRecyclerView.scrollToPosition(viewModel.latestPos)
+        binding.pageRecyclerView.scrollToPosition(viewModel.currentWeekNumber)
     }
 
     private fun setupAdapter() {
@@ -96,7 +97,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
 
         binding.monthText.setOnClickListener {
-            binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos)
+            binding.pageRecyclerView.smoothScrollToPosition(viewModel.currentWeekNumber)
+            Log.d("CalendarFragment", "position is ${viewModel.currentWeekNumber}")
         }
     }
 }

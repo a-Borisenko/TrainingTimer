@@ -18,6 +18,7 @@ class CalendarViewModel : ViewModel() {
 
     val events = mutableListOf<Date>()
     var latestPos: Int = 0
+    var currentWeekNumber = 0
 
     init {
         initializeWeeks()
@@ -25,6 +26,8 @@ class CalendarViewModel : ViewModel() {
 
     private fun initializeWeeks() {
         val calendar = java.util.Calendar.getInstance()
+        currentWeekNumber = calendar.get(java.util.Calendar.WEEK_OF_YEAR)
+
         calendar.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY)
         calendar.set(java.util.Calendar.DAY_OF_MONTH, 1)
 
@@ -37,13 +40,12 @@ class CalendarViewModel : ViewModel() {
             calendar.add(java.util.Calendar.WEEK_OF_YEAR, 1)
         }
 
-        for (i in 1..30) {
-            calendar.add(java.util.Calendar.DATE, i)
+        for (j in 1..30) {
+            calendar.add(java.util.Calendar.DATE, j)
             events.add(calendar.time)
         }
 
         _loadedWeeks.value = weeks
-//        latestPos = weeks.size / 2
     }
 
     private fun generateWeek(date: Date): List<CalendarDay> {
@@ -61,10 +63,6 @@ class CalendarViewModel : ViewModel() {
 
         return week
     }
-
-    /*fun getCurrentMonth(): Int {
-
-    }*/
 
     fun dateFormatter(date: Date): String {
         val sdf = SimpleDateFormat("MMMM - yyyy", Locale.getDefault())
