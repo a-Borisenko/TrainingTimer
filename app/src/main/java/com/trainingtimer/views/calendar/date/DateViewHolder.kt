@@ -16,46 +16,41 @@ class DateViewHolder(
     private val binding: CalendarCellBinding,
     private val context: Context,
     private val events: List<Date>,
-    private val selectedDate: Date?,
     private val onItemClick: (CalendarDay) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(date: CalendarDay) {
-
-        if (isInTheSelectedMonth(date.date)) {
-            binding.root.setOnClickListener {
-                onItemClick(date)
-            }
-
-            val calendar = Calendar.getInstance()
-            if (areDatesEqual(calendar.time, date.date)) {
-                binding.backgroundConstraint.background =
-                    getDrawable(context, R.drawable.calendar_cell_today)
-            } else {
-                var isEventDay = false
-                for (event in events) {
-                    if (areDatesEqual(event, date.date)) {
-                        isEventDay = true
-                        break
-                    }
-                }
-                if (isEventDay) {
-                    binding.backgroundConstraint.background =
-                        getDrawable(context, R.drawable.calendar_cell_event)
-                } else {
-                    binding.backgroundConstraint.background =
-                        getDrawable(context, R.drawable.calendar_cell_background)
-                }
-            }
-        } else {
-            binding.backgroundConstraint.background =
-                getDrawable(context, R.drawable.calendar_cell_gray)
-            binding.textView.setTextColor(Color.parseColor("#D3D3D3"))
+        // Всегда устанавливаем клик
+        binding.root.setOnClickListener {
+            onItemClick(date)
         }
 
+        // Установка текста дня
         binding.textView.text = date.dayOfMonth
-        if (selectedDate != null) {
-            binding.backgroundConstraint.isSelected = areDatesEqual(selectedDate, date.date)
+
+        // Проверка: дата совпадает с текущей?
+        val isToday = areDatesEqual(Calendar.getInstance().time, date.date)
+
+        // Проверка: день содержит событие?
+        val isEventDay = events.any { areDatesEqual(it, date.date) }
+
+        // Настройка стиля в зависимости от условий
+        when {
+            isToday -> binding.backgroundConstraint.background =
+                getDrawable(context, R.drawable.calendar_cell_today)
+
+            isEventDay -> binding.backgroundConstraint.background =
+                getDrawable(context, R.drawable.calendar_cell_event)
+
+            else -> binding.backgroundConstraint.background =
+                getDrawable(context, R.drawable.calendar_cell_background)
+        }
+
+        // Оформление для дат вне текущего месяца
+        if (!isInTheSelectedMonth(date.date)) {
+            binding.textView.setTextColor(Color.parseColor("#D3D3D3"))
+        } else {
+            binding.textView.setTextColor(Color.BLACK)
         }
     }
 
@@ -65,10 +60,8 @@ class DateViewHolder(
     }
 
     private fun isInTheSelectedMonth(date: Date): Boolean {
-        if (events.isNotEmpty()) {
-            val sdf = SimpleDateFormat("yyyyMM", Locale.getDefault())
-            return sdf.format(date) == sdf.format(events.first())
-        }
-        return false
+        val sdf = SimpleDateFormat("yyyyMM", Locale.getDefault())
+        val currentMonth = sdf.format(Calendar.getInstance().time)
+        return sdf.format(date) == currentMonth
     }
 }

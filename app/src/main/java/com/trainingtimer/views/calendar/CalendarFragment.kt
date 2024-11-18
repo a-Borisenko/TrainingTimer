@@ -40,14 +40,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun setupAdapter() {
         adapter = WeekAdapter(requireContext(), viewModel.events) { selectedDate ->
-            selectedDate?.let {
-                val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-                Toast.makeText(
-                    requireContext(),
-                    "Selected date is: ${sdf.format(it)}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
+            Toast.makeText(
+                requireContext(),
+                "Selected date is: ${sdf.format(selectedDate)}",
+                Toast.LENGTH_LONG
+            ).show()
         }
         binding.pageRecyclerView.adapter = adapter
         binding.pageRecyclerView.itemAnimator = null

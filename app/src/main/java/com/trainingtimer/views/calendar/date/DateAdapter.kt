@@ -18,7 +18,7 @@ class DateAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
         val binding =
             CalendarCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DateViewHolder(binding, context, events, selectedDate, onItemClick)
+        return DateViewHolder(binding, context, events, onItemClick) // Убрали selectedDate
     }
 
     override fun onBindViewHolder(holder: DateViewHolder, position: Int) {

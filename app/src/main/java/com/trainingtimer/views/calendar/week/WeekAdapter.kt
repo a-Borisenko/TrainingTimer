@@ -52,7 +52,7 @@ class WeekAdapter(
         val week = getItem(position)
 
         val adapter = dateAdapterCache.getOrPut(position) {
-            DateAdapter(events, context, selectedInfo.first) { calendarDay ->
+            DateAdapter(week.map { it.date }, context, selectedInfo.first) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
         }
@@ -65,15 +65,17 @@ class WeekAdapter(
     }
 
     private fun onDateSelected(selectedDate: Date?, position: Int) {
-        if (areDatesEqual(selectedInfo.first, selectedDate)) {
-            notifyItemChanged(selectedInfo.second!!)
-            selectedInfo = null to null
-        } else {
-            selectedInfo.second?.let { notifyItemChanged(it) }
-            selectedInfo = selectedDate to position
-            notifyItemChanged(position)
-            onItemClick(selectedInfo.first)
-        }
+        // Снимите выделение с предыдущей даты
+        selectedInfo.second?.let { notifyItemChanged(it) }
+
+        // Установите новую выбранную дату
+        selectedInfo = selectedDate to position
+
+        // Обновите элемент
+        notifyItemChanged(position)
+
+        // Сообщите о выборе
+        onItemClick(selectedInfo.first)
     }
 
     private fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
@@ -85,12 +87,11 @@ class WeekAdapter(
     fun getItemPos(selectedDate: Date): Int {
         for (index in currentList.indices) {
             val week = currentList[index]
-            // Проверяем, содержит ли неделя (список `CalendarDay`) выбранную дату
             if (week.any { areDatesEqual(it.date, selectedDate) }) {
                 return index
             }
         }
-        return -1 // Возвращаем -1, если дата не найдена
+        return -1
     }
 
     private fun isGesture(view: View): Boolean {
