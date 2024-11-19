@@ -52,7 +52,7 @@ class WeekAdapter(
         val week = getItem(position)
 
         val adapter = dateAdapterCache.getOrPut(position) {
-            DateAdapter(week.map { it.date }, context, selectedInfo.first) { calendarDay ->
+            DateAdapter(week.map { it.date }, context) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
         }
