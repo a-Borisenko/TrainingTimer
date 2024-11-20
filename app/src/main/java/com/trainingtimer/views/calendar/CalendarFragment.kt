@@ -14,6 +14,7 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.views.calendar.week.WeekAdapter
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
@@ -78,6 +79,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
+
+                        // Загрузка дополнительных недель при достижении границ
+                        if (pos == 0) {
+                            viewModel.loadPreviousWeeks()
+                        } else if (pos == viewModel.loadedWeeks.value.size - 1) {
+                            viewModel.loadNextWeeks()
+                        }
                     }
                 }
             }
@@ -95,8 +103,15 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
 
         binding.monthText.setOnClickListener {
-            binding.pageRecyclerView.smoothScrollToPosition(viewModel.currentWeekNumber)
-            Log.d("CalendarFragment", "position is ${viewModel.currentWeekNumber}")
+            val currentDate = Calendar.getInstance().time
+            val currentWeekPos = viewModel.getWeekPositionForDate(currentDate)
+            if (currentWeekPos != -1) {
+                binding.pageRecyclerView.smoothScrollToPosition(currentWeekPos)
+                viewModel.latestPos = currentWeekPos // Обновляем последнюю позицию
+                Log.d("CalendarFragment", "Returning to position: $currentWeekPos")
+            } else {
+                Log.e("CalendarFragment", "Current week position not found!")
+            }
         }
     }
 }
