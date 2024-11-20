@@ -16,6 +16,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
+    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    if (dateFirst == null || dateSecond == null) return false
+    return sdf.format(dateFirst) == sdf.format(dateSecond)
+}
+
 class WeekAdapter(
     val context: Context,
     private val events: List<Date>,
@@ -76,12 +82,6 @@ class WeekAdapter(
 
         // Сообщите о выборе
         onItemClick(selectedInfo.first)
-    }
-
-    private fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
-        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        if (dateFirst == null || dateSecond == null) return false
-        return sdf.format(dateFirst) == sdf.format(dateSecond)
     }
 
     fun getItemPos(selectedDate: Date): Int {
