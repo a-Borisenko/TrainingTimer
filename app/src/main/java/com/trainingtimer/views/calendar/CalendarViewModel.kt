@@ -28,25 +28,29 @@ class CalendarViewModel : ViewModel() {
 
     private fun initializeWeeks() {
         val calendar = Calendar.getInstance()
-        currentWeekNumber = calendar.get(Calendar.WEEK_OF_YEAR)
 
         val weeks = mutableListOf<List<CalendarDay>>()
-        val today = calendar.time
+        weeks.add(generateWeek(calendar.time)) // Текущая неделя
 
-        // Генерация текущей недели и нескольких вокруг
-        weeks.add(generateWeek(today))
+        // Добавляем 5 предыдущих недель
         for (i in 1..5) {
             calendar.add(Calendar.WEEK_OF_YEAR, -1)
-            weeks.add(0, generateWeek(calendar.time)) // Добавляем в начало
-
-            calendar.add(Calendar.WEEK_OF_YEAR, 2)
-            weeks.add(generateWeek(calendar.time)) // Добавляем в конец
+            weeks.add(0, generateWeek(calendar.time)) // Вставляем в начало
         }
 
-        for (j in 1..30) {
+        // Возвращаемся к текущей дате
+        calendar.add(Calendar.WEEK_OF_YEAR, 5)
+
+        // Добавляем 5 будущих недель
+        for (i in 1..5) {
+            calendar.add(Calendar.WEEK_OF_YEAR, 1)
+            weeks.add(generateWeek(calendar.time))
+        }
+
+        /*for (j in 1..30) {
             calendar.add(Calendar.DATE, j)
             events.add(calendar.time)
-        }
+        }*/
 
         _loadedWeeks.value = weeks
     }
@@ -56,12 +60,13 @@ class CalendarViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
         calendar.time = date
 
+        // Устанавливаем начало недели на понедельник
         calendar.firstDayOfWeek = Calendar.MONDAY
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         for (i in 0 until 7) {
             week.add(CalendarDay(calendar.get(Calendar.DAY_OF_MONTH).toString(), calendar.time))
-            calendar.add(Calendar.DATE, 1)
+            calendar.add(Calendar.DATE, 1) // Переход к следующему дню
         }
 
         return week
@@ -69,37 +74,37 @@ class CalendarViewModel : ViewModel() {
 
     fun loadPreviousWeeks() {
         val firstWeekDate = _loadedWeeks.value.firstOrNull()?.firstOrNull()?.date
-            ?: return // Если список пуст, ничего не делаем
+            ?: return
 
         val calendar = Calendar.getInstance()
         calendar.time = firstWeekDate
         calendar.add(Calendar.WEEK_OF_YEAR, -1)
 
         val newWeeks = mutableListOf<List<CalendarDay>>()
-        for (i in 0 until 5) { // Добавляем 5 новых недель
+        for (i in 0 until 5) {
             newWeeks.add(0, generateWeek(calendar.time))
             calendar.add(Calendar.WEEK_OF_YEAR, -1)
         }
 
-        // Пересчитываем позицию текущей недели относительно новых данных
         currentWeekNumber += newWeeks.size
         _loadedWeeks.value = newWeeks + _loadedWeeks.value
     }
 
     fun loadNextWeeks() {
+        // Берем последнюю дату в загруженных неделях
         val lastWeekDate = _loadedWeeks.value.lastOrNull()?.lastOrNull()?.date
             ?: return // Если список пуст, ничего не делаем
 
         val calendar = Calendar.getInstance()
         calendar.time = lastWeekDate
-        calendar.add(Calendar.WEEK_OF_YEAR, 1)
 
         val newWeeks = mutableListOf<List<CalendarDay>>()
-        for (i in 0 until 5) { // Добавляем 5 новых недель
+        for (i in 1..5) { // Добавляем 5 новых недель
+            calendar.add(Calendar.WEEK_OF_YEAR, 1) // Переход к следующей неделе
             newWeeks.add(generateWeek(calendar.time))
-            calendar.add(Calendar.WEEK_OF_YEAR, 1)
         }
 
+        // Обновляем список недель
         _loadedWeeks.value = _loadedWeeks.value + newWeeks
     }
 

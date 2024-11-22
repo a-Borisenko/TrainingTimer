@@ -63,7 +63,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks)
+                adapter.submitList(weeks.toList()) // Убедитесь, что используется новая копия списка
             }
         }
     }
@@ -80,7 +80,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
 
-                        // Загрузка дополнительных недель при достижении границ
+                        // Загрузка новых недель
                         if (pos == 0) {
                             viewModel.loadPreviousWeeks()
                         } else if (pos == viewModel.loadedWeeks.value.size - 1) {
@@ -107,7 +107,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             val currentWeekPos = viewModel.getWeekPositionForDate(currentDate)
             if (currentWeekPos != -1) {
                 binding.pageRecyclerView.smoothScrollToPosition(currentWeekPos)
-                viewModel.latestPos = currentWeekPos // Обновляем последнюю позицию
+                viewModel.latestPos = currentWeekPos
                 Log.d("CalendarFragment", "Returning to position: $currentWeekPos")
             } else {
                 Log.e("CalendarFragment", "Current week position not found!")
