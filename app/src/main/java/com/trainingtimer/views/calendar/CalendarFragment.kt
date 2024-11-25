@@ -63,7 +63,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks.toList()) // Убедитесь, что используется новая копия списка
+                adapter.submitList(weeks.toList()) // Создаем новую копию списка для гарантии обновления
             }
         }
     }

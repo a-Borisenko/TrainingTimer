@@ -1,5 +1,6 @@
 package com.trainingtimer.views.calendar
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.domain.CalendarDay
 import com.trainingtimer.views.calendar.week.areDatesEqual
@@ -53,6 +54,10 @@ class CalendarViewModel : ViewModel() {
         }*/
 
         _loadedWeeks.value = weeks
+
+        _loadedWeeks.value.forEachIndexed { index, week ->
+            Log.d("CalendarViewModel", "Week $index: ${week.first().date} - ${week.last().date}")
+        }
     }
 
     private fun generateWeek(date: Date): List<CalendarDay> {
@@ -60,7 +65,7 @@ class CalendarViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
         calendar.time = date
 
-        // Устанавливаем начало недели на понедельник
+        // Устанавливаем понедельник как начало недели
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
@@ -91,20 +96,21 @@ class CalendarViewModel : ViewModel() {
     }
 
     fun loadNextWeeks() {
-        // Берем последнюю дату в загруженных неделях
-        val lastWeekDate = _loadedWeeks.value.lastOrNull()?.lastOrNull()?.date
-            ?: return // Если список пуст, ничего не делаем
+        val lastWeekDate = _loadedWeeks.value.lastOrNull()?.lastOrNull()?.date ?: return
 
         val calendar = Calendar.getInstance()
         calendar.time = lastWeekDate
 
         val newWeeks = mutableListOf<List<CalendarDay>>()
-        for (i in 1..5) { // Добавляем 5 новых недель
-            calendar.add(Calendar.WEEK_OF_YEAR, 1) // Переход к следующей неделе
-            newWeeks.add(generateWeek(calendar.time))
+        for (i in 1..5) {
+            calendar.add(Calendar.WEEK_OF_YEAR, 1)
+            val week = generateWeek(calendar.time)
+            newWeeks.add(week)
+
+            // Логируем начало и конец каждой добавленной недели
+            Log.d("CalendarViewModel", "Added week: ${week.first().date} - ${week.last().date}")
         }
 
-        // Обновляем список недель
         _loadedWeeks.value = _loadedWeeks.value + newWeeks
     }
 
