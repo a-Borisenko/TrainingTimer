@@ -63,7 +63,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks.toList()) // Создаем новую копию списка для гарантии обновления
+                adapter.submitList(weeks.toList()) // Создаем новую копию списка
             }
         }
     }
@@ -71,19 +71,23 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private fun setupListeners() {
         binding.pageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val layoutManager = binding.pageRecyclerView.layoutManager as LinearLayoutManager
                     val pos = layoutManager.findFirstVisibleItemPosition()
+
+                    Log.d("onScrollStateChanged", "Current position: $pos")
+                    Log.d("onScrollStateChanged", "Loaded weeks size: ${viewModel.loadedWeeks.value.size}")
 
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
 
-                        // Загрузка новых недель
+                        // Проверка загрузки дополнительных недель
                         if (pos == 0) {
+                            Log.d("onScrollStateChanged", "Loading previous weeks")
                             viewModel.loadPreviousWeeks()
                         } else if (pos == viewModel.loadedWeeks.value.size - 1) {
+                            Log.d("onScrollStateChanged", "Loading next weeks")
                             viewModel.loadNextWeeks()
                         }
                     }
