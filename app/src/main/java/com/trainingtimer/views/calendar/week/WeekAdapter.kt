@@ -71,16 +71,10 @@ class WeekAdapter(
     }
 
     private fun onDateSelected(selectedDate: Date?, position: Int) {
-        // Снимите выделение с предыдущей даты
         selectedInfo.second?.let { notifyItemChanged(it) }
-
-        // Установите новую выбранную дату
         selectedInfo = selectedDate to position
 
-        // Обновите элемент
         notifyItemChanged(position)
-
-        // Сообщите о выборе
         onItemClick(selectedInfo.first)
     }
 
