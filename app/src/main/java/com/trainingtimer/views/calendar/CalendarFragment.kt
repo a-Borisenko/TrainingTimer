@@ -63,7 +63,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks.toList()) // Создаем новую копию списка
+                adapter.submitList(weeks.toList())
             }
         }
     }
@@ -82,7 +82,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
 
-                        // Проверка загрузки дополнительных недель
                         if (pos == 0) {
                             Log.d("onScrollStateChanged", "Loading previous weeks")
                             viewModel.loadPreviousWeeks()
