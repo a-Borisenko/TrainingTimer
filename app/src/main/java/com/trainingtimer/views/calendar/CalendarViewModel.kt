@@ -31,18 +31,15 @@ class CalendarViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
 
         val weeks = mutableListOf<List<CalendarDay>>()
-        weeks.add(generateWeek(calendar.time)) // Текущая неделя
+        weeks.add(generateWeek(calendar.time))
 
-        // Добавляем 5 предыдущих недель
         for (i in 1..5) {
             calendar.add(Calendar.WEEK_OF_YEAR, -1)
-            weeks.add(0, generateWeek(calendar.time)) // Вставляем в начало
+            weeks.add(0, generateWeek(calendar.time))
         }
 
-        // Возвращаемся к текущей дате
         calendar.add(Calendar.WEEK_OF_YEAR, 5)
 
-        // Добавляем 5 будущих недель
         for (i in 1..5) {
             calendar.add(Calendar.WEEK_OF_YEAR, 1)
             weeks.add(generateWeek(calendar.time))
