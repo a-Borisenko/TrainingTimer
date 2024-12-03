@@ -3,7 +3,7 @@ package com.trainingtimer.views.calendar
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.domain.CalendarDay
-import com.trainingtimer.views.calendar.week.areDatesEqual
+import com.trainingtimer.utils.areDatesEqual
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat

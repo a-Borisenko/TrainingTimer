@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun timeStringToLong(time: String): Long {
@@ -20,6 +23,12 @@ fun timeLongToString(time: Long): String {
     val min = time / 60
     val sec = time % 60
     return "${"%02d".format(min)}:${"%02d".format(sec)}"
+}
+
+fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
+    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    if (dateFirst == null || dateSecond == null) return false
+    return sdf.format(dateFirst) == sdf.format(dateSecond)
 }
 
 

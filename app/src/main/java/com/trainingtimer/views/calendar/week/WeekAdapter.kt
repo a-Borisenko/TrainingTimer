@@ -11,16 +11,9 @@ import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.utils.areDatesEqual
 import com.trainingtimer.views.calendar.date.DateAdapter
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-
-fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
-    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-    if (dateFirst == null || dateSecond == null) return false
-    return sdf.format(dateFirst) == sdf.format(dateSecond)
-}
 
 class WeekAdapter(
     val context: Context,
