@@ -17,7 +17,7 @@ import java.util.Date
 
 class WeekAdapter(
     val context: Context,
-    private val events: List<Date>,
+//    private val events: List<Date>,
     val onItemClick: (date: Date?) -> Unit
 ) : ListAdapter<List<CalendarDay>, WeekViewHolder>(WeekDiffCallback()) {
 

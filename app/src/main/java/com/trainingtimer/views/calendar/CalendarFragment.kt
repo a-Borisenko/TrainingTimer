@@ -40,7 +40,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupAdapter() {
-        adapter = WeekAdapter(requireContext(), viewModel.events) { selectedDate ->
+        adapter = WeekAdapter(requireContext()/*, viewModel.events*/) { selectedDate ->
             val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
             Toast.makeText(
                 requireContext(),

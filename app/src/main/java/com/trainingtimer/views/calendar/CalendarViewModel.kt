@@ -19,7 +19,7 @@ class CalendarViewModel : ViewModel() {
     private val _loadedWeeks = MutableStateFlow<List<List<CalendarDay>>>(emptyList())
     val loadedWeeks: StateFlow<List<List<CalendarDay>>> get() = _loadedWeeks
 
-    val events = mutableListOf<Date>()
+//    val events = mutableListOf<Date>()
     var latestPos: Int = 0
     var currentWeekNumber = 0
 
