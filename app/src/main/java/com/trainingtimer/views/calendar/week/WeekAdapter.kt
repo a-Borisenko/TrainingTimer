@@ -2,16 +2,14 @@ package com.trainingtimer.views.calendar.week
 
 import android.content.Context
 import android.content.res.Resources
-import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
 import com.trainingtimer.utils.areDatesEqual
+import com.trainingtimer.utils.isGesture
 import com.trainingtimer.views.calendar.date.DateAdapter
 import java.util.Date
 
@@ -80,16 +78,5 @@ class WeekAdapter(
             }
         }
         return -1
-    }
-
-    private fun isGesture(view: View): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                (view.rootWindowInsets?.getInsets(WindowInsets.Type.systemGestures())?.left
-                    ?: 0) > 0
-            } else {
-                TODO("VERSION.SDK_INT = Q")
-            }
-        } else false
     }
 }
