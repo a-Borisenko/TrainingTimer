@@ -2,14 +2,15 @@ package com.trainingtimer.views.calendar.week
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.utils.DataService.Companion.recyclerHeight
 import com.trainingtimer.utils.areDatesEqual
-import com.trainingtimer.utils.isGesture
 import com.trainingtimer.views.calendar.date.DateAdapter
 import java.util.Date
 
@@ -34,11 +35,17 @@ class WeekAdapter(
 
         holder.binding.root.apply {
             doOnAttach {
-                itemHeight = if (isGesture(it)) {
+                itemHeight = if (recyclerHeight != 0) {
+                    recyclerHeight / 6
+                } else {
+                    screenHeight / 7
+                }
+                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight")
+                /*itemHeight = if (isGesture(it)) {
                     screenHeight / 7
                 } else {
                     screenHeight / 8
-                }
+                }*/
             }
         }
 

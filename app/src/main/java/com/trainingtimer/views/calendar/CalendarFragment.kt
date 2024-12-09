@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
+import com.trainingtimer.utils.DataService
 import com.trainingtimer.views.calendar.week.WeekAdapter
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -37,6 +38,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.pageRecyclerView)
         binding.pageRecyclerView.scrollToPosition(viewModel.currentWeekNumber)
+        calculateRecyclerHeight()
     }
 
     private fun setupAdapter() {
@@ -114,6 +116,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             } else {
                 Log.e("CalendarFragment", "Current week position not found!")
             }
+        }
+    }
+
+    private fun calculateRecyclerHeight() {
+        binding.pageRecyclerView.post {
+            DataService.recyclerHeight = binding.pageRecyclerView.height
         }
     }
 }
