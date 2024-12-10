@@ -28,6 +28,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCalendarBinding.bind(view)
 
+        calculateRecyclerHeight()
         setupAdapter()
         setupObservers()
         setupListeners()
@@ -38,7 +39,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         val snapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.pageRecyclerView)
         binding.pageRecyclerView.scrollToPosition(viewModel.currentWeekNumber)
-        calculateRecyclerHeight()
     }
 
     private fun setupAdapter() {
@@ -122,6 +122,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private fun calculateRecyclerHeight() {
         binding.pageRecyclerView.post {
             DataService.recyclerHeight = binding.pageRecyclerView.height
+            Log.d("MainActivity", "recyclerHeight = ${binding.pageRecyclerView.height}")
         }
     }
 }
