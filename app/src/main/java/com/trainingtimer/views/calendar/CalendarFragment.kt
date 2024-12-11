@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.utils.DataService
+import com.trainingtimer.domain.RecyclerHeightProvider
 import com.trainingtimer.views.calendar.week.WeekAdapter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CalendarFragment : Fragment(R.layout.fragment_calendar) {
+class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightProvider {
 
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
@@ -28,7 +28,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCalendarBinding.bind(view)
 
-        calculateRecyclerHeight()
         setupAdapter()
         setupObservers()
         setupListeners()
@@ -42,7 +41,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupAdapter() {
-        adapter = WeekAdapter(requireContext()/*, viewModel.events*/) { selectedDate ->
+        adapter = WeekAdapter(requireContext()/*, viewModel.events*/, this) { selectedDate ->
             val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
             Toast.makeText(
                 requireContext(),
@@ -119,10 +118,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
 
-    private fun calculateRecyclerHeight() {
-        binding.pageRecyclerView.post {
-            DataService.recyclerHeight = binding.pageRecyclerView.height
-            Log.d("MainActivity", "recyclerHeight = ${binding.pageRecyclerView.height}")
-        }
+    override fun getRecyclerHeight(): Int {
+        return binding.pageRecyclerView.height // Возвращает реальную высоту
     }
 }
