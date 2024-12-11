@@ -26,8 +26,6 @@ class DataService : Service() {
     companion object {
         const val START = "START"
 
-        var recyclerHeight = 0
-
         var needLoading: Boolean by Delegates.observable(false) {
                 prop, old, new ->
             Log.d("DataService", "needLoading = $old -> $new")
