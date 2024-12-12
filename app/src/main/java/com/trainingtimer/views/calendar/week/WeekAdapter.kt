@@ -42,17 +42,7 @@ class WeekAdapter(
                 } else {
                     screenHeight / 7
                 }
-                /*itemHeight = if (recyclerHeight != 0) {
-                    recyclerHeight / 6
-                } else {
-                    screenHeight / 7
-                }*/
                 Log.d("WeekAdapter", "recyclerHeight = $itemHeight")
-                /*itemHeight = if (isGesture(it)) {
-                    screenHeight / 7
-                } else {
-                    screenHeight / 8
-                }*/
             }
         }
 
