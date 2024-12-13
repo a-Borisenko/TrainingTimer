@@ -41,13 +41,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
     }
 
     private fun setupAdapter() {
-        adapter = WeekAdapter(requireContext()/*, viewModel.events*/, this) { selectedDate ->
-            val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-            Toast.makeText(
-                requireContext(),
-                "Selected date is: ${sdf.format(selectedDate)}",
-                Toast.LENGTH_LONG
-            ).show()
+        adapter = WeekAdapter(requireContext(), this) { selectedDate ->
+            val dateMessage = selectedDate?.let {
+                val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
+                "Selected date is: ${sdf.format(it)}"
+            } ?: "Selected date is: no data"
+
+            Toast.makeText(requireContext(), dateMessage, Toast.LENGTH_LONG).show()
         }
         binding.pageRecyclerView.adapter = adapter
         binding.pageRecyclerView.itemAnimator = null
@@ -73,10 +73,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
         binding.pageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val layoutManager = binding.pageRecyclerView.layoutManager as LinearLayoutManager
+                    val layoutManager =
+                        binding.pageRecyclerView.layoutManager as LinearLayoutManager
                     val pos = layoutManager.findFirstVisibleItemPosition()
 
-                    Log.d("onScrollStateChanged", "Current position: $pos,\nLoaded weeks size: ${viewModel.loadedWeeks.value.size}")
+                    Log.d(
+                        "onScrollStateChanged",
+                        "Current position: $pos,\nLoaded weeks size: ${viewModel.loadedWeeks.value.size}"
+                    )
 
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
@@ -119,6 +123,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
     }
 
     override fun getRecyclerHeight(): Int {
-        return binding.pageRecyclerView.height // Возвращает реальную высоту
+        return binding.pageRecyclerView.height
     }
 }
