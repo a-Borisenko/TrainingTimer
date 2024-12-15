@@ -37,12 +37,9 @@ class WeekAdapter(
 
         holder.binding.root.apply {
             doOnAttach {
-                itemHeight = if (recyclerHeight != 0) {
-                    recyclerHeight / 6
-                } else {
-                    screenHeight / 7
-                }
-                Log.d("WeekAdapter", "recyclerHeight = $itemHeight")
+                itemHeight = recyclerHeight / 6
+                if (itemHeight == 0) itemHeight = screenHeight / 7
+                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight")
             }
         }
 
