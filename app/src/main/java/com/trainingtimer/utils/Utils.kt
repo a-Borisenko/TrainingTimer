@@ -1,10 +1,8 @@
 package com.trainingtimer.utils
 
-import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.WindowInsets
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +25,7 @@ fun timeLongToString(time: Long): String {
     return "${"%02d".format(min)}:${"%02d".format(sec)}"
 }
 
+
 fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
     val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     if (dateFirst == null || dateSecond == null) return false
@@ -39,19 +38,6 @@ fun <T> Flow<T>.collectInViewScope(fragment: Fragment, action: suspend (T) -> Un
     fragment.viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         collectLatest(action)
     }
-}
-
-
-// gesture navigation or 3 buttons
-fun isGesture(view: View): Boolean {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            (view.rootWindowInsets?.getInsets(WindowInsets.Type.systemGestures())?.left
-                ?: 0) > 0
-        } else {
-            TODO("VERSION.SDK_INT = Q")
-        }
-    } else false
 }
 
 
