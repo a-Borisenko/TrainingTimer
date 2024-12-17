@@ -42,7 +42,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
 
     private fun setupAdapter() {
         val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-        adapter = WeekAdapter(requireContext(), this) { selectedDate ->
+        adapter = WeekAdapter(requireContext(), viewModel.events, this) { selectedDate ->
             val dateMessage = selectedDate?.let {
                 "Selected date is: ${sdf.format(it)}"
             } ?: "Selected date is: no data"
