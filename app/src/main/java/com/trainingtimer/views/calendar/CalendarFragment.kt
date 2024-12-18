@@ -13,16 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.domain.RecyclerHeightProvider
-import com.trainingtimer.views.calendar.week.WeekAdapter
-import java.text.SimpleDateFormat
+import java.text.DateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightProvider {
 
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
-    private lateinit var adapter: WeekAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,30 +38,32 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
     }
 
     private fun setupAdapter() {
-        val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-        adapter = WeekAdapter(requireContext(), viewModel.events, this) { selectedDate ->
-            val dateMessage = selectedDate?.let {
-                "Selected date is: ${sdf.format(it)}"
-            } ?: "Selected date is: no data"
-
-            Toast.makeText(requireContext(), dateMessage, Toast.LENGTH_LONG).show()
-        }
+        val adapter =
+            viewModel.setupAdapter(requireContext(), this) { selectedDate ->
+                Toast.makeText(
+                    requireContext(),
+                    "Selected date is: ${
+                        selectedDate?.let {
+                            DateFormat.getDateInstance().format(it)
+                        } ?: "no data"
+                    }",
+                    Toast.LENGTH_LONG).show()
+            }
         binding.pageRecyclerView.adapter = adapter
-        binding.pageRecyclerView.itemAnimator = null
     }
 
     private fun setupObservers() {
         lifecycleScope.launchWhenStarted {
             viewModel.selectedWeekDate.collect { selectedDate ->
                 binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                val weekPosition = adapter.getItemPos(selectedDate)
+                val weekPosition = viewModel.adapter.getItemPos(selectedDate)
                 binding.pageRecyclerView.scrollToPosition(weekPosition)
             }
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks.toList())
+                viewModel.adapter.submitList(weeks.toList())
             }
         }
     }
