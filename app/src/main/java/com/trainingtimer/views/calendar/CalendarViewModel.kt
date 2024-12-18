@@ -1,9 +1,12 @@
 package com.trainingtimer.views.calendar
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.domain.RecyclerHeightProvider
 import com.trainingtimer.utils.areDatesEqual
+import com.trainingtimer.views.calendar.week.WeekAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
@@ -19,9 +22,11 @@ class CalendarViewModel : ViewModel() {
     private val _loadedWeeks = MutableStateFlow<List<List<CalendarDay>>>(emptyList())
     val loadedWeeks: StateFlow<List<List<CalendarDay>>> get() = _loadedWeeks
 
-    val events = mutableListOf<Date>()
+    private val events = mutableListOf<Date>()
+
     var latestPos: Int = 0
     var currentWeekNumber = 0
+    lateinit var adapter: WeekAdapter
 
     init {
         initializeWeeks()
@@ -55,6 +60,23 @@ class CalendarViewModel : ViewModel() {
         _loadedWeeks.value.forEachIndexed { index, week ->
             Log.d("CalendarViewModel", "Week $index: ${week.first().date} - ${week.last().date}")
         }
+    }
+
+    fun setupAdapter(
+        context: Context,
+        recyclerHeightProvider: RecyclerHeightProvider,
+        onDateSelected: (Date?) -> Unit
+    ): WeekAdapter {
+        val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
+        adapter = WeekAdapter(context, events, recyclerHeightProvider) { selectedDate ->
+            val dateMessage = selectedDate?.let {
+                "Selected date is: ${sdf.format(it)}"
+            } ?: "Selected date is: no data"
+
+            onDateSelected(selectedDate)
+            Log.d("CalendarViewModel", dateMessage)
+        }
+        return adapter
     }
 
     private fun generateWeek(date: Date): List<CalendarDay> {
