@@ -1,9 +1,11 @@
 package com.trainingtimer.utils
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -58,4 +60,11 @@ fun View.show() {
 
 fun View.hide() {
     visibility = View.GONE
+}
+
+
+fun Context.toast(message: String?) {
+    message?.let {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
 }

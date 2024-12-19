@@ -3,7 +3,6 @@ package com.trainingtimer.views.calendar
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.domain.RecyclerHeightProvider
-import java.text.DateFormat
+import com.trainingtimer.utils.toast
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightProvider {
 
@@ -38,16 +39,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
     }
 
     private fun setupAdapter() {
+        val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
         val adapter =
             viewModel.setupAdapter(requireContext(), this) { selectedDate ->
-                Toast.makeText(
-                    requireContext(),
-                    "Selected date is: ${
-                        selectedDate?.let {
-                            DateFormat.getDateInstance().format(it)
-                        } ?: "no data"
-                    }",
-                    Toast.LENGTH_LONG).show()
+                requireContext().toast(
+                    "Selected date is: ${selectedDate?.let { sdf.format(it) } ?: "no data"}"
+                )
             }
         binding.pageRecyclerView.adapter = adapter
     }
