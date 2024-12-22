@@ -73,20 +73,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
                         binding.pageRecyclerView.layoutManager as LinearLayoutManager
                     val pos = layoutManager.findFirstVisibleItemPosition()
 
-                    Log.d(
-                        "onScrollStateChanged",
-                        "Current position: $pos,\nLoaded weeks size: ${viewModel.loadedWeeks.value.size}"
-                    )
-
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
                         viewModel.latestPos = pos
 
                         if (pos == 0) {
-                            Log.d("onScrollStateChanged", "Loading previous weeks")
                             viewModel.loadPreviousWeeks()
                         } else if (pos == viewModel.loadedWeeks.value.size - 1) {
-                            Log.d("onScrollStateChanged", "Loading next weeks")
                             viewModel.loadNextWeeks()
                         }
                     }
