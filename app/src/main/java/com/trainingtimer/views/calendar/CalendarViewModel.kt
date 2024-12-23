@@ -148,6 +148,7 @@ class CalendarViewModel : ViewModel() {
     fun updateSelectedWeek(position: Int) {
         if (position in _loadedWeeks.value.indices) {
             _selectedWeekDate.value = _loadedWeeks.value[position].first().date
+            latestPos = position
         }
     }
 }
