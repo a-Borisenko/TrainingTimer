@@ -75,7 +75,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
 
                     if (viewModel.latestPos != pos) {
                         viewModel.updateSelectedWeek(pos)
-                        viewModel.latestPos = pos
 
                         if (pos == 0) {
                             viewModel.loadPreviousWeeks()
