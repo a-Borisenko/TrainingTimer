@@ -30,11 +30,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
         setupObservers()
         setupListeners()
 
-        val layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.pageRecyclerView.layoutManager = layoutManager
+        binding.pageRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.pageRecyclerView)
+        PagerSnapHelper().attachToRecyclerView(binding.pageRecyclerView)
         binding.pageRecyclerView.scrollToPosition(viewModel.currentWeekNumber)
     }
 
@@ -53,8 +52,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
         lifecycleScope.launchWhenStarted {
             viewModel.selectedWeekDate.collect { selectedDate ->
                 binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                val weekPosition = viewModel.adapter.getItemPos(selectedDate)
-                binding.pageRecyclerView.scrollToPosition(weekPosition)
+                binding.pageRecyclerView.scrollToPosition(viewModel.adapter.getItemPos(selectedDate))
             }
         }
 
