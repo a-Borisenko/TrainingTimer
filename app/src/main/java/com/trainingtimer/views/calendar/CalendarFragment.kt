@@ -87,11 +87,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
         binding.nextMonth.setOnClickListener {
             if (viewModel.latestPos + 1 <= viewModel.loadedWeeks.value.size - 1)
                 binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos + 1)
+            Log.d("CalendarFragment", "next month clicked!!!")
         }
 
         binding.previousMonth.setOnClickListener {
             if (viewModel.latestPos - 1 >= 0) {
                 binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos - 1)
+                Log.d("CalendarFragment", "previous month clicked!!!")
             }
         }
 
