@@ -60,6 +60,7 @@ class CalendarViewModel : ViewModel() {
         _loadedWeeks.value.forEachIndexed { index, week ->
             Log.d("CalendarViewModel", "Week $index: ${week.first().date} - ${week.last().date}")
         }
+        loadPreviousWeeks()
     }
 
     fun setupAdapter(
