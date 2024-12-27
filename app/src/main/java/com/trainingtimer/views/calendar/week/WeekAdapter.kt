@@ -59,7 +59,6 @@ class WeekAdapter(
             adapter.submitList(week)
         }
         holder.bindHolder(adapter)
-        adapter.submitList(week)
     }
 
     private fun onDateSelected(selectedDate: Date?, position: Int) {
