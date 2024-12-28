@@ -72,7 +72,7 @@ class CalendarViewModel : ViewModel() {
         adapter = WeekAdapter(context, events, recyclerHeightProvider) { selectedDate ->
             val dateMessage = selectedDate?.let {
                 "Selected date is: ${sdf.format(it)}"
-            } ?: "Selected date is: no data"
+            } ?: "Selected date is: NO DATA"
 
             onDateSelected(selectedDate)
             Log.d("CalendarViewModel", dateMessage)
@@ -117,7 +117,6 @@ class CalendarViewModel : ViewModel() {
 
     fun loadNextWeeks() {
         val lastWeekDate = _loadedWeeks.value.lastOrNull()?.lastOrNull()?.date ?: return
-        Log.d("loadNextWeeks", "Last week date: $lastWeekDate")
 
         val calendar = Calendar.getInstance()
         calendar.time = lastWeekDate
@@ -126,13 +125,11 @@ class CalendarViewModel : ViewModel() {
         for (i in 0 until 5) {
             val week = generateWeek(calendar.time)
             newWeeks.add(week)
-            Log.d("loadNextWeeks", "Generated week: ${week.first().date} to ${week.last().date}")
             calendar.add(Calendar.WEEK_OF_YEAR, 1)
         }
 
         val updatedWeeks = _loadedWeeks.value + newWeeks
         _loadedWeeks.value = updatedWeeks
-        Log.d("loadNextWeeks", "Updated weeks size: ${_loadedWeeks.value.size}")
     }
 
     fun getWeekPositionForDate(date: Date): Int {
