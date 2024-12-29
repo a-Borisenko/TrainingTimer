@@ -3,7 +3,6 @@ package com.trainingtimer.views.list
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,8 +15,8 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
 import com.trainingtimer.utils.DataService
-import com.trainingtimer.utils.hide
-import com.trainingtimer.utils.show
+import com.trainingtimer.utils.gone
+import com.trainingtimer.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -46,14 +45,14 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         viewModel.uiState.collect { state ->
             when (state) {
                 TrainingUiState.Loading -> {
-                    binding.progressBar.show()
-                    binding.trainingRecyclerView.hide()
-                    binding.newTraining.isVisible = false
+                    binding.progressBar.visible()
+                    binding.trainingRecyclerView.gone()
+                    binding.newTraining.gone()
                 }
                 TrainingUiState.Loaded -> {
-                    binding.progressBar.hide()
-                    binding.trainingRecyclerView.show()
-                    binding.newTraining.isVisible = true
+                    binding.progressBar.gone()
+                    binding.trainingRecyclerView.visible()
+                    binding.newTraining.visible()
                 }
             }
         }

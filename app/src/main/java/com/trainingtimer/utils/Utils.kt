@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
@@ -54,12 +55,12 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
 }
 
 
-fun View.show() {
-    visibility = View.VISIBLE
+fun View.visible() {
+    this.isVisible = true
 }
 
-fun View.hide() {
-    visibility = View.GONE
+fun View.gone() {
+    this.isVisible = false
 }
 
 
