@@ -6,6 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
-import com.trainingtimer.domain.Training.Companion.UNDEFINED_ID
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.gone
 import com.trainingtimer.utils.visible
@@ -60,9 +60,11 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun setupRecyclerView() {
         val rvTrainingList = binding.trainingRecyclerView
-        listAdapter = TrainingAdapter()
+        listAdapter = TrainingAdapter(
+            onItemClick = { navigate(it.id) },
+            onItemLongClick = { navCal() }
+        )
         rvTrainingList.adapter = listAdapter
-        setupClickListener()
         setupSwipeListener(rvTrainingList)
     }
 
@@ -88,18 +90,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         itemTouchHelper.attachToRecyclerView(rvTrainingList)
     }
 
-    private fun setupClickListener() {
-        binding.newTraining.setOnLongClickListener {
-            navCal()
-        }
-        listAdapter.onTrainingClickListener = {
-            navigate(it.id)
-        }
-        binding.newTraining.setOnClickListener {
-            navigate(UNDEFINED_ID)
-        }
-    }
-
     private fun navCal(): Boolean {
         findNavController().navigate(
             R.id.action_trainingListFragment_to_calendar
@@ -112,14 +102,18 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
             bundleOf("id" to id),
-            navOptions {
-                anim {
-                    enter = anim.abc_slide_in_bottom
-                    exit = anim.abc_slide_out_top
-                    popEnter = anim.abc_slide_in_top
-                    popExit = anim.abc_slide_out_bottom
-                }
-            }
+            navigationAnimation()
         )
+    }
+
+    private fun navigationAnimation(): NavOptions {
+        return navOptions {
+            anim {
+                enter = anim.abc_slide_in_bottom
+                exit = anim.abc_slide_out_top
+                popEnter = anim.abc_slide_in_top
+                popExit = anim.abc_slide_out_bottom
+            }
+        }
     }
 }
