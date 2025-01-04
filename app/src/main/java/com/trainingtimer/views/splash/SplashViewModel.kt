@@ -27,25 +27,4 @@ class SplashViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
-
-    /*private val _loadingStateFlow = MutableStateFlow<LoadingState>(LoadingState.Loading)
-    val loadingStateFlow: StateFlow<LoadingState> = _loadingStateFlow.asStateFlow()
-
-    fun updateData() {
-        viewModelScope.launch {
-            try {
-                // Загрузка данных
-                val data = fetchData()
-                _loadingStateFlow.value = LoadingState.Success(data)
-            } catch (e: Exception) {
-                _loadingStateFlow.value = LoadingState.Error(e)
-            }
-        }
-    }
-
-    private suspend fun fetchData(): Data {
-        // Реализация загрузки данных
-        delay(2000) // Имитация загрузки данных
-        return Data()
-    }*/
 }
