@@ -4,9 +4,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.databinding.ListItemTrainingBinding
 import com.trainingtimer.domain.Training
 
-class TrainingViewHolder(val binding: ListItemTrainingBinding) : RecyclerView.ViewHolder(binding.root) {
+class TrainingViewHolder(val binding: ListItemTrainingBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(training: Training, onItemClick: (Training) -> Unit, onItemLongClick: (Training) -> Unit) {
+    fun bind(
+        training: Training,
+        onItemClick: (Training) -> Unit,
+        onItemLongClick: (Training) -> Unit
+    ) {
         binding.apply {
             trainingSets.text = training.sets.toString()
             trainingTitle.text = training.title
