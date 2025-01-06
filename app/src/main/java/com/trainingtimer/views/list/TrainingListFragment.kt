@@ -32,9 +32,13 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
         binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
-        viewModel.trainingList.observe(viewLifecycleOwner) {
-            listAdapter.submitList(it)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.trainingList.collect { trainings ->
+                listAdapter.submitList(trainings)
+            }
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             uiState()
         }

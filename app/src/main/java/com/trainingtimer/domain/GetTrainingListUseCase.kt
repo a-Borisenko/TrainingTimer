@@ -1,11 +1,11 @@
 package com.trainingtimer.domain
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetTrainingListUseCase @Inject constructor(private val trainingRepository: TrainingRepository) {
 
-    fun getTrainingList(): LiveData<List<Training>> {
+    fun getTrainingList(): Flow<List<Training>> {
         return trainingRepository.getTrainingList()
     }
 }

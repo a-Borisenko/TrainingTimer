@@ -1,6 +1,6 @@
 package com.trainingtimer.domain
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 interface TrainingRepository {
 
@@ -10,8 +10,8 @@ interface TrainingRepository {
 
     fun editTraining(training: Training)
 
-    fun getTraining(trainingId: Int): LiveData<Training?>
+    fun getTraining(trainingId: Int): Flow<Training?>
 
-    fun getTrainingList(): LiveData<List<Training>>
+    fun getTrainingList(): Flow<List<Training>>
 
 }

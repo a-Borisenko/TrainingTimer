@@ -9,8 +9,10 @@ import com.trainingtimer.utils.DataService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +23,7 @@ class TrainingListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val trainingList = getTrainingListUseCase.getTrainingList()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _uiState = MutableStateFlow<TrainingUiState>(TrainingUiState.Loading)
     val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
