@@ -1,13 +1,17 @@
 package com.trainingtimer.data
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.trainingtimer.domain.Training
 import com.trainingtimer.domain.TrainingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -26,7 +30,14 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
     private val trainingDao = database.trainingDao()
     private val executor = Executors.newSingleThreadExecutor()
 
-    private var autoIncrementId = trainingDao.getTrainings().value?.size ?: 0
+    private var autoIncrementId = 0
+
+    init {
+        CoroutineScope(Dispatchers.IO).launch {
+            autoIncrementId = trainingDao.getTrainings()
+                .firstOrNull()?.size ?: 0
+        }
+    }
 
     override fun addTraining(training: Training) {
         if (training.id == Training.UNDEFINED_ID) {
@@ -50,11 +61,11 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
     }
 
     @Provides
-    override fun getTraining(trainingId: Int): LiveData<Training?> {
+    override fun getTraining(trainingId: Int): Flow<Training?> {
         return trainingDao.getTraining(trainingId)
     }
 
-    override fun getTrainingList(): LiveData<List<Training>> {
+    override fun getTrainingList(): Flow<List<Training>> {
         return trainingDao.getTrainings()
     }
 
