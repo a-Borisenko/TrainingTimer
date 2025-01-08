@@ -1,7 +1,6 @@
 package com.trainingtimer.views.details
 
 import android.util.Log
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.AddTrainingUseCase
@@ -36,7 +35,7 @@ class TrainingViewModel @Inject constructor(
     val state: StateFlow<TrainingState> = _state.asStateFlow()
 
 
-    private val trainingData = Observer<Training?> { training ->
+    /*private val trainingData = Observer<Training?> { training ->
         if (!saveState && training != null) {
             _state.update { currentState ->
                 currentState.copy(
@@ -51,11 +50,11 @@ class TrainingViewModel @Inject constructor(
                 )
             }
         }
-    }
+    }*/
 
-    private val trainingsNumber = Observer<List<Training>> {
+    /*private val trainingsNumber = Observer<List<Training>> {
         newId = it.last().id + 1
-    }
+    }*/
 
 
     init {
@@ -72,10 +71,33 @@ class TrainingViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
-        getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
+//        getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
+        viewModelScope.launch {
+            getTrainingListUseCase.getTrainingList().collect {
+                newId = it.last().id + 1
+            }
+        }
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
+//            getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
+            viewModelScope.launch {
+                getTrainingUseCase.getTraining(DataService.currentId).collect {
+                    if (!saveState && it != null) {
+                        _state.update { currentState ->
+                            currentState.copy(
+                                sets = it.sets.toString(),
+                                title = it.title,
+                                times = it.times.drop(1),
+                                secRemain = if (!DataService.isCounting) {
+                                    timeStringToLong(it.rest)
+                                } else {
+                                    currentState.secRemain
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         }
         resetProgress()
     }
