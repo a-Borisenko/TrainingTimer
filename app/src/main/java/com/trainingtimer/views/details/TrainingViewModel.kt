@@ -35,28 +35,6 @@ class TrainingViewModel @Inject constructor(
     val state: StateFlow<TrainingState> = _state.asStateFlow()
 
 
-    /*private val trainingData = Observer<Training?> { training ->
-        if (!saveState && training != null) {
-            _state.update { currentState ->
-                currentState.copy(
-                    sets = training.sets.toString(),
-                    title = training.title,
-                    times = training.times.drop(1),
-                    secRemain = if (!DataService.isCounting) {
-                        timeStringToLong(training.rest)
-                    } else {
-                        currentState.secRemain
-                    }
-                )
-            }
-        }
-    }*/
-
-    /*private val trainingsNumber = Observer<List<Training>> {
-        newId = it.last().id + 1
-    }*/
-
-
     init {
         TimerService.secRemainFlow.onEach { secRemain ->
             _state.update { currentState ->
@@ -71,7 +49,6 @@ class TrainingViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
-//        getTrainingListUseCase.getTrainingList().observeForever(trainingsNumber)
         viewModelScope.launch {
             getTrainingListUseCase.getTrainingList().collect {
                 newId = it.last().id + 1
@@ -79,7 +56,6 @@ class TrainingViewModel @Inject constructor(
         }
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
-//            getTrainingUseCase.getTraining(DataService.currentId).observeForever(trainingData)
             viewModelScope.launch {
                 getTrainingUseCase.getTraining(DataService.currentId).collect {
                     if (!saveState && it != null) {
