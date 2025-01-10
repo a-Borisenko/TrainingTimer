@@ -25,6 +25,8 @@ class WeekAdapter(
     private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
     private var itemHeight = 0
 
+    var recHeight: () -> Int = { 0 }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PageRecyclerItemBinding.inflate(inflater, parent, false)
@@ -39,7 +41,7 @@ class WeekAdapter(
             doOnAttach {
                 itemHeight = recyclerHeight / 6
                 if (itemHeight == 0) itemHeight = screenHeight / 7
-                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight")
+                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight, recHeight = $recHeight")
             }
         }
 

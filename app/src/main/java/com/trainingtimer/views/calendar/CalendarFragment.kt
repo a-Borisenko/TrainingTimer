@@ -46,6 +46,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
                 )
             }
         binding.pageRecyclerView.adapter = adapter
+
+        adapter.recHeight = {
+            binding.pageRecyclerView.height
+        }
     }
 
     private fun setupObservers() {
