@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
+import com.trainingtimer.domain.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.gone
 import com.trainingtimer.utils.visible
@@ -64,11 +65,9 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private fun setupRecyclerView() {
         val rvTrainingList = binding.trainingRecyclerView
-        listAdapter = TrainingAdapter(
-            onItemClick = { navigate(it.id) },
-            onItemLongClick = { navCal() }
-        )
+        listAdapter = TrainingAdapter()
         rvTrainingList.adapter = listAdapter
+        setupClickListener()
         setupSwipeListener(rvTrainingList)
     }
 
@@ -92,6 +91,18 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvTrainingList)
+    }
+
+    private fun setupClickListener() {
+        binding.newTraining.setOnLongClickListener {
+            navCal()
+        }
+        listAdapter.onTrainingClickListener = {
+            navigate(it.id)
+        }
+        binding.newTraining.setOnClickListener {
+            navigate(Training.UNDEFINED_ID)
+        }
     }
 
     private fun navCal(): Boolean {
