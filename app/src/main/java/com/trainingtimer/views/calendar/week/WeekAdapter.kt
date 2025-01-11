@@ -41,7 +41,7 @@ class WeekAdapter(
             doOnAttach {
                 itemHeight = recyclerHeight / 6
                 if (itemHeight == 0) itemHeight = screenHeight / 7
-                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight, recHeight = $recHeight")
+                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight,\nrecHeight = ${recHeight()}")
             }
         }
 
