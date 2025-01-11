@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.domain.RecyclerHeightProvider
 import com.trainingtimer.utils.toast
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightProvider {
+class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
@@ -40,7 +39,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
     private fun setupAdapter() {
         val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
         val adapter =
-            viewModel.setupAdapter(requireContext(), this) { selectedDate ->
+            viewModel.setupAdapter(requireContext()) { selectedDate ->
                 requireContext().toast(
                     "Selected date is: ${selectedDate?.let { sdf.format(it) } ?: "no data"}"
                 )
@@ -112,9 +111,5 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), RecyclerHeightPro
                 Log.e("CalendarFragment", "Current week position not found!")
             }
         }
-    }
-
-    override fun getRecyclerHeight(): Int {
-        return binding.pageRecyclerView.height
     }
 }

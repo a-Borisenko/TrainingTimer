@@ -9,7 +9,6 @@ import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
-import com.trainingtimer.domain.RecyclerHeightProvider
 import com.trainingtimer.utils.areDatesEqual
 import com.trainingtimer.views.calendar.date.DateAdapter
 import java.util.Date
@@ -17,7 +16,6 @@ import java.util.Date
 class WeekAdapter(
     val context: Context,
     private val events: List<Date>,
-    private val heightProvider: RecyclerHeightProvider,
     val onItemClick: (date: Date?) -> Unit
 ) : ListAdapter<List<CalendarDay>, WeekViewHolder>(WeekDiffCallback()) {
 
@@ -35,13 +33,13 @@ class WeekAdapter(
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-        val recyclerHeight = heightProvider.getRecyclerHeight()
+        val recyclerHeight = recHeight()
 
         holder.binding.root.apply {
             doOnAttach {
                 itemHeight = recyclerHeight / 6
                 if (itemHeight == 0) itemHeight = screenHeight / 7
-                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight,\nrecHeight = ${recHeight()}")
+                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight")
             }
         }
 

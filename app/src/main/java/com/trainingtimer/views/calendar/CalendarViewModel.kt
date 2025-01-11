@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.trainingtimer.domain.CalendarDay
-import com.trainingtimer.domain.RecyclerHeightProvider
 import com.trainingtimer.utils.areDatesEqual
 import com.trainingtimer.views.calendar.week.WeekAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,11 +64,10 @@ class CalendarViewModel : ViewModel() {
 
     fun setupAdapter(
         context: Context,
-        recyclerHeightProvider: RecyclerHeightProvider,
         onDateSelected: (Date?) -> Unit
     ): WeekAdapter {
         val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-        adapter = WeekAdapter(context, events, recyclerHeightProvider) { selectedDate ->
+        adapter = WeekAdapter(context, events) { selectedDate ->
             val dateMessage = selectedDate?.let {
                 "Selected date is: ${sdf.format(it)}"
             } ?: "Selected date is: NO DATA"
