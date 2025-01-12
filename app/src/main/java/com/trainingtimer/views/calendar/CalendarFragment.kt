@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.utils.toast
+import com.trainingtimer.views.calendar.week.WeekAdapter
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -20,6 +21,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
     private lateinit var binding: FragmentCalendarBinding
+    private lateinit var adapter: WeekAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,12 +40,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private fun setupAdapter() {
         val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
-        val adapter =
-            viewModel.setupAdapter(requireContext()) { selectedDate ->
-                requireContext().toast(
-                    "Selected date is: ${selectedDate?.let { sdf.format(it) } ?: "no data"}"
-                )
-            }
+        adapter = WeekAdapter(requireContext(), viewModel.events) { date ->
+            requireContext().toast("Selected date is: ${date?.let { sdf.format(it) } ?: "no data"}")
+        }
         binding.pageRecyclerView.adapter = adapter
 
         adapter.recHeight = {
@@ -55,13 +54,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         lifecycleScope.launchWhenStarted {
             viewModel.selectedWeekDate.collect { selectedDate ->
                 binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                binding.pageRecyclerView.scrollToPosition(viewModel.adapter.getItemPos(selectedDate))
+                binding.pageRecyclerView.scrollToPosition(adapter.getItemPos(selectedDate))
             }
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.loadedWeeks.collect { weeks ->
-                viewModel.adapter.submitList(weeks.toList())
+                adapter.submitList(weeks.toList())
             }
         }
     }
