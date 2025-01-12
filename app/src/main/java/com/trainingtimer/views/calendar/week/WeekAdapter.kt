@@ -1,11 +1,8 @@
 package com.trainingtimer.views.calendar.week
 
 import android.content.Context
-import android.content.res.Resources
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.doOnAttach
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
 import com.trainingtimer.domain.CalendarDay
@@ -21,7 +18,6 @@ class WeekAdapter(
 
     private var selectedInfo: Pair<Date?, Int?> = null to null
     private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
-    private var itemHeight = 0
 
     var recHeight: () -> Int = { 0 }
 
@@ -32,21 +28,7 @@ class WeekAdapter(
     }
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
-        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-        val recyclerHeight = recHeight()
-
-        holder.binding.root.apply {
-            doOnAttach {
-                itemHeight = recyclerHeight / 6
-                if (itemHeight == 0) itemHeight = screenHeight / 7
-                Log.d("WeekAdapter", "recyclerHeight = $recyclerHeight")
-            }
-        }
-
-        val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = itemHeight
-        holder.itemView.layoutParams = layoutParams
-
+        holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
 
         val adapter = dateAdapterCache.getOrPut(position) {
