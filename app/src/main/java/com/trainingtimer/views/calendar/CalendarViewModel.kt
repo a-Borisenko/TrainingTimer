@@ -2,7 +2,7 @@ package com.trainingtimer.views.calendar
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.domain.Day
 import com.trainingtimer.utils.areDatesEqual
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +16,8 @@ class CalendarViewModel : ViewModel() {
     private val _selectedWeekDate = MutableStateFlow(Date())
     val selectedWeekDate: StateFlow<Date> get() = _selectedWeekDate
 
-    private val _loadedWeeks = MutableStateFlow<List<List<CalendarDay>>>(emptyList())
-    val loadedWeeks: StateFlow<List<List<CalendarDay>>> get() = _loadedWeeks
+    private val _loadedWeeks = MutableStateFlow<List<List<Day>>>(emptyList())
+    val loadedWeeks: StateFlow<List<List<Day>>> get() = _loadedWeeks
 
     val events = mutableListOf<Date>()
 
@@ -31,7 +31,7 @@ class CalendarViewModel : ViewModel() {
     private fun initializeWeeks() {
         val calendar = Calendar.getInstance()
 
-        val weeks = mutableListOf<List<CalendarDay>>()
+        val weeks = mutableListOf<List<Day>>()
         weeks.add(generateWeek(calendar.time))
 
         for (i in 1..5) {
@@ -59,8 +59,8 @@ class CalendarViewModel : ViewModel() {
         loadPreviousWeeks()
     }
 
-    private fun generateWeek(date: Date): List<CalendarDay> {
-        val week = mutableListOf<CalendarDay>()
+    private fun generateWeek(date: Date): List<Day> {
+        val week = mutableListOf<Day>()
         val calendar = Calendar.getInstance()
         calendar.time = date
 
@@ -68,7 +68,7 @@ class CalendarViewModel : ViewModel() {
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         for (i in 0 until 7) {
-            week.add(CalendarDay(calendar.get(Calendar.DAY_OF_MONTH).toString(), calendar.time))
+            week.add(Day(calendar.get(Calendar.DAY_OF_MONTH).toString(), calendar.time))
             calendar.add(Calendar.DATE, 1)
             Log.d("generateWeek", "Generated week: ${week.first().date} to ${week.last().date}")
         }
@@ -84,7 +84,7 @@ class CalendarViewModel : ViewModel() {
         calendar.time = firstWeekDate
         calendar.add(Calendar.WEEK_OF_YEAR, -1)
 
-        val newWeeks = mutableListOf<List<CalendarDay>>()
+        val newWeeks = mutableListOf<List<Day>>()
         for (i in 0 until 5) {
             newWeeks.add(0, generateWeek(calendar.time))
             calendar.add(Calendar.WEEK_OF_YEAR, -1)
@@ -100,7 +100,7 @@ class CalendarViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
         calendar.time = lastWeekDate
 
-        val newWeeks = mutableListOf<List<CalendarDay>>()
+        val newWeeks = mutableListOf<List<Day>>()
         for (i in 0 until 5) {
             val week = generateWeek(calendar.time)
             newWeeks.add(week)

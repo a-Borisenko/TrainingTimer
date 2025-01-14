@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.PageRecyclerItemBinding
-import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.domain.Day
 import com.trainingtimer.utils.areDatesEqual
-import com.trainingtimer.views.calendar.date.DateAdapter
+import com.trainingtimer.views.calendar.date.DayAdapter
 import java.util.Date
 
 class WeekAdapter(
     val context: Context,
     private val events: List<Date>,
     val onItemClick: (date: Date?) -> Unit
-) : ListAdapter<List<CalendarDay>, WeekViewHolder>(WeekDiffCallback()) {
+) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
     private var selectedInfo: Pair<Date?, Int?> = null to null
-    private val dateAdapterCache = mutableMapOf<Int, DateAdapter>()
+    private val dayAdapterCache = mutableMapOf<Int, DayAdapter>()
 
     var recHeight: () -> Int = { 0 }
 
@@ -31,8 +31,8 @@ class WeekAdapter(
         holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
 
-        val adapter = dateAdapterCache.getOrPut(position) {
-            DateAdapter(events, context) { calendarDay ->
+        val adapter = dayAdapterCache.getOrPut(position) {
+            DayAdapter(events, context) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
         }

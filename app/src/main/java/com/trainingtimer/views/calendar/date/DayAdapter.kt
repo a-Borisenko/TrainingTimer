@@ -5,22 +5,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.trainingtimer.databinding.CalendarCellBinding
-import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.domain.Day
 import java.util.Date
 
-class DateAdapter(
+class DayAdapter(
     private val events: List<Date>,
     val context: Context,
-    private val onItemClick: (CalendarDay) -> Unit
-) : ListAdapter<CalendarDay, DateViewHolder>(DateDiffCallBack()) {
+    private val onItemClick: (Day) -> Unit
+) : ListAdapter<Day, DayViewHolder>(DayDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DateViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val binding =
             CalendarCellBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return DateViewHolder(binding, context, events, onItemClick)
+        return DayViewHolder(binding, context, events, onItemClick)
     }
 
-    override fun onBindViewHolder(holder: DateViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 }

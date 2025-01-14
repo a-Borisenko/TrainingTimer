@@ -6,20 +6,20 @@ import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.CalendarCellBinding
-import com.trainingtimer.domain.CalendarDay
+import com.trainingtimer.domain.Day
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class DateViewHolder(
+class DayViewHolder(
     private val binding: CalendarCellBinding,
     private val context: Context,
     private val events: List<Date>,
-    private val onItemClick: (CalendarDay) -> Unit
+    private val onItemClick: (Day) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(date: CalendarDay) {
+    fun bind(date: Day) {
         binding.root.setOnClickListener {
             onItemClick(date)
         }
