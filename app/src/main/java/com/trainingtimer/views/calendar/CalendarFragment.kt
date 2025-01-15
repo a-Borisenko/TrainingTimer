@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
+import com.trainingtimer.utils.sdf
 import com.trainingtimer.utils.toast
 import com.trainingtimer.views.calendar.week.WeekAdapter
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
@@ -39,9 +38,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupAdapter() {
-        val sdf = SimpleDateFormat("EE dd/MM/yyyy", Locale.getDefault())
         adapter = WeekAdapter(requireContext(), viewModel.events) { date ->
-            requireContext().toast("Selected date is: ${date?.let { sdf.format(it) } ?: "no data"}")
+            requireContext().toast("Selected date is: ${date?.let { sdf(it) } ?: "no data"}")
         }
         binding.pageRecyclerView.adapter = adapter
 
