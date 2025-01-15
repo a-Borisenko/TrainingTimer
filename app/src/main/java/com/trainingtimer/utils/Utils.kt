@@ -29,10 +29,14 @@ fun timeLongToString(time: Long): String {
 }
 
 
+val sdf: (Date) -> String = { date ->
+    val sdf = SimpleDateFormat("EEE dd/MM/yyyy", Locale.getDefault())
+    sdf.format(date)
+}
+
 fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
-    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     if (dateFirst == null || dateSecond == null) return false
-    return sdf.format(dateFirst) == sdf.format(dateSecond)
+    return sdf(dateFirst) == sdf(dateSecond)
 }
 
 
