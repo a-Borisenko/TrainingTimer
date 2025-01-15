@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.CalendarCellBinding
 import com.trainingtimer.domain.Day
-import com.trainingtimer.utils.sdf
+import com.trainingtimer.utils.areDatesEqual
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -45,10 +45,6 @@ class DayViewHolder(
         } else {
             binding.textView.setTextColor(Color.BLACK)
         }
-    }
-
-    private fun areDatesEqual(dateFirst: Date, dateSecond: Date): Boolean {
-        return sdf(dateFirst) == sdf(dateSecond)
     }
 
     private fun isInTheSelectedMonth(date: Date): Boolean {
