@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.CalendarCellBinding
 import com.trainingtimer.domain.Day
+import com.trainingtimer.utils.sdf
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -47,8 +48,7 @@ class DayViewHolder(
     }
 
     private fun areDatesEqual(dateFirst: Date, dateSecond: Date): Boolean {
-        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-        return sdf.format(dateFirst) == sdf.format(dateSecond)
+        return sdf(dateFirst) == sdf(dateSecond)
     }
 
     private fun isInTheSelectedMonth(date: Date): Boolean {
