@@ -105,7 +105,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 viewModel.latestPos = currentWeekPos
                 Log.d("CalendarFragment", "Returning to position: $currentWeekPos")
             } else {
-                Log.e("CalendarFragment", "Current week position not found!")
+                Log.d("CalendarFragment", "Current week position not found!")
             }
         }
     }
