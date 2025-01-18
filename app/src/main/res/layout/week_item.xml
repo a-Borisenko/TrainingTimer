@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/backgroundLinear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/mon"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/tue"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/wed"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/thu"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/fri"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/sat"
+        style="@style/CalendarCell"/>
+
+    <TextView
+        android:id="@+id/sun"
+        style="@style/CalendarCell"/>
+
+</LinearLayout>
