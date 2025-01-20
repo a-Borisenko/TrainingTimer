@@ -92,5 +92,5 @@
         android:clipToPadding="false"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/page_recycler_item" />
+        tools:listitem="@layout/week_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
