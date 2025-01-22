@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -36,6 +37,35 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
+        viewModelScope.launch {
+            getTrainingListUseCase.getTrainingList().collect {
+                newId = it.last().id + 1
+            }
+        }
+
+        if (DataService.currentId != Training.UNDEFINED_ID) {
+            viewModelScope.launch {
+                getTrainingUseCase.getTraining(DataService.currentId)
+                    .filterNotNull()
+                    .collect {
+                        if (!saveState) {
+                            _state.update { currentState ->
+                                currentState.copy(
+                                    sets = it.sets.toString(),
+                                    title = it.title,
+                                    times = it.times.drop(1),
+                                    secRemain = if (!DataService.isCounting) {
+                                        timeStringToLong(it.rest)
+                                    } else {
+                                        currentState.secRemain
+                                    }
+                                )
+                            }
+                        }
+                    }
+            }
+        }
+
         TimerService.secRemainFlow.onEach { secRemain ->
             _state.update { currentState ->
                 currentState.copy(secRemain = secRemain)
@@ -49,32 +79,6 @@ class TrainingViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
-        viewModelScope.launch {
-            getTrainingListUseCase.getTrainingList().collect {
-                newId = it.last().id + 1
-            }
-        }
-
-        if (DataService.currentId != Training.UNDEFINED_ID) {
-            viewModelScope.launch {
-                getTrainingUseCase.getTraining(DataService.currentId).collect {
-                    if (!saveState && it != null) {
-                        _state.update { currentState ->
-                            currentState.copy(
-                                sets = it.sets.toString(),
-                                title = it.title,
-                                times = it.times.drop(1),
-                                secRemain = if (!DataService.isCounting) {
-                                    timeStringToLong(it.rest)
-                                } else {
-                                    currentState.secRemain
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        }
         resetProgress()
     }
 
