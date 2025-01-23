@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -30,9 +31,31 @@ fun timeLongToString(time: Long): String {
 
 
 val sdf: (Date) -> String = { date ->
-    val sdf = SimpleDateFormat("EEE dd/MM/yyyy", Locale.getDefault())
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    val weekNumber = calendar.get(Calendar.WEEK_OF_YEAR).toString()
+//    val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK).toString()
+//    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH).toString()
+//    val monthNumber = calendar.get(Calendar.MONTH).toString()
+//    val year = calendar.get(Calendar.YEAR).toString()
+
+    val sdf = SimpleDateFormat("$weekNumber/EEE/dd/MM/yyyy", Locale.getDefault())
     sdf.format(date)
+//    "$weekNumber/$dayOfWeek/$dayOfMonth/$monthNumber/$year"
 }
+
+fun weekNumber(date: Date): String {
+    return sdf(date).split("/")[0]
+}
+
+fun dayOfWeek(date: Date): String {
+    return sdf(date).split("/")[1]
+}
+
+fun dayOfMonth(date: Date): String {
+    return sdf(date).split("/")[2]
+}
+
 
 fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
     if (dateFirst == null || dateSecond == null) return false
@@ -53,7 +76,7 @@ fun EditText.onChange(textChanged: ((String) -> Unit)) {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            textChanged.invoke(s.toString())
+            textChanged(s.toString())
         }
     })
 }
