@@ -4,10 +4,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.trainingtimer.databinding.PageRecyclerItemBinding
+import com.trainingtimer.databinding.WeekItemBinding
 import com.trainingtimer.domain.Day
 import com.trainingtimer.utils.areDatesEqual
-import com.trainingtimer.views.calendar.date.DayAdapter
 import java.util.Date
 
 class WeekAdapter(
@@ -17,21 +16,21 @@ class WeekAdapter(
 ) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
     private var selectedInfo: Pair<Date?, Int?> = null to null
-    private val dayAdapterCache = mutableMapOf<Int, DayAdapter>()
+//    private val dayAdapterCache = mutableMapOf<Int, DayAdapter>()
 
     var recHeight: () -> Int = { 0 }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = PageRecyclerItemBinding.inflate(inflater, parent, false)
-        return WeekViewHolder(binding)
+        val binding = WeekItemBinding.inflate(inflater, parent, false)
+        return WeekViewHolder(binding, events)
     }
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
         holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
 
-        val adapter = dayAdapterCache.getOrPut(position) {
+        /*val adapter = dayAdapterCache.getOrPut(position) {
             DayAdapter(events, context) { calendarDay ->
                 onDateSelected(calendarDay.date, position)
             }
@@ -39,11 +38,11 @@ class WeekAdapter(
 
         if (adapter.currentList != week) {
             adapter.submitList(week)
-        }
-        holder.bindHolder(adapter)
+        }*/
+        holder.bind(week, position)
     }
 
-    private fun onDateSelected(selectedDate: Date?, position: Int) {
+    fun onDateSelected(selectedDate: Date?, position: Int) {
         selectedInfo.second?.let { notifyItemChanged(it) }
         selectedInfo = selectedDate to position
 
