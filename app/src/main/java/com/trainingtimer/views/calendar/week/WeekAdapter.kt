@@ -19,6 +19,7 @@ class WeekAdapter(
 //    private val dayAdapterCache = mutableMapOf<Int, DayAdapter>()
 
     var recHeight: () -> Int = { 0 }
+    lateinit var weekHolder: WeekViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,7 +28,8 @@ class WeekAdapter(
     }
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
-        holder.itemView.layoutParams.height = recHeight() / 6
+        weekHolder = holder
+        weekHolder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
 
         /*val adapter = dayAdapterCache.getOrPut(position) {
@@ -39,7 +41,7 @@ class WeekAdapter(
         if (adapter.currentList != week) {
             adapter.submitList(week)
         }*/
-        holder.bind(week, position)
+        weekHolder.bind(week, position)
     }
 
     fun onDateSelected(selectedDate: Date?, position: Int) {
