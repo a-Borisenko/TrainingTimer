@@ -34,14 +34,9 @@ val sdf: (Date) -> String = { date ->
     val calendar = Calendar.getInstance()
     calendar.time = date
     val weekNumber = calendar.get(Calendar.WEEK_OF_YEAR).toString()
-//    val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK).toString()
-//    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH).toString()
-//    val monthNumber = calendar.get(Calendar.MONTH).toString()
-//    val year = calendar.get(Calendar.YEAR).toString()
 
     val sdf = SimpleDateFormat("$weekNumber/EEE/dd/MM/yyyy", Locale.getDefault())
     sdf.format(date)
-//    "$weekNumber/$dayOfWeek/$dayOfMonth/$monthNumber/$year"
 }
 
 fun weekNumber(date: Date): String {
