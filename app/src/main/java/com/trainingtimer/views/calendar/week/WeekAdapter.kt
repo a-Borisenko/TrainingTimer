@@ -15,9 +15,6 @@ class WeekAdapter(
     val onItemClick: (date: Date?) -> Unit
 ) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
-    private var selectedInfo: Pair<Date?, Int?> = null to null
-//    private val dayAdapterCache = mutableMapOf<Int, DayAdapter>()
-
     var recHeight: () -> Int = { 0 }
     lateinit var weekHolder: WeekViewHolder
 
@@ -31,25 +28,7 @@ class WeekAdapter(
         weekHolder = holder
         weekHolder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
-
-        /*val adapter = dayAdapterCache.getOrPut(position) {
-            DayAdapter(events, context) { calendarDay ->
-                onDateSelected(calendarDay.date, position)
-            }
-        }
-
-        if (adapter.currentList != week) {
-            adapter.submitList(week)
-        }*/
         weekHolder.bind(week, position)
-    }
-
-    fun onDateSelected(selectedDate: Date?, position: Int) {
-        selectedInfo.second?.let { notifyItemChanged(it) }
-        selectedInfo = selectedDate to position
-
-        notifyItemChanged(position)
-        onItemClick(selectedInfo.first)
     }
 
     fun getItemPos(selectedDate: Date): Int {
