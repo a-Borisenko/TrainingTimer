@@ -11,13 +11,14 @@ import com.trainingtimer.views.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        applicationContext.startService(Intent(applicationContext, DataService::class.java))
+        applicationContext.apply {
+            Intent(this, DataService::class.java)
+        }
 
         setupInitialFragment()
     }
