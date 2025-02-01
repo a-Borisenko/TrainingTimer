@@ -7,10 +7,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -55,14 +51,6 @@ fun dayOfMonth(date: Date): String {
 fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
     if (dateFirst == null || dateSecond == null) return false
     return sdf(dateFirst) == sdf(dateSecond)
-}
-
-
-// extension function for Fragment that runs a Flow<T> collection in a viewLifecycleScope
-fun <T> Flow<T>.collectInViewScope(fragment: Fragment, action: suspend (T) -> Unit) {
-    fragment.viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-        collectLatest(action)
-    }
 }
 
 
