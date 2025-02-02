@@ -47,9 +47,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             binding.pageRecyclerView.height
         }
 
-        adapter.weekHolder.onClick = { week, day ->
+        /*adapter.weekHolder.onClick = { week, day ->
             Log.d("CalendarFragment", "week number $week, day of week $day")
-        }
+        }*/
     }
 
     private fun setupObservers() {
