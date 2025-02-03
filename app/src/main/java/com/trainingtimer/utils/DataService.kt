@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-import com.trainingtimer.domain.Training
+import com.trainingtimer.domain.entity.Training
 import kotlin.properties.Delegates
 
 class DataService : Service() {

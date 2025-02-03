@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.trainingtimer.utils.DataService
-import com.trainingtimer.views.details.TimerService
-import com.trainingtimer.views.details.TrainingFragment
-import com.trainingtimer.views.splash.SplashFragment
+import com.trainingtimer.presentation.details.TimerService
+import com.trainingtimer.presentation.details.TrainingFragment
+import com.trainingtimer.presentation.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
