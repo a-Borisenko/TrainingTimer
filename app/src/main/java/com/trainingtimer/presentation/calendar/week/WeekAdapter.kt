@@ -16,7 +16,6 @@ class WeekAdapter(
 ) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
     var recHeight: () -> Int = { 0 }
-    lateinit var weekHolder: WeekViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,10 +24,9 @@ class WeekAdapter(
     }
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
-        weekHolder = holder
-        weekHolder.itemView.layoutParams.height = recHeight() / 6
+        holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
-        weekHolder.bind(week, position)
+        holder.bind(week, position)
     }
 
     fun getItemPos(selectedDate: Date): Int {
