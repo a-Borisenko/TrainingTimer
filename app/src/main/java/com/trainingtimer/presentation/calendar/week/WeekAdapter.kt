@@ -12,7 +12,7 @@ import java.util.Date
 class WeekAdapter(
     val context: Context,
     private val events: List<Date>,
-    val onItemClick: (date: Date?) -> Unit
+    private val onItemClick: (week: Int, day: Int) -> Unit
 ) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
     var recHeight: () -> Int = { 0 }
@@ -20,7 +20,7 @@ class WeekAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = WeekItemBinding.inflate(inflater, parent, false)
-        return WeekViewHolder(binding, events)
+        return WeekViewHolder(binding, events, onItemClick)
     }
 
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {

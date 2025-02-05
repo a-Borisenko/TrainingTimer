@@ -11,21 +11,20 @@ import java.util.Date
 
 class WeekViewHolder(
     val binding: WeekItemBinding,
-    private val events: List<Date>
+    private val events: List<Date>,
+    val onClick: (week: Int, day: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val weekDays = listOf(
         binding.mon, binding.tue, binding.wed, binding.thu, binding.fri, binding.sat, binding.sun
     )
 
-    var onClick: ((week: Int, day: Int) -> Unit)? = null
-
     fun bind(week: List<Day>, position: Int) {
         week.forEachIndexed { index, day ->
             val dateView = weekDays[index]
             dateView.text = dayOfMonth(day.date)
             dateView.setOnClickListener {
-                onClick?.invoke(position, index)
+                onClick(position, index + 1)
             }
 
             val isToday = areDatesEqual(Calendar.getInstance().time, day.date)
