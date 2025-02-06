@@ -6,13 +6,14 @@ import com.trainingtimer.databinding.WeekItemBinding
 import com.trainingtimer.domain.entity.Day
 import com.trainingtimer.utils.areDatesEqual
 import com.trainingtimer.utils.dayOfMonth
+import com.trainingtimer.utils.dayOfWeek
 import java.util.Calendar
 import java.util.Date
 
 class WeekViewHolder(
     val binding: WeekItemBinding,
     private val events: List<Date>,
-    val onClick: (week: Int, day: Int) -> Unit
+    val onClick: (week: Int, day: String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val weekDays = listOf(
@@ -24,7 +25,7 @@ class WeekViewHolder(
             val dateView = weekDays[index]
             dateView.text = dayOfMonth(day.date)
             dateView.setOnClickListener {
-                onClick(position, index + 1)
+                onClick(position, dayOfWeek(index))
             }
 
             val isToday = areDatesEqual(Calendar.getInstance().time, day.date)
