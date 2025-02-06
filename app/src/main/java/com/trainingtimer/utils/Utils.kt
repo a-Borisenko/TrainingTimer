@@ -39,8 +39,17 @@ fun weekNumber(date: Date): String {
     return sdf(date).split("/")[0]
 }
 
-fun dayOfWeek(date: Date): String {
-    return sdf(date).split("/")[1]
+fun dayOfWeek(day: Int): String {
+    return when (day) {
+        0 -> "Monday"
+        1 -> "Tuesday"
+        2 -> "Wednesday"
+        3 -> "Thursday"
+        4 -> "Friday"
+        5 -> "Saturday"
+        6 -> "Sunday"
+        else -> throw RuntimeException("day of week calculation mistake")
+    }
 }
 
 fun dayOfMonth(date: Date): String {
