@@ -12,7 +12,7 @@ import java.util.Date
 class WeekAdapter(
     val context: Context,
     private val events: List<Date>,
-    private val onItemClick: (week: Int, day: String) -> Unit
+    private val onItemClick: (week: String, day: String) -> Unit
 ) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
 
     var recHeight: () -> Int = { 0 }
@@ -26,7 +26,7 @@ class WeekAdapter(
     override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
         holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
-        holder.bind(week, position)
+        holder.bind(week)
     }
 
     fun getItemPos(selectedDate: Date): Int {
