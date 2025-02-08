@@ -63,48 +63,50 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupListeners() {
-        binding.pageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val layoutManager =
-                        binding.pageRecyclerView.layoutManager as LinearLayoutManager
-                    val pos = layoutManager.findFirstVisibleItemPosition()
+        with(binding) {
+            pageRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        val layoutManager =
+                            binding.pageRecyclerView.layoutManager as LinearLayoutManager
+                        val pos = layoutManager.findFirstVisibleItemPosition()
 
-                    if (viewModel.latestPos != pos) {
-                        viewModel.updateSelectedWeek(pos)
+                        if (viewModel.latestPos != pos) {
+                            viewModel.updateSelectedWeek(pos)
 
-                        if (pos == 0) {
-                            viewModel.loadPreviousWeeks()
-                        } else if (pos == viewModel.loadedWeeks.value.size - 1) {
-                            viewModel.loadNextWeeks()
+                            if (pos == 0) {
+                                viewModel.loadPreviousWeeks()
+                            } else if (pos == viewModel.loadedWeeks.value.size - 1) {
+                                viewModel.loadNextWeeks()
+                            }
                         }
                     }
                 }
+            })
+
+            nextMonth.setOnClickListener {
+                if (viewModel.latestPos + 1 <= viewModel.loadedWeeks.value.size - 1)
+                    binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos + 1)
+                Log.d("CalendarFragment", "next month clicked!!!")
             }
-        })
 
-        binding.nextMonth.setOnClickListener {
-            if (viewModel.latestPos + 1 <= viewModel.loadedWeeks.value.size - 1)
-                binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos + 1)
-            Log.d("CalendarFragment", "next month clicked!!!")
-        }
-
-        binding.previousMonth.setOnClickListener {
-            if (viewModel.latestPos - 1 >= 0) {
-                binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos - 1)
-                Log.d("CalendarFragment", "previous month clicked!!!")
+            previousMonth.setOnClickListener {
+                if (viewModel.latestPos - 1 >= 0) {
+                    binding.pageRecyclerView.smoothScrollToPosition(viewModel.latestPos - 1)
+                    Log.d("CalendarFragment", "previous month clicked!!!")
+                }
             }
-        }
 
-        binding.monthText.setOnClickListener {
-            val currentDate = Calendar.getInstance().time
-            val currentWeekPos = viewModel.getWeekPositionForDate(currentDate)
-            if (currentWeekPos != -1) {
-                binding.pageRecyclerView.smoothScrollToPosition(currentWeekPos)
-                viewModel.latestPos = currentWeekPos
-                Log.d("CalendarFragment", "Returning to position: $currentWeekPos")
-            } else {
-                Log.d("CalendarFragment", "Current week position not found!")
+            monthText.setOnClickListener {
+                val currentDate = Calendar.getInstance().time
+                val currentWeekPos = viewModel.getWeekPositionForDate(currentDate)
+                if (currentWeekPos != -1) {
+                    binding.pageRecyclerView.smoothScrollToPosition(currentWeekPos)
+                    viewModel.latestPos = currentWeekPos
+                    Log.d("CalendarFragment", "Returning to position: $currentWeekPos")
+                } else {
+                    Log.d("CalendarFragment", "Current week position not found!")
+                }
             }
         }
     }
