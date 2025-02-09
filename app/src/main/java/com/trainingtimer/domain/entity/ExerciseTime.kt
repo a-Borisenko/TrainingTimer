@@ -2,8 +2,9 @@ package com.trainingtimer.domain.entity
 
 import java.util.Date
 
-data class Day(
-    val dayOfMonth: String,
+data class ExerciseTime(
+    val id: Int,
     val date: Date,
-    var events: Boolean = false
+    val title: String,
+    val time: String
 )
