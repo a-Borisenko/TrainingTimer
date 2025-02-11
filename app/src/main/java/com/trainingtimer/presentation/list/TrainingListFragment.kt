@@ -26,12 +26,10 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
 
     private val viewModel: TrainingListViewModel by viewModels()
     private lateinit var listAdapter: TrainingAdapter
-    private lateinit var binding: FragmentTrainingListBinding
+    private val binding by lazy { FragmentTrainingListBinding.inflate(layoutInflater) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding = FragmentTrainingListBinding.bind(view)
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
