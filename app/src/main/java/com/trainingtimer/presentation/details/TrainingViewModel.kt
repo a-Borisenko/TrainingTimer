@@ -1,13 +1,12 @@
 package com.trainingtimer.presentation.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.AddTrainingUseCase
 import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
-import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +28,6 @@ class TrainingViewModel @Inject constructor(
     getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
-    private var saveState = false
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
@@ -48,34 +46,28 @@ class TrainingViewModel @Inject constructor(
                 getTrainingUseCase.getTraining(DataService.currentId)
                     .filterNotNull()
                     .collect {
-                        if (!saveState) {
-                            _state.update { currentState ->
-                                currentState.copy(
-                                    sets = it.sets.toString(),
-                                    title = it.title,
-                                    times = it.times.drop(1),
-                                    secRemain = if (!DataService.isCounting) {
-                                        timeStringToLong(it.rest)
-                                    } else {
-                                        currentState.secRemain
-                                    }
-                                )
-                            }
+                        _state.update { currentState ->
+                            currentState.copy(
+                                sets = it.sets.toString(),
+                                title = it.title,
+                                times = it.times.drop(1),
+                                secRemain = if (!DataService.isCounting) {
+                                    timeStringToLong(it.rest)
+                                } else {
+                                    currentState.secRemain
+                                }
+                            )
                         }
                     }
             }
         }
 
         TimerService.secRemainFlow.onEach { secRemain ->
-            _state.update { currentState ->
-                currentState.copy(secRemain = secRemain)
-            }
+            _state.update { it.copy(secRemain = secRemain) }
         }.launchIn(viewModelScope)
 
         TimerService.progressFlow.onEach { progress ->
-            _state.update { currentState ->
-                currentState.copy(progress = progress)
-            }
+            _state.update { it.copy(progress = progress) }
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
@@ -83,19 +75,14 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun updateTime(sec: Long) {
-        _state.update { currentState ->
-            currentState.copy(secRemain = sec)
-        }
+        _state.update { it.copy(secRemain = sec) }
         resetProgress()
     }
 
     private fun resetProgress() {
-        _state.update { currentState ->
-            currentState.copy(
-                progress = if (DataService.currentId != Training.UNDEFINED_ID) 100f else 0f
-            )
+        _state.update {
+            it.copy(progress = if (DataService.currentId != Training.UNDEFINED_ID) 100f else 0f)
         }
-        Log.d("viewModel", "progress ${_state.value.progress}")
     }
 
     fun startTimer(time: Long) {
