@@ -45,18 +45,20 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     private fun observeViewModel() {
         lifecycleScope.launchWhenStarted {
             viewModel.state.collect { state ->
-                binding.etSets.setText(state.sets)
-                binding.etTitle.setText(state.title)
-                binding.etTimes.setText(state.times)
-                binding.viewTimer.text = timeLongToString(state.secRemain)
-                binding.countdownBar.progress = state.progress.toInt()
+                with(binding) {
+                    etSets.setText(state.sets)
+                    etTitle.setText(state.title)
+                    etTimes.setText(state.times)
+                    viewTimer.text = timeLongToString(state.secRemain)
+                    countdownBar.progress = state.progress.toInt()
 
-                binding.tilSets.error =
-                    if (state.errorInputSets) getString(R.string.error_input_sets) else null
-                binding.tilTitle.error =
-                    if (state.errorInputTitle) getString(R.string.error_input_title) else null
-                binding.tilTimes.error =
-                    if (state.errorInputTimes) getString(R.string.error_input_times) else null
+                    tilSets.error =
+                        if (state.errorInputSets) getString(R.string.error_input_sets) else null
+                    tilTitle.error =
+                        if (state.errorInputTitle) getString(R.string.error_input_title) else null
+                    tilTimes.error =
+                        if (state.errorInputTimes) getString(R.string.error_input_times) else null
+                }
 
                 if (state.shouldCloseScreen) {
                     findNavController().popBackStack()
@@ -85,7 +87,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun setListeners() {
-        binding.apply {
+        with(binding) {
             trainingBtn.setOnClickListener {
                 if (!TimerService.isCounting) {
                     ContextCompat.startForegroundService(
