@@ -35,31 +35,28 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
-        viewModelScope.launch {
-            getTrainingListUseCase.getTrainingList().collect {
-                newId = it.last().id + 1
-            }
-        }
+        getTrainingListUseCase.getTrainingList()
+            .onEach { newId = it.last().id + 1 }
+            .launchIn(viewModelScope)
 
         if (DataService.currentId != Training.UNDEFINED_ID) {
-            viewModelScope.launch {
-                getTrainingUseCase.getTraining(DataService.currentId)
-                    .filterNotNull()
-                    .collect {
-                        _state.update { currentState ->
-                            currentState.copy(
-                                sets = it.sets.toString(),
-                                title = it.title,
-                                times = it.times.drop(1),
-                                secRemain = if (!DataService.isCounting) {
-                                    timeStringToLong(it.rest)
-                                } else {
-                                    currentState.secRemain
-                                }
-                            )
-                        }
+            getTrainingUseCase.getTraining(DataService.currentId)
+                .filterNotNull()
+                .onEach {
+                    _state.update { currentState ->
+                        currentState.copy(
+                            sets = it.sets.toString(),
+                            title = it.title,
+                            times = it.times.drop(1),
+                            secRemain = if (!DataService.isCounting) {
+                                timeStringToLong(it.rest)
+                            } else {
+                                currentState.secRemain
+                            }
+                        )
                     }
-            }
+                }
+                .launchIn(viewModelScope)
         }
 
         TimerService.secRemainFlow.onEach { secRemain ->
