@@ -11,7 +11,6 @@ import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -31,7 +30,7 @@ class TrainingViewModel @Inject constructor(
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
-    val state: StateFlow<TrainingState> = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
 
     init {
