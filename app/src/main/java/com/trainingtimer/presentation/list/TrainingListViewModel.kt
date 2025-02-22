@@ -2,9 +2,9 @@ package com.trainingtimer.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.DeleteTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
-import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.utils.DataService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -23,7 +23,7 @@ class TrainingListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val trainingList = getTrainingListUseCase.getTrainingList()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _uiState = MutableStateFlow<TrainingUiState>(TrainingUiState.Loading)
     val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
