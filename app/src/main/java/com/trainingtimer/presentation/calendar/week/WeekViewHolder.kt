@@ -12,7 +12,7 @@ import java.util.Calendar
 import java.util.Date
 
 class WeekViewHolder(
-    val binding: WeekItemBinding,
+    binding: WeekItemBinding,
     private val events: List<Date>,
     val onClick: (week: String, day: String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
