@@ -25,21 +25,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private val viewModel: TrainingViewModel by viewModels()
-    private var _binding: FragmentTrainingBinding? = null
-    private val binding get() = _binding!!
+    private val binding by lazy { FragmentTrainingBinding.inflate(layoutInflater) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentTrainingBinding.bind(view)
-
         setMenu()
         setListeners()
         observeViewModel()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun observeViewModel() {
