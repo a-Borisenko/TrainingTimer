@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
-import com.trainingtimer.presentation.calendar.week.WeekAdapter
+import com.trainingtimer.presentation.calendar.week.CalendarAdapter
 import com.trainingtimer.utils.toast
 import java.util.Calendar
 
@@ -19,7 +19,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
     private val binding by lazy { FragmentCalendarBinding.inflate(layoutInflater) }
-    private lateinit var adapter: WeekAdapter
+    private lateinit var adapter: CalendarAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,7 +35,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupAdapter() {
-        adapter = WeekAdapter(requireContext(), viewModel.events) { week, day ->
+        adapter = CalendarAdapter(requireContext(), viewModel.events) { week, day ->
             requireContext().toast("week number $week, day of week $day")
         }
         binding.pageRecyclerView.adapter = adapter

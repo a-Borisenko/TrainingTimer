@@ -11,7 +11,7 @@ import com.trainingtimer.utils.weekNumber
 import java.util.Calendar
 import java.util.Date
 
-class WeekViewHolder(
+class CalendarViewHolder(
     binding: WeekItemBinding,
     private val events: List<Date>,
     val onClick: (week: String, day: String) -> Unit

@@ -9,21 +9,21 @@ import com.trainingtimer.domain.entity.Day
 import com.trainingtimer.utils.areDatesEqual
 import java.util.Date
 
-class WeekAdapter(
+class CalendarAdapter(
     val context: Context,
     private val events: List<Date>,
     private val onItemClick: (week: String, day: String) -> Unit
-) : ListAdapter<List<Day>, WeekViewHolder>(WeekDiffCallback()) {
+) : ListAdapter<List<Day>, CalendarViewHolder>(CalendarDiffCallback()) {
 
     var recHeight: () -> Int = { 0 }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = WeekItemBinding.inflate(inflater, parent, false)
-        return WeekViewHolder(binding, events, onItemClick)
+        return CalendarViewHolder(binding, events, onItemClick)
     }
 
-    override fun onBindViewHolder(holder: WeekViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         holder.itemView.layoutParams.height = recHeight() / 6
         val week = getItem(position)
         holder.bind(week)
