@@ -27,6 +27,7 @@ class TrainingViewModel @Inject constructor(
     getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
+    var currentId = Training.UNDEFINED_ID
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
@@ -38,8 +39,8 @@ class TrainingViewModel @Inject constructor(
             .onEach { newId = it.last().id + 1 }
             .launchIn(viewModelScope)
 
-        if (DataService.currentId != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(DataService.currentId)
+        if (currentId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(currentId)
                 .filterNotNull()
                 .onEach {
                     _state.update { currentState ->
@@ -77,7 +78,7 @@ class TrainingViewModel @Inject constructor(
 
     private fun resetProgress() {
         _state.update {
-            it.copy(progress = if (DataService.currentId != Training.UNDEFINED_ID) 100f else 0f)
+            it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100f else 0f)
         }
     }
 
@@ -111,11 +112,11 @@ class TrainingViewModel @Inject constructor(
         if (fieldValid) {
             viewModelScope.launch {
                 DataService.needLoading = true
-                if (DataService.currentId == Training.UNDEFINED_ID) {
+                if (currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, DataService.currentId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, currentId)
                     editTrainingUseCase.editTraining(item)
                 }
                 _state.update { it.copy(shouldCloseScreen = true) }
