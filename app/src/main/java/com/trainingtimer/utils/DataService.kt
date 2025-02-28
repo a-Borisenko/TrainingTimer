@@ -34,10 +34,5 @@ class DataService : Service() {
                 prop, old, new ->
             Log.d("DataService", "startTime = $old -> $new")
         }
-
-        var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
-                prop, old, new ->
-            Log.d("DataService", "currentId = $old -> $new")
-        }
     }
 }
