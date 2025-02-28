@@ -15,7 +15,6 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.entity.Training
-import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.gone
 import com.trainingtimer.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,7 +110,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun navigate(id: Int) {
-        DataService.currentId = id
         findNavController().navigate(
             R.id.action_trainingListFragment_to_trainingFragment,
             bundleOf("id" to id),
