@@ -32,6 +32,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
         setMenu()
         setListeners()
         observeViewModel()
+        arguments?.getInt("id")?.let { viewModel.currentId = it }
     }
 
     private fun observeViewModel() {
