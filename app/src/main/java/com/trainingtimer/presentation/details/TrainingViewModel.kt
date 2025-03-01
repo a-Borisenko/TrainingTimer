@@ -1,5 +1,6 @@
 package com.trainingtimer.presentation.details
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.entity.Training
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
@@ -27,7 +29,10 @@ class TrainingViewModel @Inject constructor(
     getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
-    var currentId = Training.UNDEFINED_ID
+    var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
+            prop, old, new ->
+        Log.d("DataService", "currentId = $old -> $new")
+    }
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
