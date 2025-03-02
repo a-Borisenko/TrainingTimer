@@ -31,7 +31,7 @@ class TrainingViewModel @Inject constructor(
 
     var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
             prop, old, new ->
-        Log.d("DataService", "currentId = $old -> $new")
+        Log.d("TrainingViewModel", "currentId = $old -> $new")
     }
     private var newId = 0
 
