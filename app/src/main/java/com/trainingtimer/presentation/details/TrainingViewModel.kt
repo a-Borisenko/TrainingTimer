@@ -32,18 +32,6 @@ class TrainingViewModel @Inject constructor(
     var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
             prop, old, new ->
         Log.d("TrainingViewModel", "currentId = $old -> $new")
-    }
-    private var newId = 0
-
-    private val _state = MutableStateFlow(TrainingState())
-    val state = _state.asStateFlow()
-
-
-    init {
-        getTrainingListUseCase.getTrainingList()
-            .onEach { newId = it.last().id + 1 }
-            .launchIn(viewModelScope)
-
         if (currentId != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(currentId)
                 .filterNotNull()
@@ -60,9 +48,21 @@ class TrainingViewModel @Inject constructor(
                             }
                         )
                     }
+                    Log.d("TrainingViewModel", "title = ${it.title}")
                 }
                 .launchIn(viewModelScope)
         }
+    }
+    private var newId = 0
+
+    private val _state = MutableStateFlow(TrainingState())
+    val state = _state.asStateFlow()
+
+
+    init {
+        getTrainingListUseCase.getTrainingList()
+            .onEach { newId = it.last().id + 1 }
+            .launchIn(viewModelScope)
 
         TimerService.secRemainFlow.onEach { secRemain ->
             _state.update { it.copy(secRemain = secRemain) }

@@ -1,6 +1,7 @@
 package com.trainingtimer.presentation.details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -29,10 +30,10 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.getInt("id")?.let { viewModel.currentId = it }
         setMenu()
         setListeners()
         observeViewModel()
-        arguments?.getInt("id")?.let { viewModel.currentId = it }
     }
 
     private fun observeViewModel() {
@@ -44,6 +45,7 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                     etTimes.setText(state.times)
                     viewTimer.text = timeLongToString(state.secRemain)
                     countdownBar.progress = state.progress.toInt()
+                    Log.d("TrainingFragment", "title = ${state.title}")
 
                     tilSets.error =
                         if (state.errorInputSets) getString(R.string.error_input_sets) else null
