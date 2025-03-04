@@ -1,7 +1,6 @@
 package com.trainingtimer.presentation.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,21 +14,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
+import com.trainingtimer.presentation.timepicker.TimePickerFragment
 import com.trainingtimer.utils.DataService.Companion.START
 import com.trainingtimer.utils.onChange
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
-import com.trainingtimer.presentation.timepicker.TimePickerFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
     private val viewModel: TrainingViewModel by viewModels()
-    private val binding by lazy { FragmentTrainingBinding.inflate(layoutInflater) }
+    private lateinit var binding: FragmentTrainingBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentTrainingBinding.bind(view)
         arguments?.getInt("id")?.let { viewModel.currentId = it }
         setMenu()
         setListeners()
@@ -37,29 +39,26 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.state.collect { state ->
-                with(binding) {
-                    etSets.setText(state.sets)
-                    etTitle.setText(state.title)
-                    etTimes.setText(state.times)
-                    viewTimer.text = timeLongToString(state.secRemain)
-                    countdownBar.progress = state.progress.toInt()
-                    Log.d("TrainingFragment", "title = ${state.title}")
+        viewModel.state.onEach { state ->
+            with(binding) {
+                etSets.setText(state.sets)
+                etTitle.setText(state.title)
+                etTimes.setText(state.times)
+                viewTimer.text = timeLongToString(state.secRemain)
+                countdownBar.progress = state.progress.toInt()
 
-                    tilSets.error =
-                        if (state.errorInputSets) getString(R.string.error_input_sets) else null
-                    tilTitle.error =
-                        if (state.errorInputTitle) getString(R.string.error_input_title) else null
-                    tilTimes.error =
-                        if (state.errorInputTimes) getString(R.string.error_input_times) else null
-                }
-
-                if (state.shouldCloseScreen) {
-                    findNavController().popBackStack()
-                }
+                tilSets.error =
+                    if (state.errorInputSets) getString(R.string.error_input_sets) else null
+                tilTitle.error =
+                    if (state.errorInputTitle) getString(R.string.error_input_title) else null
+                tilTimes.error =
+                    if (state.errorInputTimes) getString(R.string.error_input_times) else null
             }
-        }
+
+            if (state.shouldCloseScreen) {
+                findNavController().popBackStack()
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun setMenu() {
