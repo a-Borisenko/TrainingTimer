@@ -18,11 +18,12 @@ import java.util.Calendar
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
     private val viewModel: CalendarViewModel by viewModels()
-    private val binding by lazy { FragmentCalendarBinding.inflate(layoutInflater) }
+    private lateinit var binding: FragmentCalendarBinding
     private lateinit var adapter: CalendarAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentCalendarBinding.bind(view)
         setupAdapter()
         setupObservers()
         setupListeners()
