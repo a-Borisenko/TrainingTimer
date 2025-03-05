@@ -1,6 +1,5 @@
 package com.trainingtimer.presentation.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.entity.Training
@@ -29,9 +28,7 @@ class TrainingViewModel @Inject constructor(
     getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
-    var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) {
-            prop, old, new ->
-        Log.d("TrainingViewModel", "currentId = $old -> $new")
+    var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) { _, _, _ ->
         if (currentId != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(currentId)
                 .filterNotNull()
@@ -48,10 +45,10 @@ class TrainingViewModel @Inject constructor(
                             }
                         )
                     }
-                    Log.d("TrainingViewModel", "title = ${it.title}")
                 }
                 .launchIn(viewModelScope)
         }
+        resetProgress()
     }
     private var newId = 0
 
@@ -73,7 +70,6 @@ class TrainingViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         TimerService.isLast = false
-        resetProgress()
     }
 
     fun updateTime(sec: Long) {
