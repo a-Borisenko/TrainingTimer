@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -65,7 +66,8 @@ class TrainingRepositoryImpl @Inject constructor() : TrainingRepository {
         return trainingDao.getTraining(trainingId)
     }
 
-    override fun getTrainingList(): Flow<List<Training>> {
+    override suspend fun getTrainingList(): Flow<List<Training>> {
+        delay(2000)
         return trainingDao.getTrainings()
     }
 
