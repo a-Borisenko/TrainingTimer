@@ -57,9 +57,9 @@ class TrainingViewModel @Inject constructor(
 
 
     init {
-        getTrainingListUseCase.getTrainingList()
-            .onEach { newId = it.last().id + 1 }
-            .launchIn(viewModelScope)
+        viewModelScope.launch {
+            getTrainingListUseCase.getTrainingList().onEach { newId = it.last().id + 1 }
+        }
 
         TimerService.secRemainFlow.onEach { secRemain ->
             _state.update { it.copy(secRemain = secRemain) }
@@ -112,7 +112,6 @@ class TrainingViewModel @Inject constructor(
 
         if (fieldValid) {
             viewModelScope.launch {
-                DataService.needLoading = true
                 if (currentId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
