@@ -13,6 +13,6 @@ interface TrainingRepository {
 
     fun getTraining(trainingId: Int): Flow<Training?>
 
-    fun getTrainingList(): Flow<List<Training>>
+    suspend fun getTrainingList(): Flow<List<Training>>
 
 }
