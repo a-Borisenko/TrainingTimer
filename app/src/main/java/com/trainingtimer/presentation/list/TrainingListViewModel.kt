@@ -5,11 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.DeleteTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
-import com.trainingtimer.utils.DataService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,20 +20,21 @@ class TrainingListViewModel @Inject constructor(
     private val deleteTrainingUseCase: DeleteTrainingUseCase
 ) : ViewModel() {
 
-    val trainingList = getTrainingListUseCase.getTrainingList()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    val trainingList = MutableStateFlow<List<Training>>(emptyList())
 
     private val _uiState = MutableStateFlow<TrainingUiState>(TrainingUiState.Loading)
     val uiState: StateFlow<TrainingUiState> = _uiState.asStateFlow()
 
-    fun loadView() {
+    init {
         viewModelScope.launch {
-            if (DataService.needLoading) {
-                _uiState.value = TrainingUiState.Loading
-                delay(2000)
-            }
-            _uiState.value = TrainingUiState.Loaded
-            DataService.needLoading = false
+            getTrainingListUseCase.getTrainingList()
+                .stateIn(viewModelScope, WhileSubscribed(), emptyList())
+                .collect {
+                    trainingList.value = it
+                    if (it.isNotEmpty()) {
+                        _uiState.value = TrainingUiState.Loaded
+                    }
+                }
         }
     }
 
