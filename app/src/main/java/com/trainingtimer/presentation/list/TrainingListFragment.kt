@@ -41,7 +41,6 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         viewLifecycleOwner.lifecycleScope.launch {
             uiState()
         }
-        viewModel.loadView()
     }
 
     private suspend fun uiState() {
@@ -92,12 +91,9 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
     }
 
     private fun setupClickListener() {
-        binding.newTraining.setOnLongClickListener {
-            navCal()
-        }
-        listAdapter.onTrainingClickListener = {
-            navigate(it.id)
-        }
+        binding.newTraining.setOnLongClickListener { navCal() }
+        listAdapter.onTrainingClickListener = { navigate(it.id) }
+
         binding.newTraining.setOnClickListener {
             navigate(Training.UNDEFINED_ID)
         }
