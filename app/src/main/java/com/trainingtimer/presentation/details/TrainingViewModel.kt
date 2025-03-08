@@ -78,9 +78,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun resetProgress() {
-        _state.update {
-            it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100f else 0f)
-        }
+        _state.update { it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100f else 0f) }
     }
 
     fun startTimer(time: Long) {
