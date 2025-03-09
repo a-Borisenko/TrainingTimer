@@ -94,9 +94,7 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
         binding.newTraining.setOnLongClickListener { navCal() }
         listAdapter.onTrainingClickListener = { navigate(it.id) }
 
-        binding.newTraining.setOnClickListener {
-            navigate(Training.UNDEFINED_ID)
-        }
+        binding.newTraining.setOnClickListener { navigate(Training.UNDEFINED_ID) }
     }
 
     private fun navCal(): Boolean {
