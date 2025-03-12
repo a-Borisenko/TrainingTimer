@@ -1,13 +1,17 @@
 package com.trainingtimer.presentation.details
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.AddTrainingUseCase
 import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
 import com.trainingtimer.utils.DataService
+import com.trainingtimer.utils.TimerWorker
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,15 +65,15 @@ class TrainingViewModel @Inject constructor(
             getTrainingListUseCase.getTrainingList().onEach { newId = it.last().id + 1 }
         }
 
-        TimerService.secRemainFlow.onEach { secRemain ->
+        /*TimerService.secRemainFlow.onEach { secRemain ->
             _state.update { it.copy(secRemain = secRemain) }
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)*/
 
-        TimerService.progressFlow.onEach { progress ->
+        /*TimerService.progressFlow.onEach { progress ->
             _state.update { it.copy(progress = progress) }
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)*/
 
-        TimerService.isLast = false
+//        TimerService.isLast = false
     }
 
     fun updateTime(sec: Long) {
@@ -81,11 +85,24 @@ class TrainingViewModel @Inject constructor(
         _state.update { it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100f else 0f) }
     }
 
-    fun startTimer(time: Long) {
-        if (!DataService.isCounting && time > 0L) {
+    fun startTimer(time: Long, appContext: Context) {
+        val workManager = WorkManager.getInstance(appContext)
+        workManager.enqueueUniqueWork(
+            TimerWorker.WORK_NAME,
+            ExistingWorkPolicy.KEEP,
+            TimerWorker.makeRequest(time)
+        )
+
+        TimerWorker.timerStateFlow.onEach {  timerState ->
+            _state.update {
+                it.copy(secRemain = timerState.secRemain, progress = timerState.progress)
+            }
+        }.launchIn(viewModelScope)
+
+        /*if (!DataService.isCounting && time > 0L) {
             DataService.startTime = time
             TimerService.isLast = false
-        }
+        }*/
     }
 
     override fun onCleared() {
