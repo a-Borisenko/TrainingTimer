@@ -1,6 +1,7 @@
 package com.trainingtimer.presentation.details
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
@@ -10,7 +11,6 @@ import com.trainingtimer.domain.usecases.AddTrainingUseCase
 import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
-import com.trainingtimer.utils.DataService
 import com.trainingtimer.utils.TimerWorker
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +42,7 @@ class TrainingViewModel @Inject constructor(
                             sets = it.sets.toString(),
                             title = it.title,
                             times = it.times.drop(1),
-                            secRemain = if (!DataService.isCounting) {
+                            secRemain = if (!isCounting) {
                                 timeStringToLong(it.rest)
                             } else {
                                 currentState.secRemain
@@ -105,12 +105,12 @@ class TrainingViewModel @Inject constructor(
         }*/
     }
 
-    override fun onCleared() {
+    /*override fun onCleared() {
         if (DataService.isCounting) {
             TimerService.isLast = true
         }
         super.onCleared()
-    }
+    }*/
 
     fun trainingClickData(
         inputSets: String?,
@@ -164,5 +164,13 @@ class TrainingViewModel @Inject constructor(
 
     fun resetErrorInputTimes(times: String) {
         _state.update { it.copy(times = times, errorInputTimes = false) }
+    }
+
+    companion object {
+
+        var isCounting: Boolean by Delegates.observable(false) {
+                prop, old, new ->
+            Log.d("TrainingViewModel", "isCounting = $old -> $new")
+        }
     }
 }
