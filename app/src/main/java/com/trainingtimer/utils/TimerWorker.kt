@@ -24,7 +24,7 @@ class TimerWorker(
         isCounting = true
         while (secRemain > 0L) {
             Thread.sleep(1000)
-            val progress = (secRemain-- * 100f) / startTime
+            val progress = (--secRemain * 100f) / startTime
             _timerStateFlow.update { it.copy(secRemain = secRemain, progress = progress) }
             Log.d("TimerWorker", "sec = $secRemain; progress = $progress")
         }
