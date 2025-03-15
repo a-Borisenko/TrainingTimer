@@ -1,6 +1,6 @@
 package com.trainingtimer.domain.repository
 
-import com.trainingtimer.data.TrainingRepositoryImpl
+import com.trainingtimer.data.database.TrainingRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

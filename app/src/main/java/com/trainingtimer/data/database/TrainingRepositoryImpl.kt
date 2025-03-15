@@ -1,8 +1,8 @@
-package com.trainingtimer.data
+package com.trainingtimer.data.database
 
 import android.content.Context
 import androidx.room.Room
-import com.trainingtimer.domain.entity.Training
+import com.trainingtimer.data.entity.Training
 import com.trainingtimer.domain.repository.TrainingRepository
 import dagger.Module
 import dagger.Provides

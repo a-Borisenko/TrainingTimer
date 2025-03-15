@@ -1,11 +1,11 @@
-package com.trainingtimer.data
+package com.trainingtimer.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.trainingtimer.domain.entity.Training
+import com.trainingtimer.data.entity.Training
 import kotlinx.coroutines.flow.Flow
 
 @Dao

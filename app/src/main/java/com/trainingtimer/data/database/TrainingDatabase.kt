@@ -1,10 +1,10 @@
-package com.trainingtimer.data
+package com.trainingtimer.data.database
 
 import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.trainingtimer.domain.entity.Training
+import com.trainingtimer.data.entity.Training
 
 @Database(version = 1, entities = [Training::class])
 abstract class TrainingDatabase : RoomDatabase() {
