@@ -12,6 +12,7 @@ import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
 import com.trainingtimer.utils.TimerWorker
+import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +44,7 @@ class TrainingViewModel @Inject constructor(
                             title = it.title,
                             times = it.times.drop(1),
                             secRemain = if (!isCounting) {
-                                timeStringToLong(it.rest)
+                                it.rest
                             } else {
                                 currentState.secRemain
                             }
@@ -77,25 +78,28 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun updateTime(sec: Long) {
-        _state.update { it.copy(secRemain = sec) }
+        _state.update { it.copy(secRemain = timeLongToString(sec)) }
         resetProgress()
     }
 
     private fun resetProgress() {
-        _state.update { it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100f else 0f) }
+        _state.update { it.copy(progress = if (currentId != Training.UNDEFINED_ID) "100" else "0") }
     }
 
-    fun startTimer(time: Long, appContext: Context) {
+    fun startTimer(time: String, appContext: Context) {
         val workManager = WorkManager.getInstance(appContext)
         workManager.enqueueUniqueWork(
             TimerWorker.WORK_NAME,
             ExistingWorkPolicy.KEEP,
-            TimerWorker.makeRequest(time)
+            TimerWorker.makeRequest(timeStringToLong(time))
         )
 
         TimerWorker.timerStateFlow.onEach {  timerState ->
             _state.update {
-                it.copy(secRemain = timerState.secRemain, progress = timerState.progress)
+                it.copy(
+                    secRemain = timeLongToString(timerState.secRemain),
+                    progress = timerState.progress.toString()
+                )
             }
         }.launchIn(viewModelScope)
 
