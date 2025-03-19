@@ -122,23 +122,25 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
-        val sets = parseInput(inputSets)
-        val title = parseInput(inputTitle)
-        val reps = parseInput(inputReps)
-        val time = parseInput(inputTime)
+        if (!isCounting) {
+            val sets = parseInput(inputSets)
+            val title = parseInput(inputTitle)
+            val reps = parseInput(inputReps)
+            val time = parseInput(inputTime)
 
-        val fieldValid = validateInput(sets, title, reps)
+            val fieldValid = validateInput(sets, title, reps)
 
-        if (fieldValid) {
-            viewModelScope.launch {
-                if (currentId == Training.UNDEFINED_ID) {
-                    val item = Training(sets.toInt(), title, "x$reps", time, newId)
-                    addTrainingUseCase.addTraining(item)
-                } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, currentId)
-                    editTrainingUseCase.editTraining(item)
+            if (fieldValid) {
+                viewModelScope.launch {
+                    if (currentId == Training.UNDEFINED_ID) {
+                        val item = Training(sets.toInt(), title, "x$reps", time, newId)
+                        addTrainingUseCase.addTraining(item)
+                    } else {
+                        val item = Training(sets.toInt(), title, "x$reps", time, currentId)
+                        editTrainingUseCase.editTraining(item)
+                    }
+                    _state.update { it.copy(shouldCloseScreen = true) }
                 }
-                _state.update { it.copy(shouldCloseScreen = true) }
             }
         }
     }
