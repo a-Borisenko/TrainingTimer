@@ -2,12 +2,13 @@ package com.trainingtimer.utils
 
 import android.content.Context
 import android.util.Log
+import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.trainingtimer.domain.entity.TimerState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,14 +17,14 @@ import kotlinx.coroutines.flow.update
 class TimerWorker(
     appContext: Context,
     workerParams: WorkerParameters
-) : Worker(appContext, workerParams) {
+) : CoroutineWorker(appContext, workerParams) {
 
     private val startTime = workerParams.inputData.getLong(TIME, 0L)
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         isCounting = true
         while (secRemain > 0L) {
-            Thread.sleep(1000)
+            delay(1000)
             val progress = (--secRemain * 100f) / startTime
             _timerStateFlow.update { it.copy(secRemain = secRemain, progress = progress) }
             Log.d("TimerWorker", "sec = $secRemain; progress = $progress")
