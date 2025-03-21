@@ -1,7 +1,6 @@
 package com.trainingtimer.presentation.details
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingWorkPolicy
@@ -43,7 +42,7 @@ class TrainingViewModel @Inject constructor(
                             sets = it.sets.toString(),
                             title = it.title,
                             times = it.times.drop(1),
-                            secRemain = if (!isCounting) {
+                            secRemain = if (!state.value.isCounting) {
                                 it.rest
                             } else {
                                 currentState.secRemain
@@ -87,6 +86,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun startTimer(time: String, appContext: Context) {
+        _state.update { it.copy(isCounting = true) }
         val workManager = WorkManager.getInstance(appContext)
         workManager.enqueueUniqueWork(
             TimerWorker.WORK_NAME,
@@ -122,7 +122,7 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
-        if (!isCounting) {
+        if (!state.value.isCounting) {
             val sets = parseInput(inputSets)
             val title = parseInput(inputTitle)
             val reps = parseInput(inputReps)
@@ -170,13 +170,5 @@ class TrainingViewModel @Inject constructor(
 
     fun resetErrorInputTimes(times: String) {
         _state.update { it.copy(times = times, errorInputTimes = false) }
-    }
-
-    companion object {
-
-        var isCounting: Boolean by Delegates.observable(false) {
-                prop, old, new ->
-            Log.d("TrainingViewModel", "isCounting = $old -> $new")
-        }
     }
 }

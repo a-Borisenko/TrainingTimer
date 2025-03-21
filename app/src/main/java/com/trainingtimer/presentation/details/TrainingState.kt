@@ -9,5 +9,6 @@ data class TrainingState(
     val errorInputSets: Boolean = false,
     val errorInputTitle: Boolean = false,
     val errorInputTimes: Boolean = false,
+    val isCounting: Boolean = false,
     val shouldCloseScreen: Boolean = false
 )
