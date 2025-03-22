@@ -10,7 +10,7 @@ import com.trainingtimer.domain.usecases.AddTrainingUseCase
 import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
-import com.trainingtimer.utils.TimerWorker
+import com.trainingtimer.data.workers.TimerWorker
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -94,7 +94,7 @@ class TrainingViewModel @Inject constructor(
             TimerWorker.makeRequest(timeStringToLong(time))
         )
 
-        TimerWorker.timerStateFlow.onEach {  timerState ->
+        TimerWorker.timerStateFlow.onEach { timerState ->
             _state.update {
                 it.copy(
                     secRemain = timeLongToString(timerState.secRemain),

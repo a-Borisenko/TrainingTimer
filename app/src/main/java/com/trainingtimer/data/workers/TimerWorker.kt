@@ -1,4 +1,4 @@
-package com.trainingtimer.utils
+package com.trainingtimer.data.workers
 
 import android.content.Context
 import android.util.Log
