@@ -23,6 +23,7 @@ class TimerWorker(
 
     override suspend fun doWork(): Result {
         isCounting = true
+        secRemain = startTime
         while (secRemain > 0L) {
             delay(1000)
             val progress = (--secRemain * 100f) / startTime
