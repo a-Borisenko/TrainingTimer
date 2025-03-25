@@ -13,8 +13,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.trainingtimer.MainActivity
 import com.trainingtimer.R
-import com.trainingtimer.utils.DataService
-import com.trainingtimer.utils.DataService.Companion.START
+import com.trainingtimer.domain.entity.TimerState
 import com.trainingtimer.utils.timeLongToString
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -36,9 +36,6 @@ class TimerService : Service() {
     lateinit var appContext: Context
 
     private var secRemain = 0L
-    private var startTime: Long by Delegates.observable(DataService.startTime) { _, _, _ ->
-        secRemain = startTime
-    }
 
     private lateinit var notificationManager: NotificationManager
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -70,14 +67,13 @@ class TimerService : Service() {
     }
 
     private fun startCountdown() {
-        startTime = DataService.startTime
+        secRemain = startTime
         coroutineScope.launch {
             isCounting = true
             while (secRemain > 0L) {
                 delay(1000)
-                _secRemainFlow.value = --secRemain
-                val progress = (secRemain.toFloat() * 100f) / startTime.toFloat()
-                _progressFlow.value = progress
+                val progress = (--secRemain * 100f) / startTime
+                _timerStateFlow.update { it.copy(secRemain = secRemain, progress = progress) }
 
                 updateNotification()
                 Log.d("TimerService", "sec = $secRemain; progress = $progress")
@@ -89,7 +85,7 @@ class TimerService : Service() {
 
     private fun stopCountdown() {
         secRemain = 1L
-        _secRemainFlow.value = secRemain
+        _timerStateFlow.update { it.copy(secRemain = secRemain) }
         stopSelf()
     }
 
@@ -157,24 +153,26 @@ class TimerService : Service() {
     }
 
     companion object {
-        var isCounting: Boolean by Delegates.observable(DataService.isCounting) { _, _, new ->
-            DataService.isCounting = new
+        var isCounting: Boolean by Delegates.observable(false) { _, _, new ->
+//            DataService.isCounting = new
         }
 
         var isLast = true
-        private const val DESTROY = "DESTROY"
+        var startTime = 0L
+
+        const val START = "START"
+        const val DESTROY = "DESTROY"
         private const val CHANNEL_ID = "NotificationChannelID"
 
-        private val _secRemainFlow = MutableStateFlow(DataService.startTime)
-        val secRemainFlow: StateFlow<Long> = _secRemainFlow.asStateFlow()
-
-        private val _progressFlow = MutableStateFlow(100f)
-        val progressFlow: StateFlow<Float> = _progressFlow.asStateFlow()
-
-        fun newIntent(context: Context, action: String): Intent {
+        fun newIntent(context: Context, action: String, time: Long): Intent {
+            startTime = time
             return Intent(context, TimerService::class.java).apply {
                 this.action = action
             }
         }
+
+        private val _timerStateFlow =
+            MutableStateFlow(TimerState(startTime, 100f))
+        val timerStateFlow: StateFlow<TimerState> = _timerStateFlow.asStateFlow()
     }
 }
