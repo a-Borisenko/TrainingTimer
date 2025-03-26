@@ -1,16 +1,15 @@
 package com.trainingtimer.presentation.details
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkManager
 import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.AddTrainingUseCase
 import com.trainingtimer.domain.usecases.EditTrainingUseCase
 import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
-import com.trainingtimer.data.workers.TimerWorker
+import com.trainingtimer.presentation.details.TimerService.Companion.START
 import com.trainingtimer.utils.timeLongToString
 import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,15 +64,10 @@ class TrainingViewModel @Inject constructor(
             getTrainingListUseCase.getTrainingList().onEach { newId = it.last().id + 1 }
         }
 
-        /*TimerService.secRemainFlow.onEach { secRemain ->
-            _state.update { it.copy(secRemain = secRemain) }
-        }.launchIn(viewModelScope)*/
+        /*val isCounting = application.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            .getBoolean("service_running", false)*/
 
-        /*TimerService.progressFlow.onEach { progress ->
-            _state.update { it.copy(progress = progress) }
-        }.launchIn(viewModelScope)*/
-
-//        TimerService.isLast = false
+        if (TimerService.isCounting) timerServiceObserve()
     }
 
     fun updateTime(sec: Long) {
@@ -87,14 +81,16 @@ class TrainingViewModel @Inject constructor(
 
     fun startTimer(time: String, appContext: Context) {
         _state.update { it.copy(isCounting = true) }
-        val workManager = WorkManager.getInstance(appContext)
-        workManager.enqueueUniqueWork(
-            TimerWorker.WORK_NAME,
-            ExistingWorkPolicy.KEEP,
-            TimerWorker.makeRequest(timeStringToLong(time))
-        )
 
-        TimerWorker.timerStateFlow.onEach { timerState ->
+        ContextCompat.startForegroundService(
+            appContext,
+            TimerService.newIntent(appContext, START, timeStringToLong(time))
+        )
+        timerServiceObserve()
+    }
+
+    private fun timerServiceObserve() {
+        TimerService.timerStateFlow.onEach { timerState ->
             _state.update {
                 it.copy(
                     secRemain = timeLongToString(timerState.secRemain),
@@ -102,19 +98,7 @@ class TrainingViewModel @Inject constructor(
                 )
             }
         }.launchIn(viewModelScope)
-
-        /*if (!DataService.isCounting && time > 0L) {
-            DataService.startTime = time
-            TimerService.isLast = false
-        }*/
     }
-
-    /*override fun onCleared() {
-        if (DataService.isCounting) {
-            TimerService.isLast = true
-        }
-        super.onCleared()
-    }*/
 
     fun trainingClickData(
         inputSets: String?,
@@ -122,25 +106,23 @@ class TrainingViewModel @Inject constructor(
         inputReps: String?,
         inputTime: String?
     ) {
-        if (!state.value.isCounting) {
-            val sets = parseInput(inputSets)
-            val title = parseInput(inputTitle)
-            val reps = parseInput(inputReps)
-            val time = parseInput(inputTime)
+        val sets = parseInput(inputSets)
+        val title = parseInput(inputTitle)
+        val reps = parseInput(inputReps)
+        val time = parseInput(inputTime)
 
-            val fieldValid = validateInput(sets, title, reps)
+        val fieldValid = validateInput(sets, title, reps)
 
-            if (fieldValid) {
-                viewModelScope.launch {
-                    if (currentId == Training.UNDEFINED_ID) {
-                        val item = Training(sets.toInt(), title, "x$reps", time, newId)
-                        addTrainingUseCase.addTraining(item)
-                    } else {
-                        val item = Training(sets.toInt(), title, "x$reps", time, currentId)
-                        editTrainingUseCase.editTraining(item)
-                    }
-                    _state.update { it.copy(shouldCloseScreen = true) }
+        if (fieldValid) {
+            viewModelScope.launch {
+                if (currentId == Training.UNDEFINED_ID) {
+                    val item = Training(sets.toInt(), title, "x$reps", time, newId)
+                    addTrainingUseCase.addTraining(item)
+                } else {
+                    val item = Training(sets.toInt(), title, "x$reps", time, currentId)
+                    editTrainingUseCase.editTraining(item)
                 }
+                _state.update { it.copy(shouldCloseScreen = true) }
             }
         }
     }
