@@ -1,11 +1,9 @@
 package com.trainingtimer
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
-import com.trainingtimer.utils.DataService
-import com.trainingtimer.presentation.details.TimerService
 import com.trainingtimer.presentation.details.TrainingFragment
 import com.trainingtimer.presentation.splash.SplashFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,11 +13,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        applicationContext.apply {
-            Intent(this, DataService::class.java)
-        }
-
         setupInitialFragment()
     }
 
@@ -28,7 +21,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         if (currentFragment == null) {
             showSplashFragment()
-        } else if (TimerService.isCounting) {
+        }
+
+        val isCounting = getSharedPreferences(
+            "app_preferences",
+            Context.MODE_PRIVATE
+        ).getBoolean("service_running", false)
+
+        if (isCounting) {
             replaceWithTrainingFragment()
         }
     }
