@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class TimerService : Service() {
@@ -50,6 +49,8 @@ class TimerService : Service() {
             createNotificationChannel()
             startForeground(1, createNotification())
         }
+        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("service_running", true).apply()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -126,6 +127,8 @@ class TimerService : Service() {
     override fun onDestroy() {
         Log.d("TimerService", "Service Stopped")
         super.onDestroy()
+        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("service_running", false).apply()
     }
 
     private val openAppIntent by lazy {
@@ -153,11 +156,8 @@ class TimerService : Service() {
     }
 
     companion object {
-        var isCounting: Boolean by Delegates.observable(false) { _, _, new ->
-//            DataService.isCounting = new
-        }
 
-        var isLast = true
+        var isCounting = false
         var startTime = 0L
 
         const val START = "START"
