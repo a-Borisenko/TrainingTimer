@@ -11,7 +11,6 @@ import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
 import com.trainingtimer.presentation.details.TimerService.Companion.START
 import com.trainingtimer.utils.timeLongToString
-import com.trainingtimer.utils.timeStringToLong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -152,5 +151,11 @@ class TrainingViewModel @Inject constructor(
 
     fun resetErrorInputTimes(times: String) {
         _state.update { it.copy(times = times, errorInputTimes = false) }
+    }
+
+    private fun timeStringToLong(time: String): Long {
+        val min = (time.split(":"))[0].toLong()
+        val sec = (time.split(":"))[1].toLong()
+        return (min * 60 + sec)
     }
 }
