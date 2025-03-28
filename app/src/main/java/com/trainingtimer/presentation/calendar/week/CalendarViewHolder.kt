@@ -5,9 +5,7 @@ import com.trainingtimer.R
 import com.trainingtimer.databinding.WeekItemBinding
 import com.trainingtimer.domain.entity.Day
 import com.trainingtimer.utils.areDatesEqual
-import com.trainingtimer.utils.dayOfMonth
-import com.trainingtimer.utils.dayOfWeek
-import com.trainingtimer.utils.weekNumber
+import com.trainingtimer.utils.sdf
 import java.util.Calendar
 import java.util.Date
 
@@ -38,5 +36,27 @@ class CalendarViewHolder(
                 else -> dateView.setBackgroundResource(R.drawable.calendar_cell_background)
             }
         }
+    }
+
+
+    private fun weekNumber(date: Date): String {
+        return sdf(date).split("/")[0]
+    }
+
+    private fun dayOfWeek(day: Int): String {
+        return when (day) {
+            0 -> "Monday"
+            1 -> "Tuesday"
+            2 -> "Wednesday"
+            3 -> "Thursday"
+            4 -> "Friday"
+            5 -> "Saturday"
+            6 -> "Sunday"
+            else -> throw RuntimeException("day of week calculation mistake")
+        }
+    }
+
+    private fun dayOfMonth(date: Date): String {
+        return sdf(date).split("/")[2]
     }
 }
