@@ -1,10 +1,13 @@
 package com.trainingtimer.presentation.details
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.presentation.timepicker.TimePickerFragment
-import com.trainingtimer.utils.onChange
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -111,5 +113,16 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 )
             }
         }
+    }
+
+
+    private fun EditText.onChange(textChanged: ((String) -> Unit)) {
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                textChanged(s.toString())
+            }
+        })
     }
 }
