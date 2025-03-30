@@ -3,6 +3,7 @@ package com.trainingtimer.presentation.list
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +16,6 @@ import com.google.android.material.R.anim
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingListBinding
 import com.trainingtimer.domain.entity.Training
-import com.trainingtimer.utils.gone
-import com.trainingtimer.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -121,5 +120,14 @@ class TrainingListFragment : Fragment(R.layout.fragment_training_list) {
                 popExit = anim.abc_slide_out_bottom
             }
         }
+    }
+
+
+    private fun View.visible() {
+        this.isVisible = true
+    }
+
+    private fun View.gone() {
+        this.isVisible = false
     }
 }
