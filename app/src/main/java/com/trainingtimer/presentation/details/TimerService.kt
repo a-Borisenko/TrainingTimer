@@ -166,6 +166,7 @@ class TimerService : Service() {
 
         fun newIntent(context: Context, action: String, time: Long): Intent {
             startTime = time
+            _timerStateFlow.update { it.copy(secRemain = time) }
             return Intent(context, TimerService::class.java).apply {
                 this.action = action
             }
