@@ -30,6 +30,11 @@ class TrainingViewModel @Inject constructor(
     getTrainingListUseCase: GetTrainingListUseCase
 ) : ViewModel() {
 
+    /*
+    inject appContext
+    inject id
+     */
+
     var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) { _, _, _ ->
         if (currentId != Training.UNDEFINED_ID) {
             getTrainingUseCase.getTraining(currentId)
@@ -152,6 +157,7 @@ class TrainingViewModel @Inject constructor(
     fun resetErrorInputTimes(times: String) {
         _state.update { it.copy(times = times, errorInputTimes = false) }
     }
+
 
     private fun timeStringToLong(time: String): Long {
         val min = (time.split(":"))[0].toLong()
