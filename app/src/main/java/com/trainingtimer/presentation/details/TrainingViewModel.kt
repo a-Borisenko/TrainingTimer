@@ -1,5 +1,6 @@
 package com.trainingtimer.presentation.details
 
+import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,6 @@ import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
 import com.trainingtimer.presentation.details.TimerService.Companion.START
 import com.trainingtimer.utils.timeLongToString
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -20,24 +20,19 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
-@HiltViewModel
 class TrainingViewModel @Inject constructor(
     getTrainingUseCase: GetTrainingUseCase,
     private val addTrainingUseCase: AddTrainingUseCase,
     private val editTrainingUseCase: EditTrainingUseCase,
-    getTrainingListUseCase: GetTrainingListUseCase
+    private val getTrainingListUseCase: GetTrainingListUseCase,
+    application: Application,
+    private val trainingId: Int
 ) : ViewModel() {
 
-    /*
-    inject appContext
-    inject id
-     */
-
-    var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) { _, _, _ ->
-        if (currentId != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(currentId)
+    /*var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) { _, _, _ ->
+        if (trainingId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(trainingId)
                 .filterNotNull()
                 .onEach {
                     _state.update { currentState ->
@@ -56,7 +51,7 @@ class TrainingViewModel @Inject constructor(
                 .launchIn(viewModelScope)
         }
         resetProgress()
-    }
+    }*/
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
@@ -68,10 +63,31 @@ class TrainingViewModel @Inject constructor(
             getTrainingListUseCase.getTrainingList().onEach { newId = it.last().id + 1 }
         }
 
-        /*val isCounting = application.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-            .getBoolean("service_running", false)*/
+        val isCounting = application.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            .getBoolean("service_running", false)
 
-        if (TimerService.isCounting) timerServiceObserve()
+        if (trainingId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(trainingId)
+                .filterNotNull()
+                .onEach {
+                    _state.update { currentState ->
+                        currentState.copy(
+                            sets = it.sets.toString(),
+                            title = it.title,
+                            times = it.times.drop(1),
+                            secRemain = if (!state.value.isCounting) {
+                                it.rest
+                            } else {
+                                currentState.secRemain
+                            }
+                        )
+                    }
+                }
+                .launchIn(viewModelScope)
+        }
+        resetProgress()
+
+        if (isCounting) timerServiceObserve()
     }
 
     fun updateTime(sec: Long) {
@@ -80,7 +96,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun resetProgress() {
-        _state.update { it.copy(progress = if (currentId != Training.UNDEFINED_ID) 100 else 0) }
+        _state.update { it.copy(progress = if (trainingId != Training.UNDEFINED_ID) 100 else 0) }
     }
 
     fun startTimer(time: String, appContext: Context) {
@@ -119,11 +135,11 @@ class TrainingViewModel @Inject constructor(
 
         if (fieldValid) {
             viewModelScope.launch {
-                if (currentId == Training.UNDEFINED_ID) {
+                if (trainingId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, currentId)
+                    val item = Training(sets.toInt(), title, "x$reps", time, trainingId)
                     editTrainingUseCase.editTraining(item)
                 }
                 _state.update { it.copy(shouldCloseScreen = true) }
