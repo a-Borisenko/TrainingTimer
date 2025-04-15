@@ -45,10 +45,10 @@ class TimerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        if (!isCounting) {
+//        if (!isCounting) {
             createNotificationChannel()
             startForeground(1, createNotification())
-        }
+//        }
         val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         sharedPref.edit().putBoolean("service_running", true).apply()
     }
@@ -70,7 +70,7 @@ class TimerService : Service() {
     private fun startCountdown() {
         secRemain = startTime
         coroutineScope.launch {
-            isCounting = true
+//            isCounting = true
             while (secRemain > 0L) {
                 delay(1000)
                 val progress = (--secRemain * 100f) / startTime
@@ -79,7 +79,7 @@ class TimerService : Service() {
                 updateNotification()
                 Log.d("TimerService", "sec = $secRemain; progress = $progress")
             }
-            isCounting = false
+//            isCounting = false
             stopSelf()
         }
     }
@@ -157,7 +157,7 @@ class TimerService : Service() {
 
     companion object {
 
-        var isCounting = false
+//        var isCounting = false
         var startTime = 0L
 
         const val START = "START"
