@@ -30,28 +30,6 @@ class TrainingViewModel @Inject constructor(
     private val trainingId: Int
 ) : ViewModel() {
 
-    /*var currentId: Int by Delegates.observable(Training.UNDEFINED_ID) { _, _, _ ->
-        if (trainingId != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(trainingId)
-                .filterNotNull()
-                .onEach {
-                    _state.update { currentState ->
-                        currentState.copy(
-                            sets = it.sets.toString(),
-                            title = it.title,
-                            times = it.times.drop(1),
-                            secRemain = if (!state.value.isCounting) {
-                                it.rest
-                            } else {
-                                currentState.secRemain
-                            }
-                        )
-                    }
-                }
-                .launchIn(viewModelScope)
-        }
-        resetProgress()
-    }*/
     private var newId = 0
 
     private val _state = MutableStateFlow(TrainingState())
