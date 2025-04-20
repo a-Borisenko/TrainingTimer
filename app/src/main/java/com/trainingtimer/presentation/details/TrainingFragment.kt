@@ -10,33 +10,25 @@ import android.view.View
 import android.widget.EditText
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
-import com.trainingtimer.presentation.factory.ViewModelFactory
 import com.trainingtimer.presentation.timepicker.TimePickerFragment
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-//    private val viewModel: TrainingViewModel by viewModels()
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[TrainingViewModel::class.java]
-    }
+    private val viewModel: TrainingViewModel by viewModels()
     private lateinit var binding: FragmentTrainingBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-//        arguments?.getInt("id")?.let { viewModel.currentId = it }
+        viewModel.setTrainingId(arguments?.getInt("id"))
         setMenu()
         setListeners()
         observeViewModel()
