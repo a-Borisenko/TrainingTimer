@@ -3,8 +3,8 @@ package com.trainingtimer.presentation.details
 import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.AddTrainingUseCase
@@ -29,9 +29,9 @@ class TrainingViewModel @Inject constructor(
     private val addTrainingUseCase: AddTrainingUseCase,
     private val editTrainingUseCase: EditTrainingUseCase,
     private val getTrainingListUseCase: GetTrainingListUseCase,
-    private val application: Application,
+    application: Application,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private var newId = 0
 
