@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.trainingtimer.domain.entity.Training
 import com.trainingtimer.domain.usecases.AddTrainingUseCase
@@ -13,6 +12,8 @@ import com.trainingtimer.domain.usecases.GetTrainingListUseCase
 import com.trainingtimer.domain.usecases.GetTrainingUseCase
 import com.trainingtimer.presentation.details.TimerService.Companion.START
 import com.trainingtimer.utils.timeLongToString
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,16 +22,15 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class TrainingViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = TrainingViewModelFactory::class)
+class TrainingViewModel @AssistedInject constructor(
     getTrainingUseCase: GetTrainingUseCase,
     private val addTrainingUseCase: AddTrainingUseCase,
     private val editTrainingUseCase: EditTrainingUseCase,
     private val getTrainingListUseCase: GetTrainingListUseCase,
     application: Application,
-    private val savedStateHandle: SavedStateHandle
+    @Assisted val trainingId: Int
 ) : AndroidViewModel(application) {
 
     private var newId = 0
@@ -47,8 +47,8 @@ class TrainingViewModel @Inject constructor(
         val isCounting = application.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
             .getBoolean("service_running", false)
 
-        if (getTrainingId() != Training.UNDEFINED_ID) {
-            getTrainingUseCase.getTraining(getTrainingId())
+        if (trainingId != Training.UNDEFINED_ID) {
+            getTrainingUseCase.getTraining(trainingId)
                 .filterNotNull()
                 .onEach {
                     _state.update { currentState ->
@@ -71,14 +71,6 @@ class TrainingViewModel @Inject constructor(
         if (isCounting) timerServiceObserve()
     }
 
-    fun setTrainingId(value: Int?) {
-        savedStateHandle["id"] = value
-    }
-
-    private fun getTrainingId(): Int {
-        return savedStateHandle["id"] ?: Training.UNDEFINED_ID
-    }
-
 
     fun updateTime(sec: Long) {
         _state.update { it.copy(secRemain = timeLongToString(sec)) }
@@ -86,7 +78,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun resetProgress() {
-        _state.update { it.copy(progress = if (getTrainingId() != Training.UNDEFINED_ID) 100 else 0) }
+        _state.update { it.copy(progress = if (trainingId != Training.UNDEFINED_ID) 100 else 0) }
     }
 
     fun startTimer(time: String, appContext: Context) {
@@ -125,11 +117,11 @@ class TrainingViewModel @Inject constructor(
 
         if (fieldValid) {
             viewModelScope.launch {
-                if (getTrainingId() == Training.UNDEFINED_ID) {
+                if (trainingId == Training.UNDEFINED_ID) {
                     val item = Training(sets.toInt(), title, "x$reps", time, newId)
                     addTrainingUseCase.addTraining(item)
                 } else {
-                    val item = Training(sets.toInt(), title, "x$reps", time, getTrainingId())
+                    val item = Training(sets.toInt(), title, "x$reps", time, trainingId)
                     editTrainingUseCase.editTraining(item)
                 }
                 _state.update { it.copy(shouldCloseScreen = true) }
