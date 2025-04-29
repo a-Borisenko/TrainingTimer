@@ -13,22 +13,37 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentTrainingBinding
 import com.trainingtimer.presentation.timepicker.TimePickerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@AndroidEntryPoint
 class TrainingFragment : Fragment(R.layout.fragment_training) {
 
-    private val viewModel: TrainingViewModel by viewModels()
+//    private val viewModel: TrainingViewModel by viewModels()
+
+    private val trainingId = arguments?.getInt("id")
+    private val viewModel by viewModels<TrainingViewModel>(
+        extrasProducer = {
+            defaultViewModelCreationExtras.withCreationCallback<TrainingViewModelFactory> { factory ->
+                factory.create(trainingId)
+            }
+        }
+    )
+
     private lateinit var binding: FragmentTrainingBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentTrainingBinding.bind(view)
-        viewModel.setTrainingId(arguments?.getInt("id"))
+//        viewModel.setTrainingId(arguments?.getInt("id"))
         setMenu()
         setListeners()
         observeViewModel()
