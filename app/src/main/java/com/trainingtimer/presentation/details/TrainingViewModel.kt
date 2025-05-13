@@ -133,27 +133,27 @@ class TrainingViewModel @AssistedInject constructor(
 
     private fun validateInput(sets: String, title: String, times: String): Boolean {
         val setsValid = sets.isNotBlank()
-        _state.update { it.copy(errorInputSets = !setsValid) }
+        _state.update { it.copy(errorSets = !setsValid) }
 
         val titleValid = title.isNotBlank()
-        _state.update { it.copy(errorInputTitle = !titleValid) }
+        _state.update { it.copy(errorTitle = !titleValid) }
 
         val timesValid = times.isNotBlank()
-        _state.update { it.copy(errorInputTimes = !timesValid) }
+        _state.update { it.copy(errorTimes = !timesValid) }
 
         return setsValid && titleValid && timesValid
     }
 
     fun resetErrorInputSets(sets: String) {
-        _state.update { it.copy(sets = sets, errorInputSets = false) }
+        _state.update { it.copy(sets = sets, errorSets = false) }
     }
 
     fun resetErrorInputTitle(title: String) {
-        _state.update { it.copy(title = title, errorInputTitle = false) }
+        _state.update { it.copy(title = title, errorTitle = false) }
     }
 
     fun resetErrorInputTimes(times: String) {
-        _state.update { it.copy(times = times, errorInputTimes = false) }
+        _state.update { it.copy(times = times, errorTimes = false) }
     }
 
 
