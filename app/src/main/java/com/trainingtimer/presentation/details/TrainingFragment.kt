@@ -58,9 +58,9 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
                 viewTimer.text = state.secRemain
                 countdownBar.progress = state.progress
 
-                tilSets.error = if (state.errorInputSets) getString(R.string.error_input_sets) else null
-                tilTitle.error = if (state.errorInputTitle) getString(R.string.error_input_title) else null
-                tilTimes.error = if (state.errorInputTimes) getString(R.string.error_input_times) else null
+                tilSets.error = if (state.errorSets) getString(R.string.error_sets) else null
+                tilTitle.error = if (state.errorTitle) getString(R.string.error_title) else null
+                tilTimes.error = if (state.errorTimes) getString(R.string.error_times) else null
             }
 
             if (state.shouldCloseScreen) {
