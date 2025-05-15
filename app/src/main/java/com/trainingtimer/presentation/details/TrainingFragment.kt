@@ -29,14 +29,11 @@ class TrainingFragment : Fragment(R.layout.fragment_training) {
 
 //    private val viewModel: TrainingViewModel by viewModels()
 
-    private val trainingId = arguments?.getInt("id")
-    private val viewModel by viewModels<TrainingViewModel>(
-        extrasProducer = {
-            defaultViewModelCreationExtras.withCreationCallback<TrainingViewModelFactory> { factory ->
-                factory.create(trainingId)
-            }
+    private val viewModel by viewModels<TrainingViewModel>(extrasProducer = {
+        defaultViewModelCreationExtras.withCreationCallback<TrainingViewModelFactory> { factory ->
+            factory.create(arguments?.getInt("id"))
         }
-    )
+    })
 
     private lateinit var binding: FragmentTrainingBinding
 
