@@ -1,8 +1,10 @@
 package com.trainingtimer.presentation.calendar
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.presentation.calendar.week.CalendarAdapter
-import com.trainingtimer.utils.toast
 import java.util.Calendar
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
@@ -105,6 +106,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     Log.d("CalendarFragment", "Current week position not found!")
                 }
             }
+        }
+    }
+
+
+    private fun Context.toast(message: String?) {
+        message?.let {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
 }
