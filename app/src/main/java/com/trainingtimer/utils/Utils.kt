@@ -1,7 +1,5 @@
 package com.trainingtimer.utils
 
-import android.content.Context
-import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -27,11 +25,4 @@ val sdf: (Date) -> String = { date ->
 fun areDatesEqual(dateFirst: Date?, dateSecond: Date?): Boolean {
     if (dateFirst == null || dateSecond == null) return false
     return sdf(dateFirst) == sdf(dateSecond)
-}
-
-
-fun Context.toast(message: String?) {
-    message?.let {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
 }
