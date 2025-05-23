@@ -7,13 +7,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.trainingtimer.R
 import com.trainingtimer.databinding.FragmentCalendarBinding
 import com.trainingtimer.presentation.calendar.week.CalendarAdapter
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
@@ -46,16 +49,20 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
 
     private fun setupObservers() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.selectedWeekDate.collect { selectedDate ->
-                binding.monthText.text = viewModel.dateFormatter(selectedDate)
-                binding.pageRecyclerView.scrollToPosition(adapter.getItemPos(selectedDate))
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedWeekDate.collect { selectedDate ->
+                    binding.monthText.text = viewModel.dateFormatter(selectedDate)
+                    binding.pageRecyclerView.scrollToPosition(adapter.getItemPos(selectedDate))
+                }
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.loadedWeeks.collect { weeks ->
-                adapter.submitList(weeks.toList())
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loadedWeeks.collect { weeks ->
+                    adapter.submitList(weeks.toList())
+                }
             }
         }
     }
