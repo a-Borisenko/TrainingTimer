@@ -51,11 +51,6 @@ class TimerService : Service() {
 //        }
     }
 
-    private fun isCounting(newStatus: Boolean) {
-        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("service_running", newStatus).apply()
-    }
-
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         return when (intent.action) {
             START -> {
@@ -69,6 +64,14 @@ class TimerService : Service() {
             else -> START_STICKY
         }
     }
+
+    override fun onDestroy() {
+        Log.d("TimerService", "Service Stopped")
+        super.onDestroy()
+        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("service_running", false).apply()
+    }
+
 
     private fun startCountdown() {
         secRemain = startTime
@@ -87,6 +90,11 @@ class TimerService : Service() {
         }
     }
 
+    private fun isCounting(newStatus: Boolean) {
+        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("service_running", newStatus).apply()
+    }
+
     private fun stopCountdown() {
         secRemain = 1L
         _timerStateFlow.update { it.copy(secRemain = secRemain) }
@@ -95,7 +103,7 @@ class TimerService : Service() {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Countdown is running!")
+            .setContentTitle(TITLE_RUN)
             .setContentText(timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
             .setContentIntent(openAppIntent)
@@ -105,7 +113,7 @@ class TimerService : Service() {
 
     private fun updateNotification() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Countdown is running!")
+            .setContentTitle(TITLE_RUN)
             .setContentText(timeLongToString(secRemain))
             .setSmallIcon(R.drawable.ic_clock)
             .setContentIntent(openAppIntent)
@@ -125,13 +133,6 @@ class TimerService : Service() {
             )
             notificationManager.createNotificationChannel(notificationChannel)
         }
-    }
-
-    override fun onDestroy() {
-        Log.d("TimerService", "Service Stopped")
-        super.onDestroy()
-        val sharedPref = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("service_running", false).apply()
     }
 
     private val openAppIntent by lazy {
@@ -165,7 +166,9 @@ class TimerService : Service() {
 
         const val START = "START"
         const val DESTROY = "DESTROY"
+
         private const val CHANNEL_ID = "NotificationChannelID"
+        private const val TITLE_RUN = "Countdown is running!"
 
         fun newIntent(context: Context, action: String, time: Long): Intent {
             startTime = time
